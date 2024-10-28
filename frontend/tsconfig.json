@@ -1,11 +1,37 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Create React App",
+  "_version": "2.0.0",
+  "ts-node": {
+    // Do not forget to `npm i -D tsconfig-paths`
+    "require": ["tsconfig-paths/register"]
+  },
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "es2015",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "jsx": "react-jsx"
-  }
+    "strict": true,
+    "baseUrl": "src",
+    "paths": {
+      "api/*": ["api/*"],
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"],
+      "store/*": ["store/*"],
+      "wrappers/*": ["wrappers/*"],
+      "utils/*": ["utils/*"],
+      "constants/*": ["constants/*"]
+    }
+  },
+  "include": ["src"]
 }
