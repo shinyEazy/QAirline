@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Input,
-  Button,
-  RadioGroup,
-  FormControl,
-  FormControlLabel,
-  Radio,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 const Header = () => {
   return (
@@ -22,17 +13,98 @@ const Header = () => {
         <Typography variant="h6">QAirline</Typography>
       </Box>
       <Box display="flex" gap="10px">
-        <Button>Home</Button>
-        <Button>Flight</Button>
-        <Button>Car</Button>
-        <Button>Hotel</Button>
-        <Button>Tour Package</Button>
-        <Button>Pages</Button>
-        <Button>News</Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Home
+        </Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Flight
+        </Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Car
+        </Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Hotel
+        </Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Tour Package
+        </Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Pages
+        </Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          News
+        </Button>
       </Box>
       <Box display="flex" gap="10px">
-        <Button>Search</Button>
-        <Button>Login/Signup</Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Search
+        </Button>
+        <Button
+          sx={{
+            color: "black",
+            fontWeight: "600",
+            fontSize: "1.2rem",
+            textTransform: "none",
+          }}
+        >
+          Login/Signup
+        </Button>
       </Box>
     </Box>
   );

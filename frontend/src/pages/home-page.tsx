@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import "../styles.css";
 import Header from "../components/Header";
+// import FlightSearch from "components/FlightSearch";
 
 const HomePage = () => {
   return (
@@ -18,8 +19,10 @@ const HomePage = () => {
       <Box
         sx={{
           backgroundColor: "wheat",
-          padding: "20px",
+          padding: "40px",
           borderRadius: "20px",
+          margin: "20px 80px",
+          color: "black",
         }}
       >
         <Box marginBottom="20px" display="flex" gap="4px">
@@ -28,6 +31,7 @@ const HomePage = () => {
               backgroundColor: "rgb(236,236,236)",
               borderRadius: "8px",
               padding: "10px 20px",
+              color: "black",
             }}
           >
             Flights
@@ -37,6 +41,7 @@ const HomePage = () => {
               backgroundColor: "rgb(236,236,236)",
               borderRadius: "8px",
               padding: "10px 20px",
+              color: "black",
             }}
           >
             Hotel
@@ -46,6 +51,7 @@ const HomePage = () => {
               backgroundColor: "rgb(236,236,236)",
               borderRadius: "8px",
               padding: "10px 20px",
+              color: "black",
             }}
           >
             Car Rentals
@@ -58,16 +64,40 @@ const HomePage = () => {
           marginBottom="20px"
         >
           <Box width="100%" display="flex" gap="4px">
-            <Button sx={{ flex: 1, backgroundColor: "rgb(236,236,236)" }}>
+            <Button
+              sx={{
+                flex: 1,
+                backgroundColor: "rgb(236,236,236)",
+                color: "black",
+              }}
+            >
               Flight
             </Button>
-            <Button sx={{ flex: 1, backgroundColor: "rgb(236,236,236)" }}>
+            <Button
+              sx={{
+                flex: 1,
+                backgroundColor: "rgb(236,236,236)",
+                color: "black",
+              }}
+            >
               Stopover
             </Button>
-            <Button sx={{ flex: 1, backgroundColor: "rgb(236,236,236)" }}>
+            <Button
+              sx={{
+                flex: 1,
+                backgroundColor: "rgb(236,236,236)",
+                color: "black",
+              }}
+            >
               Manage Booking / Check in
             </Button>
-            <Button sx={{ flex: 1, backgroundColor: "rgb(236,236,236)" }}>
+            <Button
+              sx={{
+                flex: 1,
+                backgroundColor: "rgb(236,236,236)",
+                color: "black",
+              }}
+            >
               Flight Status
             </Button>
           </Box>
@@ -91,11 +121,18 @@ const HomePage = () => {
             />
           </RadioGroup>
         </FormControl>
-        <Box display="flex" gap="10px" marginBottom="20px">
+        <Box
+          display="flex"
+          gap="10px"
+          marginBottom="20px"
+          sx={{
+            backgroundColor: "rgb(231,235,255)",
+            padding: "32px 20px",
+            borderRadius: "8px",
+          }}
+        >
           <Input placeholder="From" />
           <Input placeholder="To" />
-        </Box>
-        <Box display="flex" gap="10px" marginBottom="20px">
           <Input placeholder="Departing" />
           <Input placeholder="Returning" />
           <Input placeholder="Passengers and Class" />
@@ -109,6 +146,7 @@ const HomePage = () => {
           </Button>
         </Box>
       </Box>
+      {/* <FlightSearch /> */}
     </Box>
   );
 };
