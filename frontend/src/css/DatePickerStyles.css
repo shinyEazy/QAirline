@@ -1,0 +1,26 @@
+.custom-date-picker {
+  width: 150px;
+  padding: 16px;
+  border: none;
+  border: 1px solid #c0c0c0;
+  background-color: rgb(231, 235, 255);
+  color: black;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.custom-date-picker::placeholder {
+  color: #c0c0c0;
+}
+
+.custom-date-picker:focus {
+  outline: none;
+  caret-color: transparent;
+}
+
+input[type="text"].custom-date-picker {
+  text-align: left;
+  padding-left: 8px;
+}
