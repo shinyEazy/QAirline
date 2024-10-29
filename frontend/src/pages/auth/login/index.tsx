@@ -36,7 +36,7 @@ const Login = () => {
             <Typography
               variant="h4"
               gutterBottom
-              fontWeight="600"
+              fontWeight="400"
               fontSize="2.3rem"
             >
               Login
@@ -115,7 +115,8 @@ const Login = () => {
               }}
             />
             <Link
-              href="#"
+              component={RouterLink}
+              to="/auth/recovery"
               variant="body2"
               underline="none"
               style={{

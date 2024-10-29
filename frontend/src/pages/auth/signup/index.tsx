@@ -34,7 +34,7 @@ const SignUp = () => {
             <Typography
               variant="h4"
               gutterBottom
-              fontWeight="600"
+              fontWeight="400"
               fontSize="2.3rem"
             >
               Sign up
