@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   const [itemHovered, setItemHovered] = useState(false);
   const [flightHovered, setFlightHovered] = useState(false);
   const [carHovered, setCarHovered] = useState(false);
@@ -570,6 +573,7 @@ const Header = () => {
       </Box>
       <Box display="flex" gap="10px">
         <Button
+          onClick={() => navigate("/auth/login")}
           sx={{
             color: "black",
             fontWeight: "500",
@@ -582,9 +586,10 @@ const Header = () => {
             },
           }}
         >
-          Search
+          Login
         </Button>
         <Button
+          onClick={() => navigate("/auth/signup")}
           sx={{
             color: "black",
             fontWeight: "500",
@@ -597,7 +602,7 @@ const Header = () => {
             },
           }}
         >
-          Login/Signup
+          Signup
         </Button>
       </Box>
     </Box>
