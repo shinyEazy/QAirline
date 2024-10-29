@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Grid, Box, Typography, TextField, Button, Link } from "@mui/material";
-import { InputAdornment, IconButton } from "@mui/material";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 const SignUp = () => {
   const [checked, setChecked] = React.useState(false);
@@ -44,10 +42,11 @@ const SignUp = () => {
             <Typography variant="body2">
               <span style={{ opacity: 0.7 }}>Already have an account? </span>
               <Link
-                href="#"
+                component={RouterLink}
+                to="/auth/login"
                 underline="none"
                 sx={{
-                  color: "rgb(99,91,255)",
+                  color: "rgb(99, 91, 255)",
                   "&:hover": {
                     textDecoration: "underline",
                   },

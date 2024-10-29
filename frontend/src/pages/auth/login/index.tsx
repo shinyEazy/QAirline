@@ -3,6 +3,7 @@ import { Grid, Box, Typography, TextField, Button, Link } from "@mui/material";
 import { InputAdornment, IconButton } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Link as RouterLink } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +44,8 @@ const Login = () => {
             <Typography variant="body2">
               <span style={{ opacity: 0.7 }}>Don't have an account? </span>
               <Link
-                href="#"
+                component={RouterLink}
+                to="/auth/signup"
                 underline="none"
                 sx={{
                   color: "rgb(99,91,255)",
