@@ -441,6 +441,7 @@ const Header = () => {
                 <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
               </Button>
               <Button
+                onClick={() => navigate("/auth/login")}
                 onMouseEnter={() => setItemHovered(true)}
                 onMouseLeave={() => setItemHovered(false)}
                 sx={{
@@ -464,6 +465,7 @@ const Header = () => {
                 <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
               </Button>
               <Button
+                onClick={() => navigate("/auth/signup")}
                 onMouseEnter={() => setItemHovered(true)}
                 onMouseLeave={() => setItemHovered(false)}
                 sx={{
