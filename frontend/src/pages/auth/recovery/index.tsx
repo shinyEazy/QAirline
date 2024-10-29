@@ -5,11 +5,10 @@ import {
   Typography,
   TextField,
   Button,
-  Link,
   IconButton,
 } from "@mui/material";
-import ArrowBack from "@mui/icons-material/ArrowBack"; // Importing ArrowBack icon
-import { useNavigate } from "react-router-dom"; // Importing useNavigate hook
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
 const Recovery = () => {
   const navigate = useNavigate();
