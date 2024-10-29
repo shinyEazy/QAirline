@@ -3,12 +3,13 @@ import { Grid, Box, Typography, TextField, Button, Link } from "@mui/material";
 import { InputAdornment, IconButton } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
-const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
+const SignUp = () => {
+  const [checked, setChecked] = React.useState(false);
 
-  const handleClickShowPassword = () => {
-    setShowPassword((prev) => !prev);
+  const handleChange = (event: any) => {
+    setChecked(event.target.checked);
   };
 
   return (
@@ -38,10 +39,10 @@ const Login = () => {
               fontWeight="600"
               fontSize="2.3rem"
             >
-              Login
+              Sign up
             </Typography>
             <Typography variant="body2">
-              <span style={{ opacity: 0.7 }}>Don't have an account? </span>
+              <span style={{ opacity: 0.7 }}>Already have an account? </span>
               <Link
                 href="#"
                 underline="none"
@@ -52,11 +53,51 @@ const Login = () => {
                   },
                 }}
               >
-                Sign up
+                Login
               </Link>
             </Typography>
           </Box>
           <Box component="form" noValidate mt={2}>
+            <TextField
+              fullWidth
+              label="First name"
+              variant="outlined"
+              sx={{
+                margin: "10px auto",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": {
+                    borderColor: "#bdbdbd",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "black",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "rgb(99,91,255)",
+                  },
+                },
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Last name"
+              variant="outlined"
+              sx={{
+                margin: "10px auto",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": {
+                    borderColor: "#bdbdbd",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "black",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "rgb(99,91,255)",
+                  },
+                },
+              }}
+            />
             <TextField
               fullWidth
               label="Email address"
@@ -81,10 +122,9 @@ const Login = () => {
               fullWidth
               label="Password"
               variant="outlined"
-              margin="normal"
-              type={showPassword ? "text" : "password"}
+              type="password"
               sx={{
-                margin: "10px auto 20px",
+                margin: "10px auto",
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "8px",
                   "& fieldset": {
@@ -98,39 +138,56 @@ const Login = () => {
                   },
                 },
               }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                      aria-label="toggle password visibility"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
             />
-            <Link
-              href="#"
-              variant="body2"
-              underline="none"
-              style={{
-                display: "inline",
-                textAlign: "left",
-                color: "rgb(99, 91, 255)",
-                fontSize: "0.95rem",
-                cursor: "pointer",
-              }}
+            <TextField
+              fullWidth
+              label="Confirm password"
+              variant="outlined"
+              margin="normal"
+              type="password"
               sx={{
-                "&:hover": {
-                  textDecoration: "underline",
+                margin: "10px auto",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": {
+                    borderColor: "#bdbdbd",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "black",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "rgb(99,91,255)",
+                  },
                 },
               }}
-            >
-              Forgot password?
-            </Link>
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={handleChange}
+                  color="primary" // You can customize the color
+                />
+              }
+              label={
+                <span>
+                  I have read the{" "}
+                  <Link
+                    href="#"
+                    underline="none"
+                    sx={{
+                      color: "rgb(99,91,255)",
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
+                  >
+                    terms and conditions
+                  </Link>
+                </span>
+              }
+            />
+
             <Button
               fullWidth
               variant="contained"
@@ -148,7 +205,7 @@ const Login = () => {
                 },
               }}
             >
-              Login
+              Sign up
             </Button>
           </Box>
         </Box>
@@ -182,4 +239,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

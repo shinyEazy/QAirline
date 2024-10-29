@@ -2,6 +2,7 @@ import NoFoundPage from "pages/404";
 import HomePage from "pages/home-page";
 import Login from "pages/auth/login";
 import Auth from "pages/auth";
+import SignUp from "pages/auth/signup";
 
 const routes = [
   {
@@ -11,6 +12,10 @@ const routes = [
       {
         path: "login",
         component: Login,
+      },
+      {
+        path: "signup",
+        component: SignUp,
       },
     ],
   },
