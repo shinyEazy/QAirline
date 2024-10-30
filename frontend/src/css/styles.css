@@ -12,7 +12,7 @@
 
 .dropdown-content {
   position: absolute;
-  background-color: white;
+  background-color: rgb(234, 234, 234);
   padding: 20px;
   z-index: 1;
 }
@@ -27,18 +27,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
 }
 
 .class-btn {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid black;
   cursor: pointer;
   flex: 1;
+  display: flex;
+  text-align: center;
 }
 
 .class-btn.selected {
   background-color: #007bff;
   color: white;
-  border-color: #007bff;
 }

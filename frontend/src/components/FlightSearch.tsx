@@ -12,6 +12,7 @@ import {
   RadioGroup,
   Radio,
   Input,
+  Typography,
 } from "@mui/material";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -387,44 +388,108 @@ function FlightSearch() {
               ref={dropdownRef}
               position="absolute"
               left="0"
-              bgcolor="white"
+              bgcolor="rgb(234,234,234)"
               borderRadius="8px"
               p="10px"
               mt="5px"
               zIndex={1}
-              width="200px"
+              width="100%"
+              padding="12px"
             >
-              <div className="passenger-section">
-                <h3>Passenger</h3>
-                {["adult", "child", "infant"].map((type, idx) => (
-                  <div key={idx} className="passenger-type">
-                    <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
-                    <button onClick={() => handlePassengerChange(type, -1)}>
-                      -
-                    </button>
-                    <span>{passengerCount[type]}</span>
-                    <button onClick={() => handlePassengerChange(type, 1)}>
-                      +
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <div className="class-section">
-                <h3>Travel Class</h3>
-                {["Economy", "Business", "First Class", "Premium Economy"].map(
-                  (cls, idx) => (
-                    <button
+              <Box className="passenger-section">
+                <Typography fontWeight="600" fontSize="1.2rem">
+                  Passenger
+                </Typography>
+                <Box>
+                  {["adult", "child", "infant"].map((type, idx) => (
+                    <Box
+                      key={idx}
+                      className="passenger-type"
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        margin: "8px 0",
+                      }}
+                    >
+                      <Typography fontSize="1rem">
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                      </Typography>
+                      <Box display="flex" alignItems="center" gap="12px">
+                        <Button
+                          onClick={() => handlePassengerChange(type, -1)}
+                          sx={{
+                            border: "1px solid black",
+                            width: "32px",
+                            height: "32px",
+                            padding: "4px",
+                            minWidth: 0,
+                            fontSize: "1rem",
+                          }}
+                        >
+                          -
+                        </Button>
+                        <Typography>{passengerCount[type]}</Typography>
+                        <Button
+                          onClick={() => handlePassengerChange(type, 1)}
+                          sx={{
+                            border: "1px solid black",
+                            width: "32px",
+                            height: "32px",
+                            padding: "4px",
+                            minWidth: 0,
+                            fontSize: "1rem",
+                          }}
+                        >
+                          +
+                        </Button>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+              <Box className="class-section">
+                <Typography
+                  fontWeight="600"
+                  fontSize="1.2rem"
+                  marginBottom="12px"
+                >
+                  Travel Class
+                </Typography>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: "16px",
+                  }}
+                >
+                  {[
+                    "Economy",
+                    "Business",
+                    "First Class",
+                    "Premium Economy",
+                  ].map((cls, idx) => (
+                    <Button
                       key={idx}
                       className={`class-btn ${
                         travelClass === cls ? "selected" : ""
                       }`}
                       onClick={() => handleClassChange(cls)}
+                      sx={{
+                        border: "1px solid black",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        height: "52px",
+                        lineHeight: "16px",
+                        textAlign: "center",
+                        alignItems: "center",
+                      }}
                     >
                       {cls}
-                    </button>
-                  )
-                )}
-              </div>
+                    </Button>
+                  ))}
+                </Box>
+              </Box>
             </Box>
           )}
         </Box>
