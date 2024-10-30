@@ -1,9 +1,9 @@
 .custom-date-picker {
   width: 150px;
-  padding: 16px;
+  padding: 18px;
   border: none;
   border: 1px solid #c0c0c0;
-  background-color: rgb(231, 235, 255);
+  background-color: white;
   color: black;
   font-size: 16px;
   text-align: center;

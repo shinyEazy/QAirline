@@ -13,13 +13,14 @@ import {
   Radio,
   Input,
 } from "@mui/material";
-import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useEffect } from "react";
+import { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../css/DatePickerStyles.css";
+import "../css/styles.css";
 
 function FlightSearch() {
   const [from, setFrom] = useState("");
@@ -30,6 +31,53 @@ function FlightSearch() {
     today.setDate(today.getDate() + 2);
     return today;
   });
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [passengerCount, setPassengerCount] = useState({
+    adult: 0,
+    child: 0,
+    infant: 0,
+  });
+  const [travelClass, setTravelClass] = useState("Economy");
+  const dropdownRef = useRef(null);
+
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prevState) => !prevState);
+  };
+
+  // Handle passenger count changes
+  const handlePassengerChange = (type, increment) => {
+    setPassengerCount((prevCount) => {
+      const newCount = { ...prevCount };
+      newCount[type] = Math.max(0, newCount[type] + increment);
+      return newCount;
+    });
+  };
+
+  // Handle travel class selection
+  const handleClassChange = (selectedClass) => {
+    setTravelClass(selectedClass);
+  };
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    // Add mousedown listener when dropdown is open
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    // Cleanup listener on component unmount or when dropdown closes
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   return (
     <Box
@@ -189,7 +237,7 @@ function FlightSearch() {
         gap="10px"
         marginBottom="20px"
         sx={{
-          backgroundColor: "rgb(231,235,255)",
+          backgroundColor: "white",
           padding: "32px 20px",
           borderRadius: "8px",
         }}
@@ -240,7 +288,7 @@ function FlightSearch() {
           sx={{
             display: "flex",
             gap: "20px",
-            padding: "20px",
+            padding: "16px",
             borderRadius: "8px",
           }}
         >
@@ -253,7 +301,7 @@ function FlightSearch() {
                 position: "absolute",
                 top: "0px",
                 left: "12px",
-                backgroundColor: "rgb(231, 235, 255)",
+                backgroundColor: "white",
                 padding: "0 4px",
                 transform: "translateY(-50%)",
               }}
@@ -279,7 +327,7 @@ function FlightSearch() {
                 position: "absolute",
                 top: "0px",
                 left: "12px",
-                backgroundColor: "rgb(231, 235, 255)",
+                backgroundColor: "white",
                 padding: "0 4px",
                 transform: "translateY(-50%)",
               }}
@@ -296,7 +344,85 @@ function FlightSearch() {
             />
           </FormControl>
         </Box>
-        <Input placeholder="Passengers and Class" />
+        <Box>
+          <TextField
+            variant="outlined"
+            value={`${
+              passengerCount.adult +
+              passengerCount.child +
+              passengerCount.infant
+            } Passengers / ${travelClass}`}
+            onClick={toggleDropdown}
+            label="Passengers and Class"
+            InputProps={{
+              readOnly: true,
+            }}
+            sx={{
+              margin: "10px auto",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+                "& fieldset": {
+                  borderColor: "#bdbdbd",
+                },
+                "&:hover fieldset": {
+                  borderColor: "black",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "rgb(99,91,255)",
+                },
+              },
+              "& .MuiInputBase-input": {
+                cursor: "pointer",
+              },
+            }}
+          />
+
+          {isDropdownOpen && (
+            <div
+              className="dropdown-content"
+              ref={dropdownRef}
+              style={{
+                position: "absolute",
+                backgroundColor: "white",
+                left: "0",
+                border: "1px solid #ddd",
+                padding: "10px",
+              }}
+            >
+              <div className="passenger-section">
+                <h3>Passenger</h3>
+                {["adult", "child", "infant"].map((type, idx) => (
+                  <div key={idx} className="passenger-type">
+                    <span>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                    <button onClick={() => handlePassengerChange(type, -1)}>
+                      -
+                    </button>
+                    <span>{passengerCount[type]}</span>
+                    <button onClick={() => handlePassengerChange(type, 1)}>
+                      +
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="class-section">
+                <h3>Travel Class</h3>
+                {["Economy", "Business", "First Class", "Premium Economy"].map(
+                  (cls, idx) => (
+                    <button
+                      key={idx}
+                      className={`class-btn ${
+                        travelClass === cls ? "selected" : ""
+                      }`}
+                      onClick={() => handleClassChange(cls)}
+                    >
+                      {cls}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+        </Box>
       </Box>
       <Box display="flex" justifyContent="flex-end">
         <Button
