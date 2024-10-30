@@ -12,11 +12,8 @@
 
 .dropdown-content {
   position: absolute;
-  top: 100%;
-  left: 0;
   background-color: white;
   padding: 20px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 

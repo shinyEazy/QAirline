@@ -240,50 +240,53 @@ function FlightSearch() {
           backgroundColor: "white",
           padding: "32px 20px",
           borderRadius: "8px",
+          justifyContent: "space-between",
         }}
       >
-        <TextField
-          label="From"
-          variant="outlined"
-          sx={{
-            width: "250px",
-            margin: "10px auto",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "8px",
-              "& fieldset": {
-                borderColor: "#bdbdbd",
+        <Box display="flex" alignItems="center" gap="10px">
+          {" "}
+          <TextField
+            label="From"
+            variant="outlined"
+            sx={{
+              width: "250px",
+              margin: "10px auto",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+                "& fieldset": {
+                  borderColor: "#bdbdbd",
+                },
+                "&:hover fieldset": {
+                  borderColor: "black",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "rgb(99,91,255)",
+                },
               },
-              "&:hover fieldset": {
-                borderColor: "black",
+            }}
+          />
+          <FontAwesomeIcon icon={faArrowRightArrowLeft} />
+          <TextField
+            label="To"
+            variant="outlined"
+            sx={{
+              width: "250px",
+              margin: "10px auto",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+                "& fieldset": {
+                  borderColor: "#bdbdbd",
+                },
+                "&:hover fieldset": {
+                  borderColor: "black",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "rgb(99,91,255)",
+                },
               },
-              "&.Mui-focused fieldset": {
-                borderColor: "rgb(99,91,255)",
-              },
-            },
-          }}
-        />
-        <FontAwesomeIcon icon={faArrowRightArrowLeft} />
-
-        <TextField
-          label="To"
-          variant="outlined"
-          sx={{
-            width: "250px",
-            margin: "10px auto",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "8px",
-              "& fieldset": {
-                borderColor: "#bdbdbd",
-              },
-              "&:hover fieldset": {
-                borderColor: "black",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "rgb(99,91,255)",
-              },
-            },
-          }}
-        />
+            }}
+          />
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -344,8 +347,9 @@ function FlightSearch() {
             />
           </FormControl>
         </Box>
-        <Box>
+        <Box position="relative" display="inline-block" width="350px">
           <TextField
+            fullWidth
             variant="outlined"
             value={`${
               passengerCount.adult +
@@ -378,16 +382,17 @@ function FlightSearch() {
           />
 
           {isDropdownOpen && (
-            <div
+            <Box
               className="dropdown-content"
               ref={dropdownRef}
-              style={{
-                position: "absolute",
-                backgroundColor: "white",
-                left: "0",
-                border: "1px solid #ddd",
-                padding: "10px",
-              }}
+              position="absolute"
+              left="0"
+              bgcolor="white"
+              borderRadius="8px"
+              p="10px"
+              mt="5px"
+              zIndex={1}
+              width="200px"
             >
               <div className="passenger-section">
                 <h3>Passenger</h3>
@@ -420,7 +425,7 @@ function FlightSearch() {
                   )
                 )}
               </div>
-            </div>
+            </Box>
           )}
         </Box>
       </Box>
