@@ -497,7 +497,11 @@ function FlightSearch() {
       <Box display="flex" justifyContent="flex-end">
         <Button
           variant="contained"
-          sx={{ backgroundColor: "rgb(236,236,236)" }}
+          sx={{
+            backgroundColor: "rgb(77,115,252)",
+            padding: "10px 20px",
+            borderRadius: "12px",
+          }}
         >
           Show Flight
         </Button>
