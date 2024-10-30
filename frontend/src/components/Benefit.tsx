@@ -1,10 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faComments,
-  faPlane,
-  faDollarSign,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlane, faDollarSign } from "@fortawesome/free-solid-svg-icons";
+import { faComments } from "@fortawesome/free-regular-svg-icons";
 
 const Benefit = () => {
   return (
@@ -21,14 +18,19 @@ const Benefit = () => {
     >
       <Box
         bgcolor="white"
-        sx={{ flex: "1", borderRadius: "8px" }}
+        sx={{ flex: "1", borderRadius: "12px" }}
         padding="10px 20px"
         display="flex"
         flexDirection="row"
         justifyContent="center"
         alignItems="center"
       >
-        <FontAwesomeIcon icon={faComments} fontSize="2.3rem" />
+        <FontAwesomeIcon
+          icon={faComments}
+          fontSize="2.3rem"
+          style={{ color: "rgb(77, 115, 252)" }}
+        />
+
         <Box marginLeft="20px">
           <Typography fontSize="1.4rem" fontWeight="400">
             We are Now Available
@@ -38,14 +40,18 @@ const Benefit = () => {
       </Box>
       <Box
         bgcolor="white"
-        sx={{ flex: "1", borderRadius: "8px" }}
+        sx={{ flex: "1", borderRadius: "12px" }}
         padding="10px 20px"
         display="flex"
         flexDirection="row"
         justifyContent="center"
         alignItems="center"
       >
-        <FontAwesomeIcon icon={faPlane} fontSize="2.3rem" />
+        <FontAwesomeIcon
+          icon={faPlane}
+          fontSize="2.3rem"
+          style={{ color: "rgb(77, 115, 252)" }}
+        />
         <Box marginLeft="20px">
           <Typography fontSize="1.4rem" fontWeight="400">
             International Flight
@@ -55,14 +61,18 @@ const Benefit = () => {
       </Box>
       <Box
         bgcolor="white"
-        sx={{ flex: "1", borderRadius: "8px" }}
+        sx={{ flex: "1", borderRadius: "12px" }}
         padding="10px 20px"
         display="flex"
         flexDirection="row"
         justifyContent="center"
         alignItems="center"
       >
-        <FontAwesomeIcon icon={faDollarSign} fontSize="2.3rem" />
+        <FontAwesomeIcon
+          icon={faDollarSign}
+          fontSize="2.3rem"
+          style={{ color: "rgb(77, 115, 252)" }}
+        />
         <Box marginLeft="20px">
           <Typography fontSize="1.4rem" fontWeight="400">
             Check Refund
