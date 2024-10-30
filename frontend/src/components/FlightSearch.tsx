@@ -239,7 +239,7 @@ function FlightSearch() {
         marginBottom="20px"
         sx={{
           backgroundColor: "white",
-          padding: "32px 20px",
+          padding: "10px 20px",
           borderRadius: "8px",
           justifyContent: "space-between",
         }}
@@ -391,7 +391,6 @@ function FlightSearch() {
               bgcolor="rgb(234,234,234)"
               borderRadius="8px"
               p="10px"
-              mt="5px"
               zIndex={1}
               width="100%"
               padding="12px"

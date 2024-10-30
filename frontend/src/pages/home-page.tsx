@@ -13,6 +13,7 @@ import Header from "components/Header";
 import Banner from "components/Banner";
 import FlightSearch from "components/FlightSearch";
 import Benefit from "components/Benefit";
+import LatestFlight from "components/LatestFlight";
 
 const HomePage = () => {
   return (
@@ -22,6 +23,7 @@ const HomePage = () => {
         <Banner />
         <FlightSearch />
         <Benefit />
+        <LatestFlight />
       </Box>
     </Box>
   );
