@@ -20,8 +20,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../css/DatePickerStyles.css";
-import "../css/DropDown.css";
+import "./css/DatePickerStyles.css";
+import "./css/DropDown.css";
 
 function FlightSearch() {
   const [from, setFrom] = useState("");
