@@ -7,6 +7,7 @@ import Benefit from "components/Benefit";
 import LatestFlight from "components/LatestFlight";
 import GlobalTravel from "components/GlobalTravel";
 import Achievement from "components/Achievement";
+import Testimonial from "components/Testimonial";
 
 const HomePage = () => {
   return (
@@ -19,6 +20,7 @@ const HomePage = () => {
         <LatestFlight />
         <GlobalTravel />
         <Achievement />
+        <Testimonial />
       </Box>
     </Box>
   );
