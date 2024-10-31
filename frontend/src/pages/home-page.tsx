@@ -1,19 +1,11 @@
-import {
-  Box,
-  Input,
-  Button,
-  RadioGroup,
-  FormControl,
-  FormControlLabel,
-  Radio,
-  Typography,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import "../styles.css";
 import Header from "components/Header";
 import Banner from "components/Banner";
 import FlightSearch from "components/FlightSearch";
 import Benefit from "components/Benefit";
 import LatestFlight from "components/LatestFlight";
+import GlobalTravel from "components/GlobalTravel";
 
 const HomePage = () => {
   return (
@@ -24,6 +16,7 @@ const HomePage = () => {
         <FlightSearch />
         <Benefit />
         <LatestFlight />
+        <GlobalTravel />
       </Box>
     </Box>
   );

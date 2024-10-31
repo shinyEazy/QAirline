@@ -80,7 +80,7 @@ const LatestFlight = () => {
         alignItems="center"
         mb={3}
       >
-        <Typography fontWeight="600" fontSize="2rem">
+        <Typography fontWeight="600" fontSize="1.7rem">
           Latest Flight Deals
         </Typography>
 
@@ -89,9 +89,9 @@ const LatestFlight = () => {
             onClick={() => sliderRef.current.slickPrev()}
             sx={{
               backgroundColor: "#4D73FC",
-              width: "48px",
-              height: "48px",
-              minWidth: "48px",
+              width: "32px",
+              height: "32px",
+              minWidth: "32px",
               borderRadius: "8px",
               color: "white",
               display: "flex",
@@ -108,9 +108,9 @@ const LatestFlight = () => {
             onClick={() => sliderRef.current.slickNext()}
             sx={{
               backgroundColor: "#4D73FC",
-              width: "48px",
-              height: "48px",
-              minWidth: "48px",
+              width: "32px",
+              height: "32px",
+              minWidth: "32px",
               borderRadius: "8px",
               color: "white",
               display: "flex",
