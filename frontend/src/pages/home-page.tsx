@@ -6,6 +6,7 @@ import FlightSearch from "components/FlightSearch";
 import Benefit from "components/Benefit";
 import LatestFlight from "components/LatestFlight";
 import GlobalTravel from "components/GlobalTravel";
+import Achievement from "components/Achievement";
 
 const HomePage = () => {
   return (
@@ -17,6 +18,7 @@ const HomePage = () => {
         <Benefit />
         <LatestFlight />
         <GlobalTravel />
+        <Achievement />
       </Box>
     </Box>
   );
