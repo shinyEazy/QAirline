@@ -9,6 +9,7 @@ import GlobalTravel from "components/home-page/GlobalTravel";
 import Achievement from "components/home-page/Achievement";
 import Testimonial from "components/home-page/Testimonial";
 import LatestNews from "components/home-page/LatestNews";
+import Footer from "components/home-page/Footer";
 
 const HomePage = () => {
   return (
@@ -24,6 +25,7 @@ const HomePage = () => {
         <Testimonial />
         <LatestNews />
       </Box>
+      <Footer />
     </Box>
   );
 };
