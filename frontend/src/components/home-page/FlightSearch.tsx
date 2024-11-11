@@ -22,8 +22,17 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
 import "./css/DropDown.css";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function FlightSearch() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  const navigate = useNavigate();
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [departing, setDeparting] = useState(new Date());
@@ -496,6 +505,7 @@ function FlightSearch() {
       <Box display="flex" justifyContent="flex-end">
         <Button
           variant="contained"
+          onClick={() => navigate("/flight-listing")}
           sx={{
             backgroundColor: "rgb(77,115,252)",
             padding: "10px 20px",

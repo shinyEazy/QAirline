@@ -26,7 +26,7 @@ const FilterSearch = () => {
       sx={{
         backgroundColor: "white",
         borderRadius: "20px",
-        margin: "20px auto",
+        margin: "40px auto",
         padding: "30px",
         maxWidth: "500px",
         color: "black",

@@ -8,11 +8,12 @@ const SearchResult = () => {
         backgroundColor: "#f5f7fa",
         borderRadius: "16px",
         padding: "20px",
-        margin: "16px 0",
+        margin: "40px auto",
         display: "flex",
         alignItems: "center",
         gap: "16px",
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        justifyContent: "space-between",
       }}
     >
       <Box display="flex" alignItems="center" sx={{ paddingLeft: "16px" }}>
@@ -37,32 +38,27 @@ const SearchResult = () => {
             mx: 1,
           }}
         >
-          {/* Image */}
-          <Box sx={{ position: "relative", textAlign: "center" }}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            sx={{ textAlign: "center" }}
+          >
             <img
-              src="/route-plan.png" // Path to your image in the public folder
+              src="/route-plan.png"
               alt="Route Plan"
               style={{
-                width: "100%", // Adjust width as needed
-                maxWidth: "150px", // Optional, to control max size
+                width: "100%",
+                maxWidth: "150px",
                 height: "auto",
               }}
             />
 
-            {/* Text Below Image */}
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                marginTop: "8px", // Space between image and text
-              }}
-            >
+            <Typography variant="caption" color="text.secondary">
               Bay thẳng
             </Typography>
           </Box>
         </Box>
 
-        {/* Arrival Time and Airport Code */}
         <Box textAlign="center" sx={{ minWidth: "80px" }}>
           <Typography variant="body2">
             <strong>09:10</strong>
@@ -79,7 +75,7 @@ const SearchResult = () => {
         <Typography>Chi tiết hành trình</Typography>
       </Box>
 
-      <Box sx={{ textAlign: "right", width: "30%" }}>
+      <Box sx={{ textAlign: "center" }}>
         <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
           Price: $240
         </Typography>

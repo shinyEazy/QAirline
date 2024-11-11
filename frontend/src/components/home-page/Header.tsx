@@ -24,6 +24,7 @@ const Header = () => {
         <img
           src="/logo.png"
           alt="QAirline Logo"
+          onClick={() => navigate("/")}
           style={{ width: "100%", height: "100%", maxWidth: "200px" }}
         />
       </Box>
