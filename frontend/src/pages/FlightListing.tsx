@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import Header from "components/home-page/Header";
 import FlightSearch from "components/home-page/FlightSearch";
+import FilterSearch from "components/flight-listing/FilterSearch";
 
 const FlightListing = () => {
   return (
@@ -17,6 +18,9 @@ const FlightListing = () => {
         Flight Listing
       </Typography>
       <FlightSearch />
+      <Box>
+        <FilterSearch />
+      </Box>
     </Box>
   );
 };
