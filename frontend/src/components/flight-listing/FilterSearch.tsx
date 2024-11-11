@@ -90,7 +90,39 @@ const FilterSearch = () => {
           sx={{ width: "100%" }}
         />
       </Box>
-
+      <Box>
+        <Typography
+          variant="subtitle1"
+          sx={{ fontWeight: 500, color: "#555", mb: 1 }}
+        >
+          Stops
+        </Typography>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+            },
+            gap: "16px",
+          }}
+        >
+          {[
+            { label: "Any" },
+            { label: "Non-stop" },
+            { label: "1 Stop" },
+            { label: "2 Stop" },
+          ].map(({ label }) => (
+            <Button key={label} sx={buttonStyles}>
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  {label}
+                </Typography>
+              </Box>
+            </Button>
+          ))}
+        </Box>
+      </Box>
       <Box>
         <Typography
           variant="subtitle1"
