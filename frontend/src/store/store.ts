@@ -1,14 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./user/userSlice";
-import websocketReducer from "./websocket/websocketSlice";
-import adminSettingReducer from "./admin/adminSettingSlice";
 
 export const store = configureStore({
-  reducer: {
-    user: userReducer,
-    websocket: websocketReducer,
-    adminSetting: adminSettingReducer,
-  },
+  reducer: {},
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

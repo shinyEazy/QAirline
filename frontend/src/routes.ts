@@ -4,6 +4,7 @@ import Login from "pages/auth/login";
 import Auth from "pages/auth";
 import SignUp from "pages/auth/signup";
 import Recovery from "pages/auth/recovery";
+import FlightListing from "pages/FlightListing";
 
 const routes = [
   {
@@ -28,7 +29,14 @@ const routes = [
     path: "",
     component: HomePage,
   },
-  { path: "*", component: NoFoundPage },
+  {
+    path: "*",
+    component: NoFoundPage,
+  },
+  {
+    path: "/flight-listing",
+    component: FlightListing,
+  },
 ];
 
 export default routes;

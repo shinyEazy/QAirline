@@ -1,5 +1,4 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import onmessageFunction from "./handleOnmessage";
 interface WebsocketState {
   socket: WebSocket | null;
 }
@@ -57,7 +56,6 @@ export const connectWebsocket = createAsyncThunk(
       const socket = await new WebSocket(
         `ws://${process.env.REACT_APP_BACKEND_HOST}/ws/chat/${randomString}/?token=${token}`
       );
-      socket.onmessage = onmessageFunction(getState, dispatch);
       return socket;
     }
     return null;
