@@ -20,8 +20,12 @@ const Header = () => {
       justifyContent="space-between"
       padding="20px 80px"
     >
-      <Box>
-        <Typography variant="h6">QAirline</Typography>
+      <Box display="flex" alignItems="center" gap="8px">
+        <img
+          src="/logo.png"
+          alt="QAirline Logo"
+          style={{ width: "100%", height: "100%", maxWidth: "200px" }}
+        />
       </Box>
       <Box display="flex" gap="10px">
         <Button
