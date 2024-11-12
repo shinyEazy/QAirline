@@ -3,6 +3,7 @@ import Header from "components/home-page/Header";
 import FlightSearch from "components/home-page/FlightSearch";
 import FilterSearch from "components/flight-listing/FilterSearch";
 import SearchResult from "components/flight-listing/SearchResult";
+import Footer from "components/home-page/Footer";
 
 const FlightListing = () => {
   return (
@@ -23,7 +24,7 @@ const FlightListing = () => {
         display="flex"
         gap="40px"
         sx={{
-          margin: "20px 80px",
+          margin: "20px 80px 80px",
         }}
       >
         <Box
@@ -42,6 +43,7 @@ const FlightListing = () => {
           <SearchResult />
         </Box>
       </Box>
+      <Footer />
     </Box>
   );
 };
