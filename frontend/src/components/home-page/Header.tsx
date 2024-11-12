@@ -18,7 +18,13 @@ const Header = () => {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      padding="20px 80px"
+      padding="10px 80px"
+      position="sticky"
+      sx={{
+        backgroundColor: "#ffffff", // Set a background color for visibility
+        top: 0,
+        zIndex: 1100, // Ensure it stays above other content
+      }}
     >
       <Box display="flex" alignItems="center" gap="8px">
         <img
