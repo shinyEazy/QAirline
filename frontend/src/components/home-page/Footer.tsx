@@ -19,9 +19,13 @@ const Footer = () => {
       }}
     >
       <Box flex={2}>
-        <Typography variant="h3" marginBottom="10px">
-          QAirline
-        </Typography>
+        <Box display="flex" alignItems="center" gap="8px">
+          <img
+            src="/logo.png"
+            alt="QAirline Logo"
+            style={{ width: "100%", height: "100%", maxWidth: "200px" }}
+          />
+        </Box>
         <Typography marginBottom="10px">
           The customer is very happy to be followed. Aqueet vulputate augue
           penatibus in libero and some of that. The performance is ridiculously
