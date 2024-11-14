@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import Step from "components/flight-booking/Step";
+import UserDetail from "components/flight-booking/UserDetail";
 
 const FlightBooking = () => {
   return (
@@ -31,6 +32,7 @@ const FlightBooking = () => {
           }}
         >
           <Step />
+          <UserDetail />
         </Box>
         <Box
           sx={{
