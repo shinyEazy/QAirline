@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import Step from "components/flight-booking/Step";
@@ -35,6 +35,17 @@ const FlightBooking = () => {
         >
           <Step />
           <UserDetail />
+          <Button
+            fullWidth
+            sx={{
+              marginTop: "40px",
+              backgroundColor: "blue",
+              borderRadius: "8px",
+              color: "white",
+            }}
+          >
+            Next
+          </Button>
         </Box>
         <Box
           sx={{
