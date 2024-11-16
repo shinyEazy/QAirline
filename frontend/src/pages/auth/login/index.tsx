@@ -111,7 +111,7 @@ const Login = () => {
               underline="none"
               sx={{
                 color: "#1e90ff",
-                fontSize: "0.95rem",
+                fontSize: "1rem",
                 "&:hover": { textDecoration: "underline" },
               }}
             >
