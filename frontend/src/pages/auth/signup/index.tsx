@@ -163,14 +163,14 @@ const SignUp = () => {
               variant="contained"
               sx={{
                 marginTop: "16px",
-                backgroundColor: "#1e90ff",
+                background: "linear-gradient(to right, #1e90ff, #87ceeb)",
                 borderRadius: "12px",
                 textTransform: "none",
                 padding: "8px",
                 color: "#ffffff",
                 fontWeight: "500",
                 "&:hover": {
-                  backgroundColor: "#4682b4",
+                  background: "linear-gradient(to right, #1c86ee, #4682b4)",
                   boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
                   transform: "translateY(-2px)",
                   transition: "all 0.3s ease",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Box,
@@ -15,12 +15,13 @@ const Recovery = () => {
 
   return (
     <Grid container style={{ minHeight: "100vh" }}>
+      {/* Left Section */}
       <Grid
         item
         xs={12}
         md={6}
         style={{
-          backgroundColor: "#fff",
+          background: "linear-gradient(to bottom, #87ceeb, #1e90ff)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -32,91 +33,102 @@ const Recovery = () => {
           padding={3}
           width="100%"
           maxWidth={450}
+          bgcolor="#ffffff"
+          borderRadius="12px"
+          boxShadow="0 4px 20px rgba(0, 0, 0, 0.1)"
         >
-          {" "}
           <IconButton
             onClick={() => navigate("/auth/login")}
             edge="start"
-            sx={{ width: "48px", marginBottom: "20px" }}
+            sx={{
+              width: "48px",
+              marginBottom: "20px",
+              color: "#1e90ff",
+              "&:hover": { backgroundColor: "#e6f7ff" },
+            }}
           >
             <ArrowBack />
           </IconButton>
-          <Box
-            alignItems="start"
-            display="flex"
-            style={{ alignItems: "center" }}
+          <Typography
+            variant="h4"
+            gutterBottom
+            fontWeight="500"
+            color="primary"
           >
-            <Typography variant="h4" fontWeight="400" fontSize="2.3rem">
-              Reset password
-            </Typography>
-          </Box>
+            Reset Password
+          </Typography>
+          <Typography variant="body2" color="textSecondary" mb={3}>
+            Enter your email address, and we'll send you a link to reset your
+            password.
+          </Typography>
           <Box component="form" noValidate mt={2}>
             <TextField
               fullWidth
               label="Email address"
               variant="outlined"
               sx={{
-                margin: "auto",
+                margin: "10px auto",
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "8px",
-                  "& fieldset": {
-                    borderColor: "#bdbdbd",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "black",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "rgb(99,91,255)",
-                  },
+                  "& fieldset": { borderColor: "#b0c4de" },
+                  "&:hover fieldset": { borderColor: "#1e90ff" },
+                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
                 },
               }}
             />
             <Button
               fullWidth
               variant="contained"
-              color="primary"
               sx={{
                 marginTop: "16px",
-                backgroundColor: "rgb(99, 91, 255)",
+                background: "linear-gradient(to right, #1e90ff, #87ceeb)",
                 borderRadius: "12px",
                 textTransform: "none",
                 padding: "8px",
+                color: "#ffffff",
+                fontWeight: "500",
                 "&:hover": {
-                  backgroundColor: "rgb(78, 54, 245)",
-                  boxShadow: "none",
-                  transition: "transform 0.3s ease, background-color 0.3s ease",
+                  background: "linear-gradient(to right, #1c86ee, #4682b4)",
+                  boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+                  transform: "translateY(-2px)",
+                  transition: "all 0.3s ease",
                 },
               }}
             >
-              Send recovery link
+              Send Recovery Link
             </Button>
           </Box>
         </Box>
       </Grid>
 
+      {/* Right Section */}
       <Grid
         item
         xs={12}
         md={6}
         style={{
-          backgroundColor: "#1c1c2b",
+          backgroundColor: "#f0f8ff",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          color: "#fff",
+          color: "#1e90ff",
+          flexDirection: "column",
+          padding: "20px",
         }}
       >
-        <Box textAlign="center" padding={3}>
-          <Typography variant="h4" gutterBottom>
-            Welcome to QAirline
-          </Typography>
-
-          <img
-            src="https://via.placeholder.com/400"
-            alt="tmp"
-            style={{ marginTop: "20px", borderRadius: "8px", maxWidth: "80%" }}
-          />
-        </Box>
+        <Typography variant="h3" sx={{ fontWeight: "500" }}>
+          Welcome to
+        </Typography>
+        <img
+          src="/logo2.png"
+          style={{ width: "100%", maxWidth: "400px" }}
+          alt="Brand Logo"
+        />
+        <img
+          src="/globe.png"
+          alt="World Illustration"
+          style={{ marginTop: "20px", borderRadius: "8px", maxWidth: "80%" }}
+        />
       </Grid>
     </Grid>
   );
