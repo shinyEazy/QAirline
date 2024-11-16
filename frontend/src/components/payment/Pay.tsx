@@ -56,7 +56,7 @@ const Pay = () => {
               borderRadius: "12px",
             }}
           >
-            QR Code here
+            <img src="qr.png" />
           </Box>
         </Collapse>
       </RadioGroup>

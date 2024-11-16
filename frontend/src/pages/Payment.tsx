@@ -5,8 +5,18 @@ import Step from "components/payment/Step";
 import BookingDetail from "components/flight-booking/BookingDetail";
 import Price from "components/flight-booking/Price";
 import Pay from "components/payment/Pay";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const Payment = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <Box>
       <Header />
@@ -37,6 +47,7 @@ const Payment = () => {
           <Pay />
           <Box display="flex" gap="40px" marginTop="40px">
             <Button
+              onClick={() => navigate("/flight-booking")}
               fullWidth
               sx={{
                 backgroundColor: "blue",
@@ -47,6 +58,7 @@ const Payment = () => {
               Back
             </Button>
             <Button
+              onClick={() => navigate("/")}
               fullWidth
               sx={{
                 backgroundColor: "blue",

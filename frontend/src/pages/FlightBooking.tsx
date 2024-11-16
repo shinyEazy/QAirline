@@ -5,8 +5,19 @@ import Step from "components/flight-booking/Step";
 import UserDetail from "components/flight-booking/UserDetail";
 import BookingDetail from "components/flight-booking/BookingDetail";
 import Price from "components/flight-booking/Price";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const FlightBooking = () => {
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <div>
       <Header />
@@ -36,6 +47,7 @@ const FlightBooking = () => {
           <Step />
           <UserDetail />
           <Button
+            onClick={() => navigate("/payment")}
             fullWidth
             sx={{
               marginTop: "40px",
