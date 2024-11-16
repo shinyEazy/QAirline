@@ -1,8 +1,10 @@
 import { Box, Typography, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const Step = () => {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -17,6 +19,7 @@ const Step = () => {
     >
       <Box width="100%" display="flex" alignItems="center">
         <FontAwesomeIcon
+          onClick={() => navigate("/flight-listing")}
           icon={faCircleCheck}
           style={{ color: "rgb(77,115,252)", fontSize: "40px" }}
         />

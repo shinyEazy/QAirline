@@ -1,8 +1,18 @@
 import { Box, Typography, Button, Divider, Collapse } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const SearchResult = () => {
   const [expandedDetails, setExpandedDetails] = useState({});
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+  const navigate = useNavigate();
 
   const toggleDetails = (id) => {
     setExpandedDetails((prev) => ({
@@ -142,6 +152,10 @@ const SearchResult = () => {
                 Price: {flight.price}
               </Typography>
               <Button
+                onClick={() => {
+                  navigate("/flight-booking");
+                  window.scrollTo(0, 0);
+                }}
                 variant="contained"
                 color="primary"
                 sx={{
