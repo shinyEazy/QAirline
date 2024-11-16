@@ -35,6 +35,28 @@ const Payment = () => {
         >
           <Step />
           <Pay />
+          <Box display="flex" gap="40px" marginTop="40px">
+            <Button
+              fullWidth
+              sx={{
+                backgroundColor: "blue",
+                borderRadius: "8px",
+                color: "white",
+              }}
+            >
+              Back
+            </Button>
+            <Button
+              fullWidth
+              sx={{
+                backgroundColor: "blue",
+                borderRadius: "8px",
+                color: "white",
+              }}
+            >
+              Submit
+            </Button>
+          </Box>
         </Box>
         <Box
           sx={{
