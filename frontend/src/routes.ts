@@ -6,6 +6,8 @@ import SignUp from "pages/auth/signup";
 import Recovery from "pages/auth/recovery";
 import FlightListing from "pages/FlightListing";
 import FlightBooking from "pages/FlightBooking";
+import Payment from "pages/Payment";
+import { Component } from "react";
 
 const routes = [
   {
@@ -41,6 +43,10 @@ const routes = [
   {
     path: "/flight-booking",
     component: FlightBooking,
+  },
+  {
+    path: "/payment",
+    component: Payment,
   },
 ];
 
