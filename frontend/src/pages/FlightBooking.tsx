@@ -3,8 +3,8 @@ import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import Step from "components/flight-booking/Step";
 import UserDetail from "components/flight-booking/UserDetail";
-import FlightDetail from "components/flight-booking/BookingDetail";
 import BookingDetail from "components/flight-booking/BookingDetail";
+import Price from "components/flight-booking/Price";
 
 const FlightBooking = () => {
   return (
@@ -43,6 +43,7 @@ const FlightBooking = () => {
           }}
         >
           <BookingDetail />
+          <Price />
         </Box>
       </Box>
       <Footer />
