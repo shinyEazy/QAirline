@@ -1,17 +1,91 @@
 import React, { useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
 
-  const [itemHovered, setItemHovered] = useState(false);
-  const [flightHovered, setFlightHovered] = useState(false);
-  const [carHovered, setCarHovered] = useState(false);
-  const [hotelHovered, setHotelHovered] = useState(false);
-  const [pagesHovered, setPagesHovered] = useState(false);
-  const [newsHovered, setNewsHovered] = useState(false);
+  const menuItems = [
+    {
+      label: "Flight",
+      subItems: [
+        { label: "Flight Listing", path: "/flight-listing" },
+        { label: "Flight Booking", path: "/flight-booking" },
+      ],
+    },
+    {
+      label: "Car",
+      subItems: [
+        { label: "Car Listing", path: "/car-listing" },
+        { label: "Car Booking", path: "/car-booking" },
+        { label: "Car Detail", path: "/car-detail" },
+      ],
+    },
+    {
+      label: "Hotel",
+      subItems: [
+        { label: "Hotel Listing", path: "/hotel-listing" },
+        { label: "Hotel Booking", path: "/hotel-booking" },
+        { label: "Hotel Detail", path: "/hotel-detail" },
+      ],
+    },
+    {
+      label: "Pages",
+      subItems: [
+        { label: "About", path: "/about" },
+        { label: "Contact", path: "/contact" },
+        { label: "Privacy Policy", path: "/privacy-policy" },
+        { label: "Login", path: "/auth/login" },
+        { label: "Sign Up", path: "/auth/signup" },
+      ],
+    },
+    {
+      label: "News",
+      subItems: [
+        { label: "News Listing", path: "/news-listing" },
+        { label: "News Detail", path: "/news-detail" },
+      ],
+    },
+  ];
+
+  const buttonStyles = {
+    color: "black",
+    fontWeight: "500",
+    fontSize: "1.2rem",
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: "inherit",
+      color: "#1e90ff",
+      transition: "0.3s ease-in-out",
+    },
+  };
+
+  const subMenuStyles = {
+    position: "absolute",
+    left: "0",
+    bgcolor: "rgb(230, 238, 245)",
+    borderRadius: "8px",
+    padding: "10px",
+    mt: "5px",
+    zIndex: 1,
+    width: "200px",
+    margin: "0",
+  };
+
+  const handleMouseEnter = (menu: string) => setHoveredMenu(menu);
+  const handleMouseLeave = () => setHoveredMenu(null);
+
+  const isActive = (path: string) => location.pathname === path;
+
+  const getMenuItemColor = (menuLabel: string) => {
+    if (location.pathname.includes(menuLabel.toLowerCase())) {
+      return "#1e90ff";
+    }
+    return "black";
+  };
 
   return (
     <Box
@@ -21,600 +95,108 @@ const Header = () => {
       padding="10px 80px"
       position="sticky"
       sx={{
-        backgroundColor: "#ffffff", // Set a background color for visibility
+        backgroundColor: "#ffffff",
         top: 0,
-        zIndex: 1100, // Ensure it stays above other content
+        zIndex: 1100,
       }}
     >
+      {/* Logo */}
       <Box display="flex" alignItems="center" gap="8px">
         <img
           src="/logo.png"
           alt="QAirline Logo"
           onClick={() => navigate("/")}
-          style={{ width: "100%", height: "100%", maxWidth: "200px" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            maxWidth: "200px",
+            cursor: "pointer",
+          }}
         />
       </Box>
+
+      {/* Main Menu */}
       <Box display="flex" gap="10px">
         <Button
           sx={{
-            color: "rgb(77,115,252)",
-            fontWeight: "500",
-            fontSize: "1.2rem",
-            textTransform: "none",
-            "&:hover": { backgroundColor: "inherit" },
+            ...buttonStyles,
+            color: isActive("/") ? "#1e90ff" : "black",
           }}
+          onClick={() => navigate("/")}
         >
           Home
         </Button>
-        <Box
-          onMouseEnter={() => setFlightHovered(true)}
-          onMouseLeave={() => setFlightHovered(false)}
-          position="relative"
-        >
-          <Button
-            sx={{
-              color: flightHovered ? "rgb(77,115,252)" : "black",
-              fontWeight: "500",
-              fontSize: "1.2rem",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "inherit",
-                color: "rgb(77,115,252)",
-                transition: "0.3s ease in out",
-              },
-            }}
+
+        {menuItems.map((menu) => (
+          <Box
+            key={menu.label}
+            onMouseEnter={() => handleMouseEnter(menu.label)}
+            onMouseLeave={handleMouseLeave}
+            position="relative"
           >
-            Flight
-          </Button>
-          {flightHovered && (
-            <Box
-              position="absolute"
-              left="0"
-              bgcolor="rgb(244, 244, 244)"
-              borderRadius="8px"
-              p="10px"
-              mt="5px"
-              zIndex={1}
-              width="200px"
-              margin="0"
+            <Button
+              sx={{
+                ...buttonStyles,
+                color: getMenuItemColor(menu.label),
+              }}
             >
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Flight Listing
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Flight Booking
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-            </Box>
-          )}
-        </Box>
-        <Box
-          onMouseEnter={() => setCarHovered(true)}
-          onMouseLeave={() => setCarHovered(false)}
-          position="relative"
-        >
-          <Button
-            sx={{
-              color: carHovered ? "rgb(77,115,252)" : "black",
-              fontWeight: "500",
-              fontSize: "1.2rem",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "inherit",
-                color: "rgb(77,115,252)",
-                transition: "0.3s ease in out",
-              },
-            }}
-          >
-            Car
-          </Button>
-          {carHovered && (
-            <Box
-              position="absolute"
-              left="0"
-              bgcolor="rgb(244, 244, 244)"
-              borderRadius="8px"
-              p="10px"
-              mt="5px"
-              zIndex={1}
-              width="200px"
-              margin="0"
-            >
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Car Listing
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Car Booking
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Car Detail
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-            </Box>
-          )}
-        </Box>
-        <Box
-          onMouseEnter={() => setHotelHovered(true)}
-          onMouseLeave={() => setHotelHovered(false)}
-          position="relative"
-        >
-          <Button
-            sx={{
-              color: hotelHovered ? "rgb(77,115,252)" : "black",
-              fontWeight: "500",
-              fontSize: "1.2rem",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "inherit",
-                color: "rgb(77,115,252)",
-                transition: "0.3s ease in out",
-              },
-            }}
-          >
-            Hotel
-          </Button>
-          {hotelHovered && (
-            <Box
-              position="absolute"
-              left="0"
-              bgcolor="rgb(244, 244, 244)"
-              borderRadius="8px"
-              p="10px"
-              mt="5px"
-              zIndex={1}
-              width="200px"
-              margin="0"
-            >
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Hotel Listing
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Hotel Booking
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Hotel Detail
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-            </Box>
-          )}
-        </Box>
+              {menu.label}
+            </Button>
+            {hoveredMenu === menu.label && (
+              <Box sx={subMenuStyles}>
+                {menu.subItems.map((subItem, index) => {
+                  const isActiveSubItem = location.pathname === subItem.path;
+                  return (
+                    <Button
+                      key={index}
+                      onClick={() => navigate(subItem.path)}
+                      sx={{
+                        margin: "4px auto",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                        color: isActiveSubItem ? "#1e90ff" : "black",
+                        backgroundColor: "transparent",
+                        borderRadius: "4px",
+                        textTransform: "none",
+                        "&:hover": {
+                          backgroundColor: "rgb(77,115,252)",
+                          color: "white",
+                        },
+                        padding: "8px 12px",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      {subItem.label}
+                      <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
+                    </Button>
+                  );
+                })}
+              </Box>
+            )}
+          </Box>
+        ))}
+
         <Button
           sx={{
-            color: "black",
-            fontWeight: "500",
-            fontSize: "1.2rem",
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "inherit",
-              color: "rgb(77,115,252)",
-              transition: "0.3s ease in out",
-            },
+            ...buttonStyles,
+            color: location.pathname.includes("/tour-packages")
+              ? "#1e90ff"
+              : "black",
           }}
+          onClick={() => navigate("/tour-packages")}
         >
           Tour Package
         </Button>
-        <Box
-          onMouseEnter={() => setPagesHovered(true)}
-          onMouseLeave={() => setPagesHovered(false)}
-          position="relative"
-        >
-          <Button
-            sx={{
-              color: pagesHovered ? "rgb(77,115,252)" : "black",
-              fontWeight: "500",
-              fontSize: "1.2rem",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "inherit",
-                color: "rgb(77,115,252)",
-                transition: "0.3s ease in out",
-              },
-            }}
-          >
-            Pages
-          </Button>
-          {pagesHovered && (
-            <Box
-              position="absolute"
-              left="0"
-              bgcolor="rgb(244, 244, 244)"
-              borderRadius="8px"
-              p="10px"
-              mt="5px"
-              zIndex={1}
-              width="200px"
-              margin="0"
-            >
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                About
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Contact
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Privacy Policy
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onClick={() => navigate("/auth/login")}
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Login
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onClick={() => navigate("/auth/signup")}
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                Sign Up
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-            </Box>
-          )}
-        </Box>
-        <Box
-          onMouseEnter={() => setNewsHovered(true)}
-          onMouseLeave={() => setNewsHovered(false)}
-          position="relative"
-        >
-          <Button
-            sx={{
-              color: newsHovered ? "rgb(77,115,252)" : "black",
-              fontWeight: "500",
-              fontSize: "1.2rem",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "inherit",
-                color: "rgb(77,115,252)",
-                transition: "0.3s ease in out",
-              },
-            }}
-          >
-            News
-          </Button>
-          {newsHovered && (
-            <Box
-              position="absolute"
-              left="0"
-              bgcolor="rgb(244, 244, 244)"
-              borderRadius="8px"
-              p="10px"
-              mt="5px"
-              zIndex={1}
-              width="200px"
-              margin="0"
-            >
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                News Listing
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-              <Button
-                onMouseEnter={() => setItemHovered(true)}
-                onMouseLeave={() => setItemHovered(false)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                  color: "black",
-                  backgroundColor: "transparent",
-                  borderRadius: "4px",
-                  textTransform: "none",
-                  "&:hover": {
-                    backgroundColor: "rgb(77,115,252)",
-                    color: "white",
-                  },
-                  padding: "8px 12px",
-                  fontSize: "1rem",
-                }}
-              >
-                News Detail
-                <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-              </Button>
-            </Box>
-          )}
-        </Box>
       </Box>
+
+      {/* Authentication Links */}
       <Box display="flex" gap="10px">
-        <Button
-          onClick={() => navigate("/auth/login")}
-          sx={{
-            color: "black",
-            fontWeight: "500",
-            fontSize: "1.2rem",
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "inherit",
-              color: "rgb(77,115,252)",
-              transition: "0.3s ease in out",
-            },
-          }}
-        >
+        <Button sx={buttonStyles} onClick={() => navigate("/auth/login")}>
           Login
         </Button>
-        <Button
-          onClick={() => navigate("/auth/signup")}
-          sx={{
-            color: "black",
-            fontWeight: "500",
-            fontSize: "1.2rem",
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "inherit",
-              color: "rgb(77,115,252)",
-              transition: "0.3s ease in out",
-            },
-          }}
-        >
+        <Button sx={buttonStyles} onClick={() => navigate("/auth/signup")}>
           Signup
         </Button>
       </Box>

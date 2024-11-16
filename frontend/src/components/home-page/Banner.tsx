@@ -4,9 +4,9 @@ const Banner = () => {
   return (
     <Box>
       <img
-        src="https://www.vietnamairlines.com/~/media/8E433D91E88A40B4B139B3616BD64F5C.ashx"
+        src="/banner.png"
         width="100%"
-        height="300px"
+        height="320px"
         alt="Banner"
         style={{ objectFit: "cover" }}
       />
