@@ -56,10 +56,13 @@ const Header = () => {
     fontWeight: "500",
     fontSize: "1.2rem",
     textTransform: "none",
+    padding: "4px 20px",
+    borderRadius: "100px",
+    transition: "color 0.3s ease-in-out, transform 0.3s ease-in-out",
     "&:hover": {
       backgroundColor: "inherit",
       color: "#1e90ff",
-      transition: "0.3s ease-in-out",
+      transform: "translateY(-4px)",
     },
   };
 
@@ -196,7 +199,26 @@ const Header = () => {
         <Button sx={buttonStyles} onClick={() => navigate("/auth/login")}>
           Login
         </Button>
-        <Button sx={buttonStyles} onClick={() => navigate("/auth/signup")}>
+        <Button
+          sx={{
+            color: "white",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            textTransform: "none",
+            backgroundColor: "#1e90ff",
+            borderRadius: "100px",
+            padding: "4px 20px",
+            transition:
+              "background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out",
+            "&:hover": {
+              backgroundColor: "#2177cb",
+              color: "white",
+              transform: "scale(1.05)",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            },
+          }}
+          onClick={() => navigate("/auth/signup")}
+        >
           Signup
         </Button>
       </Box>
