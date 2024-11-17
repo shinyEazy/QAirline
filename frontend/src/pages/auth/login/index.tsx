@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Grid,
   Box,
   Typography,
   TextField,
@@ -17,19 +16,41 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Link as RouterLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import "../login/login.css";
 
 const Login = () => {
-  const navigate = useNavigate();
+  const [checked, setChecked] = React.useState(false);
+  const [isRightPanelActive, setIsRightPanelActive] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
 
+  const handleChange = (event: any) => {
+    setChecked(event.target.checked);
+  };
+
+  const handleRegisterClick = () => {
+    setIsRightPanelActive(true);
+  };
+
+  const handleLoginClick = () => {
+    setIsRightPanelActive(false);
+  };
+
   return (
-    <Grid container style={{ minHeight: "100vh" }}>
-      {/* Background Video */}
+    <div
+      className={`container ${isRightPanelActive ? "right-panel-active" : ""}`}
+      id="container"
+      style={{
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <video
         autoPlay
         loop
@@ -47,42 +68,222 @@ const Login = () => {
         <source src="/live.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      {/* Left Section with Video Background */}
-      <Grid
-        item
-        xs={12}
-        md={6}
-        style={{
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden",
-          backgroundColor: "#f8f8f2",
-        }}
-      >
-        {/* Content Box */}
+
+      {/* Register Form */}
+      <div className="form-container register-container">
         <Box
           display="flex"
           flexDirection="column"
           padding={3}
           width="100%"
-          maxWidth={450}
-          bgcolor="rgba(255, 255, 255, 0.85)"
-          borderRadius="12px"
-          boxShadow="0 4px 20px rgba(0, 0, 0, 0.1)"
+          height="100%"
+          bgcolor="#f8f8f2"
+          justifyContent="center"
+          alignItems="center"
         >
-          <Box display="flex" justifyContent="center" mb={2}>
-            <Typography
-              variant="h3"
-              gutterBottom
-              fontWeight="500"
-              color="primary"
-            >
-              Login
-            </Typography>
-          </Box>
           <Box component="form" noValidate>
+            <Box display="flex" justifyContent="center" mb={2}>
+              <Typography variant="h3" fontWeight="500" color="#1e90ff">
+                Sign up
+              </Typography>
+            </Box>
+            <TextField
+              fullWidth
+              label="First name"
+              variant="outlined"
+              sx={{
+                margin: "10px auto",
+                backgroundColor: "#f0f8ff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": { borderColor: "#b0c4de" },
+                  "&:hover fieldset": { borderColor: "#1e90ff" },
+                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                },
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Last name"
+              variant="outlined"
+              sx={{
+                margin: "10px auto",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  backgroundColor: "#f0f8ff",
+                  "& fieldset": { borderColor: "#b0c4de" },
+                  "&:hover fieldset": { borderColor: "#1e90ff" },
+                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                },
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Email address"
+              variant="outlined"
+              sx={{
+                margin: "10px auto",
+                backgroundColor: "#f0f8ff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": { borderColor: "#b0c4de" },
+                  "&:hover fieldset": { borderColor: "#1e90ff" },
+                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                },
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Password"
+              variant="outlined"
+              type="password"
+              sx={{
+                margin: "10px auto",
+                backgroundColor: "#f0f8ff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": { borderColor: "#b0c4de" },
+                  "&:hover fieldset": { borderColor: "#1e90ff" },
+                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                },
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Confirm password"
+              variant="outlined"
+              margin="normal"
+              type="password"
+              sx={{
+                margin: "10px auto",
+                backgroundColor: "#f0f8ff",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                  "& fieldset": { borderColor: "#b0c4de" },
+                  "&:hover fieldset": { borderColor: "#1e90ff" },
+                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                },
+              }}
+            />
+            <Box width="100%" display="flex" justifyContent="start">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    color="primary"
+                  />
+                }
+                label={
+                  <span>
+                    I have read the{" "}
+                    <Link
+                      href="#"
+                      underline="none"
+                      sx={{
+                        color: "#1e90ff",
+                        fontSize: "1rem",
+                        "&:hover": { textDecoration: "underline" },
+                      }}
+                    >
+                      terms and conditions
+                    </Link>
+                  </span>
+                }
+              />
+            </Box>
+            <Box display="flex" justifyContent="center" width="100%">
+              {" "}
+              <Button
+                className="auth-button"
+                variant="contained"
+                sx={{
+                  marginTop: "20px",
+                  width: "60%",
+                  position: "relative",
+                  padding: "12px 24px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                  fontSize: "1rem",
+                  color: "#ffffff",
+                  background: "linear-gradient(to right, #1e90ff, #87ceeb)",
+                  border: "2px solid transparent",
+                  borderRadius: "50px",
+                  overflow: "hidden",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    background: "linear-gradient(to right, #1c86ee, #4682b4)",
+                    transform: "scale(1.05)",
+                    "&::after": {
+                      transform: "translateX(0)",
+                      opacity: 1,
+                    },
+                  },
+                }}
+              >
+                Sign up
+              </Button>
+            </Box>
+
+            <Typography
+              textAlign="center"
+              marginTop={3}
+              color="textSecondary"
+              fontSize="1rem"
+            >
+              or use your account
+            </Typography>
+            <Box display="flex" justifyContent="center" gap={2} marginTop={2}>
+              <IconButton
+                sx={{
+                  backgroundColor: "#3b5998",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#2d4373" },
+                }}
+              >
+                <FacebookIcon />
+              </IconButton>
+              <IconButton
+                sx={{
+                  backgroundColor: "#db4437",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#a33327" },
+                }}
+              >
+                <GoogleIcon />
+              </IconButton>
+              <IconButton
+                sx={{
+                  backgroundColor: "#0077b5",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#005582" },
+                }}
+              >
+                <LinkedInIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
+      </div>
+
+      {/* Login Form */}
+      <div className="form-container login-container">
+        <Box
+          display="flex"
+          flexDirection="column"
+          padding={3}
+          width="100%"
+          height="100%"
+          bgcolor="#f8f8f2"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box component="form" noValidate>
+            <Box display="flex" justifyContent="center" mb={2}>
+              <Typography variant="h3" fontWeight="500" color="#1e90ff">
+                Login
+              </Typography>
+            </Box>
             <TextField
               fullWidth
               label="Email"
@@ -130,12 +331,11 @@ const Login = () => {
               }}
             />
 
-            {/* Remember Me and Forgot Password Row */}
             <Box
+              width="100%"
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              mt={1}
             >
               <FormControlLabel
                 control={<Checkbox color="primary" />}
@@ -154,7 +354,7 @@ const Login = () => {
                 Forgot password?
               </Link>
             </Box>
-            <Box display="flex" justifyContent="center">
+            <Box display="flex" justifyContent="center" width="100%">
               <Button
                 variant="contained"
                 sx={{
@@ -184,139 +384,193 @@ const Login = () => {
                 Login
               </Button>
             </Box>
-          </Box>
-
-          {/* Divider */}
-          <Typography
-            textAlign="center"
-            marginTop={3}
-            color="textSecondary"
-            fontSize="1rem"
-          >
-            or use your account
-          </Typography>
-
-          {/* Social Login Icons */}
-          <Box display="flex" justifyContent="center" gap={2} marginTop={2}>
-            <IconButton
-              sx={{
-                backgroundColor: "#3b5998",
-                color: "#fff",
-                "&:hover": { backgroundColor: "#2d4373" },
-              }}
-            >
-              <FacebookIcon />
-            </IconButton>
-            <IconButton
-              sx={{
-                backgroundColor: "#db4437",
-                color: "#fff",
-                "&:hover": { backgroundColor: "#a33327" },
-              }}
-            >
-              <GoogleIcon />
-            </IconButton>
-            <IconButton
-              sx={{
-                backgroundColor: "#0077b5",
-                color: "#fff",
-                "&:hover": { backgroundColor: "#005582" },
-              }}
-            >
-              <LinkedInIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        md={6}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "white",
-          flexDirection: "column",
-          padding: "20px",
-        }}
-      >
-        <Box textAlign="center" mt={4}>
-          <Typography
-            variant="h2"
-            sx={{
-              fontWeight: "500",
-              color: "#ffffff",
-              textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
-              mb: 2,
-            }}
-          >
-            Start your
             <Typography
+              textAlign="center"
+              marginTop={3}
+              color="textSecondary"
+              fontSize="1rem"
+            >
+              or use your account
+            </Typography>
+            <Box display="flex" justifyContent="center" gap={2} marginTop={2}>
+              <IconButton
+                sx={{
+                  backgroundColor: "#3b5998",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#2d4373" },
+                }}
+              >
+                <FacebookIcon />
+              </IconButton>
+              <IconButton
+                sx={{
+                  backgroundColor: "#db4437",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#a33327" },
+                }}
+              >
+                <GoogleIcon />
+              </IconButton>
+              <IconButton
+                sx={{
+                  backgroundColor: "#0077b5",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#005582" },
+                }}
+              >
+                <LinkedInIcon />
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
+      </div>
+
+      {/* Overlay */}
+      <div className="overlay-container">
+        <div className="overlay">
+          <div className="overlay-panel overlay-left">
+            <Typography
+              marginBottom={2}
               variant="h2"
-              component="span"
               sx={{
-                display: "block",
-                fontWeight: "inherit",
-                color: "inherit",
-                textShadow: "inherit",
+                fontWeight: "500",
+                color: "#ffffff",
               }}
             >
-              journey now
+              Hello friends
             </Typography>
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "rgba(255, 255, 255, 0.85)",
-              textShadow: "1px 1px 3px rgba(0, 0, 0, 0.5)",
-              mb: 3,
-            }}
-          >
-            If you don't have an account yet, join us
-            <span style={{ display: "block" }}>and start your journey</span>
-          </Typography>
-          <Button
-            onClick={() => navigate("/auth/signup")}
-            sx={{
-              width: "300px",
-              position: "relative",
-              padding: "12px 24px",
-              textTransform: "none",
-              fontWeight: "500",
-              fontSize: "1rem",
-              color: "#ffffff",
-              background: "rgba(255, 255, 255, 0.2)",
-              border: "2px solid #ffffff",
-              borderRadius: "50px",
-              overflow: "hidden",
-              transition: "all 0.3s ease-in-out",
-              "&:hover": {
-                background: "rgba(255, 255, 255, 0.3)",
-                transform: "scale(1.05)",
-                "&::after": {
-                  transform: "translateX(0)",
-                  opacity: 1,
-                },
-              },
-              "&::after": {
-                content: "'→'",
-                position: "absolute",
-                right: "32px",
-                bottom: "2px",
-                opacity: 0,
-                transform: "translateX(-10px)",
+            <Typography
+              variant="body1"
+              sx={{
+                color: "white",
+              }}
+            >
+              If you already have an account, login
+              <span style={{ display: "block", marginTop: "10px" }}>
+                here and have fun
+              </span>
+            </Typography>
+            <Button
+              onClick={handleLoginClick}
+              className="ghost"
+              sx={{
+                marginTop: "20px",
+                width: "300px",
+                position: "relative",
+                padding: "12px 24px",
+                textTransform: "none",
+                fontWeight: "500",
+                fontSize: "1rem",
+                color: "#ffffff",
+                background: "rgba(255, 255, 255, 0.2)",
+                border: "2px solid #ffffff",
+                borderRadius: "50px",
+                overflow: "hidden",
                 transition: "all 0.3s ease-in-out",
-                fontSize: "1.9rem",
-                fontWeight: "bold",
-              },
-            }}
-          >
-            Sign up
-          </Button>
-        </Box>
-      </Grid>
-    </Grid>
+                "&:hover": {
+                  background: "rgba(255, 255, 255, 0.3)",
+                  transform: "scale(1.05)",
+                  "&::after": {
+                    transform: "translateX(0)",
+                    opacity: 1,
+                  },
+                },
+                "&::after": {
+                  content: "'←'",
+                  position: "absolute",
+                  left: "32px",
+                  bottom: "2px",
+                  opacity: 0,
+                  transform: "translateX(-10px)",
+                  transition: "all 0.3s ease-in-out",
+                  fontSize: "1.9rem",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              Login
+            </Button>
+          </div>
+          <div className="overlay-panel overlay-right">
+            <Box textAlign="center" mt={4}>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontWeight: "500",
+                  color: "#ffffff",
+                }}
+              >
+                Start your
+                <Typography
+                  marginBottom={2}
+                  variant="h2"
+                  component="span"
+                  sx={{
+                    display: "block",
+                    fontWeight: "inherit",
+                    color: "inherit",
+                    textShadow: "inherit",
+                  }}
+                >
+                  journey now
+                </Typography>
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "white",
+                }}
+              >
+                If you don't have an account yet, join us
+                <span style={{ display: "block", marginTop: "10px" }}>
+                  and start your journey
+                </span>
+              </Typography>
+              <Button
+                onClick={handleRegisterClick}
+                className="ghost"
+                sx={{
+                  marginTop: "20px",
+                  width: "300px",
+                  position: "relative",
+                  padding: "12px 24px",
+                  textTransform: "none",
+                  fontWeight: "500",
+                  fontSize: "1rem",
+                  color: "#ffffff",
+                  background: "rgba(255, 255, 255, 0.2)",
+                  border: "2px solid #ffffff",
+                  borderRadius: "50px",
+                  overflow: "hidden",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    background: "rgba(255, 255, 255, 0.3)",
+                    transform: "scale(1.05)",
+                    "&::after": {
+                      transform: "translateX(0)",
+                      opacity: 1,
+                    },
+                  },
+                  "&::after": {
+                    content: "'→'",
+                    position: "absolute",
+                    right: "32px",
+                    bottom: "2px",
+                    opacity: 0,
+                    transform: "translateX(-10px)",
+                    transition: "all 0.3s ease-in-out",
+                    fontSize: "1.9rem",
+                    fontWeight: "bold",
+                  },
+                }}
+              >
+                Sign up
+              </Button>
+            </Box>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
