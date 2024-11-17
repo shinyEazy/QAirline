@@ -122,11 +122,7 @@ const Thumbnail = ({ images, currentIndex, onClick }) => {
   return (
     <div className="thumbnail">
       {reorderedThumbnails.map((image, index) => (
-        <div
-          className={`item ${index === 0 ? "active" : ""}`}
-          key={image.id}
-          onClick={() => onClick((currentIndex + index) % images.length)}
-        >
+        <div className={`item ${index === 0 ? "active" : ""}`} key={image.id}>
           <img src={image.src} alt={image.title} />
           <div className="content">
             <div className="title">{image.title}</div>
