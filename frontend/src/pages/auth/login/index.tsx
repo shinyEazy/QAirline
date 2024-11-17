@@ -81,7 +81,7 @@ const Login = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Box component="form" noValidate>
+          <Box component="form" noValidate maxWidth="450px">
             <Box display="flex" justifyContent="center" mb={2}>
               <Typography variant="h3" fontWeight="500" color="#1e90ff">
                 Sign up
@@ -193,7 +193,6 @@ const Login = () => {
               />
             </Box>
             <Box display="flex" justifyContent="center" width="100%">
-              {" "}
               <Button
                 className="auth-button"
                 variant="contained"
@@ -278,7 +277,7 @@ const Login = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <Box component="form" noValidate>
+          <Box component="form" noValidate maxWidth="450px">
             <Box display="flex" justifyContent="center" mb={2}>
               <Typography variant="h3" fontWeight="500" color="#1e90ff">
                 Login

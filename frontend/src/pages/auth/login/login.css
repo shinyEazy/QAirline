@@ -87,7 +87,7 @@
   opacity: 1;
 }
 
-form {
+/* form {
   width: 500px;
   background-color: #f8f8f2;
   display: flex;
@@ -106,7 +106,7 @@ input {
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
-}
+} */
 
 .container {
   position: relative;
