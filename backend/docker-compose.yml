@@ -1,16 +1,16 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
-    depends_on:
-      - db
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://postgres:mysecretpassword@db:5432/airline_db
-    volumes:
-      - ./app:/app
+  # app:
+  #   build: .
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - DATABASE_URL=postgresql://postgres:mysecretpassword@db:5432/airline_db
+  #   volumes:
+  #     - ./app:/app
 
   db:
     image: postgres:15
