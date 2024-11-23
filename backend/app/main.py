@@ -7,18 +7,12 @@ import fastapi
 from pydantic import BaseModel
 from typing import Annotated
 from sqlalchemy.orm import Session
-import models
+import models, schemas, crud
 from database import engine, SessionLocal
-import crud
 from datetime import datetime
 
 app = fastapi.FastAPI()
 models.Base.metadata.create_all(bind=engine)
-
-
-class UserBase(BaseModel):
-    email: str
-    password: str
 
 
 def get_db():
@@ -33,13 +27,8 @@ db_dependency = Annotated[Session, fastapi.Depends(get_db)]
 
 
 @app.post("/users/")
-async def create_users(user: UserBase, db: db_dependency):
-    db_user = models.User(
-        email=user.email, password=user.password, created_at=datetime.now()
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
+async def create_users(user: schemas.UserCreate, db: db_dependency):
+    return crud.create_user(user, db)
 
 
 @app.get("/user/{user_id}")

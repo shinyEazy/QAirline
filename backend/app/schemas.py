@@ -21,6 +21,11 @@ class UserBase(SchemaModel):
     created_at: datetime
 
 
+class UserCreate(SchemaModel):
+    email: EmailStr
+    password: str
+
+
 class PassengerBase(SchemaModel):
     passport_number: str
     gender: bool
@@ -36,11 +41,6 @@ class BookingBase(SchemaModel):
     number_of_children: int
     class_: str
     flight_id: int
-
-
-# Create schemas (for creating new items)
-class UserCreate(UserBase):
-    password: str
 
 
 class PassengerCreate(PassengerBase):
