@@ -1,6 +1,22 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime
+from sqlalchemy import (
+    Boolean,
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    DateTime,
+    Enum,
+)
 from app.database import Base
 from datetime import datetime
+from enum import Enum as PyEnum
+
+
+class FlightClass(PyEnum):
+    economy = "Economy"
+    business = "Business"
+    first_class = "First Class"
 
 
 class User(Base):
@@ -44,10 +60,10 @@ class Booking(Base):
     )
     number_of_adults = Column(Integer)
     number_of_children = Column(Integer)
-    flight_class = Column("class", String)
+    flight_class = Column(Enum(FlightClass), nullable=False)
     cancelled = Column(Boolean, default=False)
 
-    flight_id = Column(Integer, ForeignKey("flight.flight_id"), ondelete="CASCADE")
+    flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
     booking_date = Column(DateTime)
 
 

@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import EmailStr
 from datetime import datetime
 from typing import Optional, List
+from models import FlightClass
 
 
 class SchemaModel(BaseModel):
@@ -26,10 +27,13 @@ class PassengerBase(SchemaModel):
 
 
 class BookingBase(SchemaModel):
+    passenger_id: int
     number_of_adults: int
     number_of_children: int
-    flight_class: str
+    flight_class: FlightClass
+    cancelled: Optional[bool] = False
     flight_id: int
+    booking_date: datetime
 
 
 class AirplaneModel(SchemaModel):
@@ -102,7 +106,7 @@ class PassengerCreate(PassengerBase):
 
 
 class BookingCreate(BookingBase):
-    passenger_id: int
+    pass
 
 
 class FlightCreate(SchemaModel):
