@@ -36,11 +36,14 @@ async def get_user(user_id: int, db: db_dependency):
     return crud.get_user(user_id=user_id, db=db)
 
 
+@app.delete("/user/{user_id}")
+async def delete_user(user_id: int, db: db_dependency):
+    return crud.delete_user(user_id=user_id, db=db)
+
+
 @app.post("/passengers/")
-async def create_passenger(
-    user_id: int, passenger: schemas.PassengerCreate, db: db_dependency
-):
-    return crud.create_passenger(user_id=user_id, passenger=passenger, db=db)
+async def create_passenger(passenger: schemas.PassengerCreate, db: db_dependency):
+    return crud.create_passenger(passenger=passenger, db=db)
 
 
 @app.get("/passengers/{passenger_id}")

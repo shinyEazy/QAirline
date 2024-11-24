@@ -14,14 +14,8 @@ class SchemaModel(BaseModel):
         orm_mode = True
 
 
-# Base schemas (for shared attributes)
-class UserBase(SchemaModel):
-    email: EmailStr
-    password: str
-    created_at: datetime
-
-
 class PassengerBase(SchemaModel):
+    passenger_id: int  # Must reference an existing User ID
     passport_number: str
     gender: bool
     phone_number: str
@@ -34,7 +28,7 @@ class PassengerBase(SchemaModel):
 class BookingBase(SchemaModel):
     number_of_adults: int
     number_of_children: int
-    class_: str
+    flight_class: str
     flight_id: int
 
 
@@ -119,14 +113,11 @@ class FlightCreate(SchemaModel):
     status: str = "Scheduled"
 
 
-# Read schemas (for returning data)
-class User(UserBase):
-    id: int
-    created_at: datetime
-
-
 class Booking(BookingBase):
     booking_id: int
     cancelled: bool
     booking_date: datetime
     payment: Optional[Payment] = None
+
+
+# class Booking

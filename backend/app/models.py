@@ -15,7 +15,9 @@ class User(Base):
 class Passenger(Base):
     __tablename__ = "passengers"
 
-    passenger_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    passenger_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
     passport_number = Column(String)
     gender = Column(Boolean)
     phone_number = Column(String)
@@ -28,20 +30,24 @@ class Passenger(Base):
 class Admin(Base):
     __tablename__ = "admin"
 
-    admin_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    admin_id = Column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
 
 
 class Booking(Base):
     __tablename__ = "booking"
 
     booking_id = Column(Integer, primary_key=True, index=True)
-    passenger_id = Column(Integer, ForeignKey("passengers.passenger_id"))
+    passenger_id = Column(
+        Integer, ForeignKey("passengers.passenger_id", ondelete="CASCADE")
+    )
     number_of_adults = Column(Integer)
     number_of_children = Column(Integer)
     flight_class = Column("class", String)
     cancelled = Column(Boolean, default=False)
 
-    flight_id = Column(Integer, ForeignKey("flight.flight_id"))
+    flight_id = Column(Integer, ForeignKey("flight.flight_id"), ondelete="CASCADE")
     booking_date = Column(DateTime)
 
 
@@ -54,7 +60,9 @@ class Payment(Base):
     currency = Column(String, default="USD")
     payment_method = Column(String)
     status = Column(String, default="pending")
-    booking_id = Column(Integer, ForeignKey("booking.booking_id"), unique=True)
+    booking_id = Column(
+        Integer, ForeignKey("booking.booking_id", ondelete="CASCADE"), unique=True
+    )
 
 
 class Flight(Base):
@@ -66,7 +74,9 @@ class Flight(Base):
     actual_departure_time = Column(DateTime)
     estimated_arrival_time = Column(DateTime)
     actual_arrival_time = Column(DateTime)
-    destination_airport_code = Column(String, ForeignKey("airport.airport_code"))
+    destination_airport_code = Column(
+        String, ForeignKey("airport.airport_code", ondelete="CASCADE")
+    )
     status = Column(String)
 
 
@@ -83,9 +93,13 @@ class Airplane(Base):
     __tablename__ = "airplane"
 
     airplane_id = Column(Integer, primary_key=True, index=True)
-    airplane_model_id = Column(Integer, ForeignKey("airplane_model.airplane_model_id"))
+    airplane_model_id = Column(
+        Integer, ForeignKey("airplane_model.airplane_model_id", ondelete="CASCADE")
+    )
     registration_number = Column(String, unique=True)
-    current_airport_code = Column(String, ForeignKey("airport.airport_code"))
+    current_airport_code = Column(
+        String, ForeignKey("airport.airport_code", ondelete="CASCADE")
+    )
 
 
 class Airport(Base):
@@ -100,6 +114,6 @@ class FlightSeats(Base):
     __tablename__ = "flight_seats"
 
     flight_seats_id = Column(Integer, primary_key=True, index=True)
-    flight_id = Column(Integer, ForeignKey("flight.flight_id"))
+    flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
     travel_class = Column(String)
     available_seats = Column(Integer)
