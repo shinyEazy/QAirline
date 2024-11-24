@@ -27,10 +27,22 @@ db_dependency = Annotated[Session, fastapi.Depends(get_db)]
 
 
 @app.post("/users/")
-async def create_users(user: schemas.UserCreate, db: db_dependency):
-    return crud.create_user(user, db)
+async def create_user(user: schemas.UserCreate, db: db_dependency):
+    return crud.create_user(user=user, db=db)
 
 
 @app.get("/user/{user_id}")
 async def get_user(user_id: int, db: db_dependency):
-    return crud.get_user(user_id, db)
+    return crud.get_user(user_id=user_id, db=db)
+
+
+@app.post("/passengers/")
+async def create_passenger(
+    user_id: int, passenger: schemas.PassengerCreate, db: db_dependency
+):
+    return crud.create_passenger(user_id=user_id, passenger=passenger, db=db)
+
+
+@app.get("/passengers/{passenger_id}")
+async def get_passenger(passenger_id: int, db: db_dependency):
+    return crud.get_passenger(passenger_id=passenger_id, db=db)
