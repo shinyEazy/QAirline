@@ -1,47 +1,25 @@
 import sys
 import os
 
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
 
 import fastapi
-from pydantic import BaseModel
-from typing import Annotated
-from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 import models
-from database import engine, SessionLocal
-import crud
-from datetime import datetime
+from database import engine
+import time
+from api.main import api_router
 
 app = fastapi.FastAPI()
-models.Base.metadata.create_all(bind=engine)
 
-
-class UserBase(BaseModel):
-    email: str
-    password: str
-
-
-def get_db():
-    db = SessionLocal()
+# wait for db to start to connect
+while True:
     try:
-        yield db
-    finally:
-        db.close()
+        models.Base.metadata.create_all(bind=engine)
+        break
+    except OperationalError:
+        print("Database is not ready, retrying in 5 seconds...")
+        time.sleep(5)
 
-
-db_dependency = Annotated[Session, fastapi.Depends(get_db)]
-
-
-@app.post("/users/")
-async def create_users(user: UserBase, db: db_dependency):
-    db_user = models.User(
-        email=user.email, password=user.password, created_at=datetime.now()
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-
-
-@app.get("/user/{user_id}")
-async def get_user(user_id: int, db: db_dependency):
-    return crud.get_user(user_id, db)
+app.include_router(api_router)

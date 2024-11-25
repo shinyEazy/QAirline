@@ -1,9 +1,7 @@
-from sqlalchemy.orm import Session
 import models, schemas
 from datetime import datetime
 from fastapi import HTTPException
-
-# Helper functions for create booking
+from sqlalchemy.orm import Session
 
 
 def get_booking_by_passenger_id(passenger_id: int, db: Session) -> models.Booking:
@@ -41,9 +39,6 @@ def get_booking(booking_id: int, db: Session) -> models.Booking:
         db.query(models.Booking).filter(models.Booking.booking_id == booking_id).first()
     )
 
-    if not db_booking:
-        raise HTTPException(status_code=404, detail="Booking not found")
-
     return db_booking
 
 
@@ -54,12 +49,6 @@ def create_booking(booking: schemas.BookingCreate, db: Session) -> models.Bookin
     The flight_class enums in the data has already been validated by pydantic, but the format needs to be like this:
     'Economy' or 'Business' or 'First'
     """
-
-    if not get_booking_by_passenger_id(booking.passenger_id, db):
-        raise HTTPException(status_code=404, detail="Referenced passenger not found")
-
-    if not get_booking_by_flight_id(booking.flight_id, db):
-        raise HTTPException(status_code=404, detail="Referenced flight not found")
 
     db_booking = models.Booking(**booking.dict())
 

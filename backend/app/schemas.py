@@ -3,6 +3,7 @@ from datetime import datetime
 from pydantic import EmailStr
 from datetime import datetime
 from typing import Optional, List
+from models import FlightClass
 
 
 class SchemaModel(BaseModel):
@@ -14,14 +15,8 @@ class SchemaModel(BaseModel):
         orm_mode = True
 
 
-# Base schemas (for shared attributes)
-class UserBase(SchemaModel):
-    email: EmailStr
-    password: str
-    created_at: datetime
-
-
 class PassengerBase(SchemaModel):
+    passenger_id: int  # Must reference an existing User ID
     passport_number: str
     gender: bool
     phone_number: str
@@ -32,69 +27,13 @@ class PassengerBase(SchemaModel):
 
 
 class BookingBase(SchemaModel):
+    passenger_id: int
     number_of_adults: int
     number_of_children: int
-    class_: str
+    flight_class: FlightClass
+    cancelled: Optional[bool] = False
     flight_id: int
-
-
-# Create schemas (for creating new items)
-class UserCreate(UserBase):
-    password: str
-
-
-class PassengerCreate(PassengerBase):
-    pass
-
-
-class BookingCreate(BookingBase):
-    passenger_id: int
-
-
-class PaymentCreate(SchemaModel):
-    amount: int
-    currency: str = "USD"
-    payment_method: str
-    booking_id: int
-
-
-class FlightCreate(SchemaModel):
-    airplane_id: int
-    estimated_departure_time: datetime
-    estimated_arrival_time: datetime
-    destination_airport_code: str
-    status: str = "Scheduled"
-
-
-# Read schemas (for returning data)
-class User(UserBase):
-    id: int
-    created_at: datetime
-
-
-class Passenger(PassengerBase):
-    passenger_id: int
-
-
-class Admin(SchemaModel):
-    admin_id: int
-
-
-class Payment(SchemaModel):
-    payment_id: int
-    transaction_date_time: datetime
-    amount: int
-    currency: str
-    payment_method: str
-    status: str
-    booking_id: int
-
-
-class Booking(BookingBase):
-    booking_id: int
-    cancelled: bool
     booking_date: datetime
-    payment: Optional[Payment] = None
 
 
 class AirplaneModel(SchemaModel):
@@ -120,7 +59,7 @@ class Airport(SchemaModel):
 class FlightSeats(SchemaModel):
     flight_seats_id: int
     flight_id: int
-    travel_class: str
+    flight_class: FlightClass
     available_seats: int
 
 
@@ -134,3 +73,45 @@ class Flight(SchemaModel):
     status: str
     airplane: Airplane
     flight_seats: List[FlightSeats]
+
+
+class Admin(SchemaModel):
+    admin_id: int
+
+
+class Payment(SchemaModel):
+    payment_id: int
+    transaction_date_time: datetime
+    amount: int
+    currency: str
+    payment_method: str
+    status: str
+    booking_id: int
+
+
+class PaymentCreate(SchemaModel):
+    amount: int
+    currency: str = "USD"
+    payment_method: str
+    booking_id: int
+
+
+class UserCreate(SchemaModel):
+    email: EmailStr
+    password: str
+
+
+class PassengerCreate(PassengerBase):
+    pass
+
+
+class BookingCreate(BookingBase):
+    pass
+
+
+class FlightCreate(SchemaModel):
+    airplane_id: int
+    estimated_departure_time: datetime
+    estimated_arrival_time: datetime
+    destination_airport_code: str
+    status: str = "Scheduled"
