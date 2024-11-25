@@ -14,9 +14,9 @@ from enum import Enum as PyEnum
 
 
 class FlightClass(PyEnum):
-    economy = "Economy"
-    business = "Business"
-    first_class = "First Class"
+    Economy = "Economy"
+    Business = "Business"
+    FirstClass = "First Class"
 
 
 class User(Base):
@@ -90,8 +90,11 @@ class Flight(Base):
     actual_departure_time = Column(DateTime)
     estimated_arrival_time = Column(DateTime)
     actual_arrival_time = Column(DateTime)
-    destination_airport_code = Column(
-        String, ForeignKey("airport.airport_code", ondelete="CASCADE")
+    departure_airport_id = Column(
+        Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
+    )
+    destination_airport_id = Column(
+        Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
     )
     status = Column(String)
 
@@ -113,15 +116,16 @@ class Airplane(Base):
         Integer, ForeignKey("airplane_model.airplane_model_id", ondelete="CASCADE")
     )
     registration_number = Column(String, unique=True)
-    current_airport_code = Column(
-        String, ForeignKey("airport.airport_code", ondelete="CASCADE")
+    current_airport_id = Column(
+        Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
     )
 
 
 class Airport(Base):
     __tablename__ = "airport"
 
-    airport_code = Column(String, primary_key=True, index=True)
+    airport_id = Column(Integer, primary_key=True, index=True)
+    airport_code = Column(String, index=True)
     city = Column(String)
     name = Column(String)
 

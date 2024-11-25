@@ -59,7 +59,7 @@ class Airport(SchemaModel):
 class FlightSeats(SchemaModel):
     flight_seats_id: int
     flight_id: int
-    travel_class: str
+    flight_class: FlightClass
     available_seats: int
 
 
@@ -115,13 +115,3 @@ class FlightCreate(SchemaModel):
     estimated_arrival_time: datetime
     destination_airport_code: str
     status: str = "Scheduled"
-
-
-class Booking(BookingBase):
-    booking_id: int
-    cancelled: bool
-    booking_date: datetime
-    payment: Optional[Payment] = None
-
-
-# class Booking

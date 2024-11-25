@@ -7,12 +7,22 @@ import fastapi
 from pydantic import BaseModel
 from typing import Annotated
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 import models, schemas, crud
 from database import engine, SessionLocal
 from datetime import datetime
+import time
 
 app = fastapi.FastAPI()
-models.Base.metadata.create_all(bind=engine)
+
+# wait for db to start to connect
+while True:
+    try:
+        models.Base.metadata.create_all(bind=engine)
+        break
+    except OperationalError:
+        print("Database is not ready, retrying in 5 seconds...")
+        time.sleep(5)
 
 
 def get_db():
@@ -68,4 +78,5 @@ async def get_booking_by_passenger_id(passenger_id: int, db: db_dependency):
 
 @app.post("/booking/")
 async def create_booking(booking: schemas.BookingCreate, db: db_dependency):
+    print(booking)
     return crud.create_booking(booking=booking, db=db)

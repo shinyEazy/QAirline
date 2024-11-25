@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
+import time
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL", "postgresql://postgres:mysecretpassword@db:5432/airline_db"

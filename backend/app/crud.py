@@ -167,6 +167,9 @@ def get_booking(booking_id: int, db: Session) -> models.Booking:
 def create_booking(booking: schemas.BookingCreate, db: Session) -> models.Booking:
     """
     Equivalent to a SQL query that is 'INSERT INTO booking values ()'
+    When creating the booking, we need to ensure that the passenger_id and flight_id are valid
+    The flight_class enums in the data has already been validated by pydantic, but the format needs to be like this:
+    'Economy' or 'Business' or 'First'
     """
 
     if not get_booking_by_passenger_id(booking.passenger_id, db):
