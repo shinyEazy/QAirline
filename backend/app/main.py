@@ -1,6 +1,7 @@
 import sys
 import os
 
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
 
 import fastapi
@@ -8,7 +9,7 @@ from sqlalchemy.exc import OperationalError
 import models
 from database import engine
 import time
-from api.routes import user
+from api.main import api_router
 
 app = fastapi.FastAPI()
 
@@ -21,4 +22,4 @@ while True:
         print("Database is not ready, retrying in 5 seconds...")
         time.sleep(5)
 
-app.include_router(user.router, prefix="/api", tags=["User"])
+app.include_router(api_router)
