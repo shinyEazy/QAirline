@@ -35,7 +35,7 @@ def get_user_by_email(user_email: str, db: Session) -> User:
     return db_user
 
 
-def delete_user(db_user, db: Session) -> User:
+def delete_user(db_user: User, db: Session) -> User:
     """
     Equivalent to a SQL query that is 'DELETE FROM table users where users.id = user_id'
     Returns User
@@ -50,7 +50,9 @@ def create_user(user: UserCreate, db: Session):
     Equivalent to a SQL query that is 'INSERT INTO users values (user.email, user.password, datetime.now)'
     """
 
-    return create(User, db, user.dict())
+    current_dict = user.dict()
+    current_dict["created_at"] = datetime.now()
+    return create(User, db, current_dict)
 
 
 def update_user(db_user: User, user: UserUpdate, db: Session):

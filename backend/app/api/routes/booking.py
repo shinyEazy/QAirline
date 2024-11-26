@@ -65,3 +65,31 @@ def get_booking_by_flight_id_end_point(flight_id: int, db: Session = Depends(get
         raise HTTPException(status_code=404, detail="Booking not found")
 
     return db_booking
+
+
+@router.put("/{booking_id}")
+def update_booking_end_point(
+    booking_id: int, booking: schemas.BookingUpdate, db: Session = Depends(get_db)
+):
+    """
+    Update a booking
+    """
+    db_booking = get_booking(booking_id, db)
+
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    return update_booking(db_booking, booking, db)
+
+
+@router.delete("/{booking_id}")
+def delete_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
+    """
+    Delete a booking
+    """
+    db_booking = get_booking(booking_id, db)
+
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    return delete_booking(db_booking, db)

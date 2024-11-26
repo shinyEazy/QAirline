@@ -1,4 +1,4 @@
-from pydantic import EmailStr
+from pydantic import EmailStr, fields
 from datetime import datetime
 
 # from . import SchemaModel  # Import from base.py
@@ -8,7 +8,6 @@ from .base import SchemaModel
 class UserCreate(SchemaModel):
     email: EmailStr
     password: str
-    created_at: datetime = datetime.now()
 
 
 class UserBase:

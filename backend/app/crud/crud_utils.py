@@ -5,6 +5,9 @@ from typing import Type
 
 
 def create(model, db: Session, data: dict):
+    """
+    Equivalent to a SQL query that is 'INSERT INTO table values ()'
+    """
     db_obj = model(**data)
     db.add(db_obj)
     db.commit()
@@ -13,6 +16,9 @@ def create(model, db: Session, data: dict):
 
 
 def update(queried_model, db: Session, data: dict):
+    """
+    Equivalent to a SQL query that is 'UPDATE table SET column = value WHERE table.id = id'
+    """
     for key, value in data.items():
         setattr(queried_model, key, value)
     db.commit()
@@ -21,6 +27,9 @@ def update(queried_model, db: Session, data: dict):
 
 
 def delete(queried_model, db: Session):
+    """
+    Equivalent to a SQL query that is 'DELETE FROM table WHERE table.id = id'
+    """
     db.delete(queried_model)
     db.commit()
     return queried_model
