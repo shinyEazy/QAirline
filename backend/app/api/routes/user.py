@@ -3,12 +3,13 @@ import schemas, models
 from crud.user import *
 from sqlalchemy.orm import Session
 from database import get_db
+import logging
 
 router = APIRouter(prefix="/user", tags=["User"])
 
 
 @router.get("/{user_id}")
-def get_user_end_point(user_id: int, db: Session = Depends(get_db)):
+async def get_user_end_point(user_id: int, db: Session = Depends(get_db)):
     """
     Get a specific user by user_id
     """
@@ -21,7 +22,7 @@ def get_user_end_point(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/")
-def get_all_users_end_point(db: Session = Depends(get_db)):
+async def get_all_users_end_point(db: Session = Depends(get_db)):
     """
     Get all users
     """
@@ -30,7 +31,7 @@ def get_all_users_end_point(db: Session = Depends(get_db)):
 
 
 @router.get("/email/{user_email}")
-def get_user_by_email_end_point(user_email: str, db: Session = Depends(get_db)):
+async def get_user_by_email_end_point(user_email: str, db: Session = Depends(get_db)):
     """
     Get a specific user by user_email
     """
@@ -43,7 +44,9 @@ def get_user_by_email_end_point(user_email: str, db: Session = Depends(get_db)):
 
 
 @router.post("/")
-def create_user_end_point(user: schemas.UserCreate, db: Session = Depends(get_db)):
+async def create_user_end_point(
+    user: schemas.UserCreate, db: Session = Depends(get_db)
+):
     """
     Create a user
     """
@@ -55,13 +58,28 @@ def create_user_end_point(user: schemas.UserCreate, db: Session = Depends(get_db
 
 
 @router.delete("/{user_id}")
-def delete_user_end_point(user_id: int, db: Session = Depends(get_db)):
+async def delete_user_end_point(user_id: int, db: Session = Depends(get_db)):
     """
     Delete a user by user_id
     """
-    db_user = delete_user(user_id, db)
+    db_user = get_user(user_id, db)
 
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return db_user
+    return delete_user(db_user, db)
+
+
+@router.put("/{user_id}")
+async def update_user_end_point(
+    user_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)
+):
+    """
+    Update a user by user_id
+    """
+    db_user = get_user(user_id, db)
+
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return update_user(db_user, user, db)

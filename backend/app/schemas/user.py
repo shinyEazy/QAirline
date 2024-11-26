@@ -8,6 +8,7 @@ from .base import SchemaModel
 class UserCreate(SchemaModel):
     email: EmailStr
     password: str
+    created_at: datetime = datetime.now()
 
 
 class UserBase:
@@ -18,3 +19,7 @@ class UserBase:
 
 class UserResponse(UserBase):
     pass
+
+
+class UserUpdate(SchemaModel):
+    password: str
