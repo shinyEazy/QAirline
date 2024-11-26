@@ -117,7 +117,7 @@ class Airplane(Base):
     )
     registration_number = Column(String, unique=True)
     current_airport_id = Column(
-        Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
+        Integer, ForeignKey("airport.airport_code", ondelete="CASCADE")
     )
 
 
