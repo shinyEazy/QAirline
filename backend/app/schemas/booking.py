@@ -15,3 +15,7 @@ class BookingBase(SchemaModel):
 
 class BookingCreate(BookingBase):
     pass
+
+
+class BookingUpdate(BookingBase):
+    pass
