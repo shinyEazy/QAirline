@@ -257,3 +257,45 @@ input {
 .social-container a:hover {
   border: 1px solid #4bb6b7;
 }
+
+/* General container style */
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: all 0.6s ease-in-out;
+}
+
+@media (max-width: 750px) {
+  .container {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .background-video {
+    display: none;
+  }
+
+  .form-container {
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+
+  .overlay-panel {
+    padding: 10px 20px;
+  }
+
+  .overlay-panel .ghost {
+    width: 80%;
+  }
+}
+
+@media (min-width: 751px) {
+  .container {
+    overflow: hidden;
+    width: 100%;
+  }
+}

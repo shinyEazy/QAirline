@@ -9,6 +9,7 @@ import {
   IconButton,
   Checkbox,
   FormControlLabel,
+  useMediaQuery,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -22,6 +23,7 @@ const Login = () => {
   const [checked, setChecked] = React.useState(false);
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const isDesktop = useMediaQuery("(min-width:750px)");
 
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -55,6 +57,7 @@ const Login = () => {
         autoPlay
         loop
         muted
+        className="background-video"
         style={{
           position: "absolute",
           top: 0,
@@ -80,6 +83,9 @@ const Login = () => {
           bgcolor="#f8f8f2"
           justifyContent="center"
           alignItems="center"
+          sx={{
+            background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+          }}
         >
           <Box component="form" noValidate maxWidth="450px">
             <Box display="flex" justifyContent="center" mb={2}>
@@ -92,6 +98,7 @@ const Login = () => {
               label="First name"
               variant="outlined"
               sx={{
+                borderRadius: "8px",
                 margin: "10px auto",
                 backgroundColor: "#f0f8ff",
                 "& .MuiOutlinedInput-root": {
@@ -122,6 +129,7 @@ const Login = () => {
               label="Email address"
               variant="outlined"
               sx={{
+                borderRadius: "8px",
                 margin: "10px auto",
                 backgroundColor: "#f0f8ff",
                 "& .MuiOutlinedInput-root": {
@@ -138,6 +146,7 @@ const Login = () => {
               variant="outlined"
               type="password"
               sx={{
+                borderRadius: "8px",
                 margin: "10px auto",
                 backgroundColor: "#f0f8ff",
                 "& .MuiOutlinedInput-root": {
@@ -155,6 +164,7 @@ const Login = () => {
               margin="normal"
               type="password"
               sx={{
+                borderRadius: "8px",
                 margin: "10px auto",
                 backgroundColor: "#f0f8ff",
                 "& .MuiOutlinedInput-root": {
@@ -276,6 +286,9 @@ const Login = () => {
           bgcolor="#f8f8f2"
           justifyContent="center"
           alignItems="center"
+          sx={{
+            background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+          }}
         >
           <Box component="form" noValidate maxWidth="450px">
             <Box display="flex" justifyContent="center" mb={2}>
@@ -425,94 +438,19 @@ const Login = () => {
       </div>
 
       {/* Overlay */}
-      <div className="overlay-container">
-        <div className="overlay">
-          <div className="overlay-panel overlay-left">
-            <Typography
-              marginBottom={2}
-              variant="h2"
-              sx={{
-                fontWeight: "500",
-                color: "#ffffff",
-              }}
-            >
-              Hello friends
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                color: "white",
-              }}
-            >
-              If you already have an account, login
-              <span style={{ display: "block", marginTop: "10px" }}>
-                here and have fun
-              </span>
-            </Typography>
-            <Button
-              onClick={handleLoginClick}
-              className="ghost"
-              sx={{
-                marginTop: "20px",
-                width: "300px",
-                position: "relative",
-                padding: "12px 24px",
-                textTransform: "none",
-                fontWeight: "500",
-                fontSize: "1rem",
-                color: "#ffffff",
-                background: "rgba(255, 255, 255, 0.2)",
-                border: "2px solid #ffffff",
-                borderRadius: "50px",
-                overflow: "hidden",
-                transition: "all 0.3s ease-in-out",
-                "&:hover": {
-                  background: "rgba(255, 255, 255, 0.3)",
-                  transform: "scale(1.05)",
-                  "&::after": {
-                    transform: "translateX(0)",
-                    opacity: 1,
-                  },
-                },
-                "&::after": {
-                  content: "'←'",
-                  position: "absolute",
-                  left: "32px",
-                  bottom: "2px",
-                  opacity: 0,
-                  transform: "translateX(-10px)",
-                  transition: "all 0.3s ease-in-out",
-                  fontSize: "1.9rem",
-                  fontWeight: "bold",
-                },
-              }}
-            >
-              Login
-            </Button>
-          </div>
-          <div className="overlay-panel overlay-right">
-            <Box textAlign="center" mt={4}>
+      {isDesktop && (
+        <div className="overlay-container">
+          <div className="overlay">
+            <div className="overlay-panel overlay-left">
               <Typography
+                marginBottom={2}
                 variant="h2"
                 sx={{
                   fontWeight: "500",
                   color: "#ffffff",
                 }}
               >
-                Start your
-                <Typography
-                  marginBottom={2}
-                  variant="h2"
-                  component="span"
-                  sx={{
-                    display: "block",
-                    fontWeight: "inherit",
-                    color: "inherit",
-                    textShadow: "inherit",
-                  }}
-                >
-                  journey now
-                </Typography>
+                Hello friends
               </Typography>
               <Typography
                 variant="body1"
@@ -520,13 +458,13 @@ const Login = () => {
                   color: "white",
                 }}
               >
-                If you don't have an account yet, join us
+                If you already have an account, login
                 <span style={{ display: "block", marginTop: "10px" }}>
-                  and start your journey
+                  here and have fun
                 </span>
               </Typography>
               <Button
-                onClick={handleRegisterClick}
+                onClick={handleLoginClick}
                 className="ghost"
                 sx={{
                   marginTop: "20px",
@@ -551,9 +489,9 @@ const Login = () => {
                     },
                   },
                   "&::after": {
-                    content: "'→'",
+                    content: "'←'",
                     position: "absolute",
-                    right: "32px",
+                    left: "32px",
                     bottom: "2px",
                     opacity: 0,
                     transform: "translateX(-10px)",
@@ -563,12 +501,89 @@ const Login = () => {
                   },
                 }}
               >
-                Sign up
+                Login
               </Button>
-            </Box>
+            </div>
+            <div className="overlay-panel overlay-right">
+              <Box textAlign="center" mt={4}>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontWeight: "500",
+                    color: "#ffffff",
+                  }}
+                >
+                  Start your
+                  <Typography
+                    marginBottom={2}
+                    variant="h2"
+                    component="span"
+                    sx={{
+                      display: "block",
+                      fontWeight: "inherit",
+                      color: "inherit",
+                      textShadow: "inherit",
+                    }}
+                  >
+                    journey now
+                  </Typography>
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "white",
+                  }}
+                >
+                  If you don't have an account yet, join us
+                  <span style={{ display: "block", marginTop: "10px" }}>
+                    and start your journey
+                  </span>
+                </Typography>
+                <Button
+                  onClick={handleRegisterClick}
+                  className="ghost"
+                  sx={{
+                    marginTop: "20px",
+                    width: "300px",
+                    position: "relative",
+                    padding: "12px 24px",
+                    textTransform: "none",
+                    fontWeight: "500",
+                    fontSize: "1rem",
+                    color: "#ffffff",
+                    background: "rgba(255, 255, 255, 0.2)",
+                    border: "2px solid #ffffff",
+                    borderRadius: "50px",
+                    overflow: "hidden",
+                    transition: "all 0.3s ease-in-out",
+                    "&:hover": {
+                      background: "rgba(255, 255, 255, 0.3)",
+                      transform: "scale(1.05)",
+                      "&::after": {
+                        transform: "translateX(0)",
+                        opacity: 1,
+                      },
+                    },
+                    "&::after": {
+                      content: "'→'",
+                      position: "absolute",
+                      right: "32px",
+                      bottom: "2px",
+                      opacity: 0,
+                      transform: "translateX(-10px)",
+                      transition: "all 0.3s ease-in-out",
+                      fontSize: "1.9rem",
+                      fontWeight: "bold",
+                    },
+                  }}
+                >
+                  Sign up
+                </Button>
+              </Box>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
