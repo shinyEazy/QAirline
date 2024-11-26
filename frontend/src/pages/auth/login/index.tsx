@@ -17,6 +17,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Link as RouterLink } from "react-router-dom";
 import "../login/login.css";
+import { useEffect } from "react";
 
 const Login = () => {
   const [checked, setChecked] = React.useState(false);
@@ -39,6 +40,19 @@ const Login = () => {
     setIsRightPanelActive(false);
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 750);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <div
       className={`container ${isRightPanelActive ? "right-panel-active" : ""}`}
@@ -79,12 +93,12 @@ const Login = () => {
             padding={3}
             width="100%"
             height="100%"
-            bgcolor="#f8f8f2"
+            bgcolor="white"
             justifyContent="center"
             alignItems="center"
-            sx={{
-              background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
-            }}
+            // sx={{
+            //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+            // }}
           >
             <Box component="form" noValidate maxWidth="450px">
               <Box display="flex" justifyContent="center" mb={2}>
@@ -233,15 +247,10 @@ const Login = () => {
                 </Button>
               </Box>
 
-              <Typography
-                textAlign="center"
-                marginTop={3}
-                color="textSecondary"
-                fontSize="1rem"
-              >
+              <Typography textAlign="center" marginTop={2} fontSize="1rem">
                 or use your account
               </Typography>
-              <Box display="flex" justifyContent="center" gap={2} marginTop={2}>
+              <Box display="flex" justifyContent="center" gap={2} marginTop={1}>
                 <IconButton
                   sx={{
                     backgroundColor: "#3b5998",
@@ -270,10 +279,30 @@ const Login = () => {
                   <LinkedInIcon />
                 </IconButton>
               </Box>
-              <Typography>
-                Already have an account?
-                <span onClick={handleLoginClick}>Login</span>
-              </Typography>
+              {isMobile && (
+                <Box>
+                  <Typography textAlign="center" marginTop={1} fontSize="1rem">
+                    Already have an account?{" "}
+                    <span
+                      onClick={handleLoginClick}
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "none",
+                        borderBottom: "1px solid transparent",
+                        transition: "border-color 0.3s",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.target.style.borderBottom = "2px solid #000")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.borderBottom = "2px solid transparent")
+                      }
+                    >
+                      Login
+                    </span>
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
@@ -285,12 +314,12 @@ const Login = () => {
             padding={3}
             width="100%"
             height="100%"
-            bgcolor="#f8f8f2"
+            bgcolor="white"
             justifyContent="center"
             alignItems="center"
-            sx={{
-              background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
-            }}
+            // sx={{
+            //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+            // }}
           >
             <Box component="form" noValidate maxWidth="450px">
               <Box display="flex" justifyContent="center" mb={2}>
@@ -398,15 +427,10 @@ const Login = () => {
                   Login
                 </Button>
               </Box>
-              <Typography
-                textAlign="center"
-                marginTop={3}
-                color="textSecondary"
-                fontSize="1rem"
-              >
+              <Typography textAlign="center" marginTop={2} fontSize="1rem">
                 or use your account
               </Typography>
-              <Box display="flex" justifyContent="center" gap={2} marginTop={2}>
+              <Box display="flex" justifyContent="center" gap={2} marginTop={1}>
                 <IconButton
                   sx={{
                     backgroundColor: "#3b5998",
@@ -435,12 +459,30 @@ const Login = () => {
                   <LinkedInIcon />
                 </IconButton>
               </Box>
-              <Box>
-                <Typography>
-                  Don't have an account?
-                  <span onClick={handleRegisterClick}>Sign up</span>
-                </Typography>
-              </Box>
+              {isMobile && (
+                <Box>
+                  <Typography textAlign="center" marginTop={1} fontSize="1rem">
+                    Don't have an account?{" "}
+                    <span
+                      onClick={handleRegisterClick}
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "none",
+                        borderBottom: "1px solid transparent",
+                        transition: "border-color 0.3s",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.target.style.borderBottom = "2px solid #000")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.borderBottom = "2px solid transparent")
+                      }
+                    >
+                      Sign up
+                    </span>
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
