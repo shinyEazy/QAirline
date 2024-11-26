@@ -43,8 +43,9 @@ def create_booking(booking: schemas.BookingCreate, db: Session) -> Booking:
     The flight_class enums in the data has already been validated by pydantic, but the format needs to be like this:
     'Economy' or 'Business' or 'First'
     """
-
-    return create(Booking, db, booking.dict())
+    current_dict = booking.dict()
+    current_dict["booking_date"] = datetime.now()
+    return create(Booking, db, current_dict)
 
 
 def update_booking(

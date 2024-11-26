@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 import schemas, models
+from sqlalchemy.exc import IntegrityError
 from crud.booking import *
 from sqlalchemy.orm import Session
 from database import get_db
+from models import FlightClass
 
 router = APIRouter(prefix="/booking", tags=["Booking"])
 
@@ -28,11 +30,16 @@ def create_booking_end_point(
     """
     Create a booking
     """
-
+    # Manually validate the flight_class value against the Enum
     if not get_booking_by_passenger_id(booking.passenger_id, db):
         raise HTTPException(status_code=404, detail="Referenced passenger not found")
     if not get_booking_by_flight_id(booking.flight_id, db):
         raise HTTPException(status_code=404, detail="Referenced flight not found")
+    if booking.flight_class not in FlightClass.__members__:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid flight class value: {booking.flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
+        )
 
     return create_booking(booking, db)
 
