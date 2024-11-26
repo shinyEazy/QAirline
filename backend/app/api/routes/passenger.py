@@ -35,3 +35,31 @@ def create_passenger_end_point(
         )
 
     return create_passenger(passenger, db)
+
+
+@router.put("/{passenger_id}")
+def update_passenger_end_point(
+    passenger_id: int, passenger: schemas.PassengerUpdate, db: Session = Depends(get_db)
+):
+    """
+    Update a passenger
+    """
+    db_passenger = get_passenger(passenger_id, db)
+
+    if not db_passenger:
+        raise HTTPException(status_code=404, detail="Passenger not found")
+
+    return update_passenger(db_passenger, passenger, db)
+
+
+@router.delete("/{passenger_id}")
+def delete_passenger_end_point(passenger_id: int, db: Session = Depends(get_db)):
+    """
+    Delete a passenger
+    """
+    db_passenger = get_passenger(passenger_id, db)
+
+    if not db_passenger:
+        raise HTTPException(status_code=404, detail="Passenger not found")
+
+    return delete_passenger(db_passenger, db)
