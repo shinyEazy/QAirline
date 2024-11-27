@@ -8,7 +8,7 @@ class AirplaneModel(SchemaModel):
     total_seats: int
 
 
-class Airplane(SchemaModel):
+class AirplaneBase(SchemaModel):
     airplane_id: int
     registration_number: str
     current_airport_code: str

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 from .base import SchemaModel
-from .airplane import Airplane
+from .airplane import AirplaneBase
 from .flight_seats import FlightSeats
 
 
@@ -13,7 +13,7 @@ class Flight(SchemaModel):
     actual_arrival_time: Optional[datetime]
     destination_airport_code: str
     status: str
-    airplane: Airplane
+    airplane: AirplaneBase
     flight_seats: List[FlightSeats]
 
 
