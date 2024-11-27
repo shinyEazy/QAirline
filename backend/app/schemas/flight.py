@@ -1,9 +1,12 @@
 from datetime import datetime
 from typing import List, Optional
 from .base import SchemaModel
+<<<<<<< HEAD
 from .airplane import AirplaneBase
+=======
+from .airplane import AirplaneBase as Airplane
+>>>>>>> origin/main
 from .flight_seats import FlightSeats
-
 
 class Flight(SchemaModel):
     flight_id: int

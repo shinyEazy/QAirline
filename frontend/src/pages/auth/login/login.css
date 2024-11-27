@@ -191,15 +191,14 @@ input {
   position: absolute;
   top: 0;
   left: 0;
-  width: 40px; /* Set the video width to 40px */
-  height: 40px; /* Set the video height to 40px */
-  object-fit: cover; /* Ensure the video covers the defined area */
-  z-index: -1; /* Make sure the video stays behind other elements */
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  z-index: -1;
 }
 
-/* Remove the overlay::before pseudo-element to remove background gradient */
 .overlay::before {
-  content: none; /* Remove the pseudo-element */
+  content: none;
 }
 
 .container.right-panel-active .overlay {
@@ -256,4 +255,53 @@ input {
 
 .social-container a:hover {
   border: 1px solid #4bb6b7;
+}
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: all 0.6s ease-in-out;
+}
+
+@media (max-width: 750px) {
+  .container {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    background: linear-gradient(to right, #b0c4de, #d3d3d3);
+  }
+
+  .background-video {
+    display: none;
+  }
+
+  .form-container {
+    top: 0;
+    height: 100%;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .overlay-container {
+    display: none;
+  }
+
+  .register-container {
+    overflow-y: hidden;
+    min-height: 750px;
+    height: 100%;
+    width: 100%;
+    left: -100%;
+  }
+}
+
+@media (min-width: 751px) {
+  .container {
+    overflow: hidden;
+    width: 100%;
+  }
 }
