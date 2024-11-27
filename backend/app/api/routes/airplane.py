@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from models import AirplaneModel, Airplane
+from crud.airport import get_airport
 from schemas import AirplaneModelCreate, AirplaneModelUpdate, AirplaneCreate, AirplaneUpdate
 from crud.airplane import *
 from database import get_db
@@ -45,6 +46,10 @@ async def delete_airplane_model_end_point(airplane_model_id: int, db: Session = 
 
 @router.post("/")
 async def create_airplane_end_point(airplane: AirplaneCreate, db: Session = Depends(get_db)):
+    if not get_airport(db, airplane.current_airport_id):
+        raise HTTPException(status_code=404, detail="Airport not found")
+    if not get_airplane_model(db, airplane.airplane_model_id):
+        raise HTTPException(status_code=404, detail="Airplane model not found")
     return create_airplane(db, airplane)
 
 @router.get("/{airplane_id}")

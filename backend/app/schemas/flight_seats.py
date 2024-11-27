@@ -1,9 +1,20 @@
 from .base import SchemaModel
-from models import FlightClass
 
 
-class FlightSeats(SchemaModel):
+class FlightSeatsBase(SchemaModel):
     flight_seats_id: int
     flight_id: int
-    flight_class: FlightClass
+    flight_price: float
+    flight_class: str
+    available_seats: int
+
+class FlightSeatsCreate(SchemaModel):
+    flight_id: int
+    flight_price: float
+    flight_class: str
+    available_seats: int
+
+class FlightSeatsUpdate(SchemaModel):
+    flight_price: float
+    flight_class: str
     available_seats: int

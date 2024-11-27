@@ -4,6 +4,8 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    Float,
+    DECIMAL,
     Text,
     DateTime,
     Enum,
@@ -62,7 +64,7 @@ class Booking(Base):
     number_of_children = Column(Integer)
     flight_class = Column(Enum(FlightClass), nullable=False)
     cancelled = Column(Boolean, default=False)
-
+    # children_multiplier = Column(DECIMAL,default=0)
     flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
     booking_date = Column(DateTime)
 
@@ -135,5 +137,7 @@ class FlightSeats(Base):
 
     flight_seats_id = Column(Integer, primary_key=True, index=True)
     flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
-    travel_class = Column(String)
+    flight_class = Column(String)
+    flight_price = Column(Float)
+    child_multiplier = Column(DECIMAL)
     available_seats = Column(Integer)

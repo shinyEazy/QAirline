@@ -5,6 +5,7 @@ from crud.booking import *
 from sqlalchemy.orm import Session
 from database import get_db
 from models import FlightClass
+from crud.flight_seat import get_flight_seat_by_flight_id_and_class
 
 router = APIRouter(prefix="/booking", tags=["Booking"])
 
@@ -40,8 +41,22 @@ def create_booking_end_point(
             status_code=400,
             detail=f"Invalid flight class value: {booking.flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
         )
+    # Create the booking
+    db_booking = create_booking(booking, db)
 
-    return create_booking(booking, db)
+    
+    # Get flight seat information to determine the price
+    flight_seat = get_flight_seat_by_flight_id_and_class(db, booking.flight_id, booking.flight_class) 
+    
+    price_per_adult = flight_seat.flight_price
+    price_per_child = price_per_adult * flight_seat.children_multiplier
+    total_price = (db_booking.number_of_adults * price_per_adult) + (db_booking.number_of_children * price_per_child)
+
+
+    return {
+        "booking": db_booking,
+        "total_price": total_price
+    }
 
 
 @router.get("/passenger/{passenger_id}")

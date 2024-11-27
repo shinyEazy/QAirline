@@ -79,8 +79,12 @@ CREATE TABLE IF NOT EXISTS "flight_seats" (
     flight_seats_id SERIAL PRIMARY KEY,
     flight_id INTEGER REFERENCES "flight"(flight_id) ON DELETE CASCADE,
     flight_class VARCHAR(255) NOT NULL,
+    flight_price INTEGER,
+    child_multiplier DECIMAL(5,2),
     available_seats INTEGER
 );
+
+
 -- Insert sample users (Mix of passengers and admins)
 
 INSERT INTO "users" (email, password, created_at) VALUES
@@ -232,25 +236,25 @@ INSERT INTO "flight" (airplane_id, estimated_departure_time, actual_departure_ti
 (29, '2024-11-26 14:00:00', NULL, '2024-11-26 22:00:00', NULL, 29, 30, 'Scheduled'),
 (30, '2024-11-26 15:00:00', NULL, '2024-11-26 23:00:00', NULL, 30, 31, 'Scheduled');
 -- Insert flight seats for each flight
-INSERT INTO "flight_seats" (flight_id, flight_class, available_seats) VALUES
+INSERT INTO "flight_seats" (flight_id, flight_class, flight_price, child_multiplier, available_seats) VALUES
 -- Flight 1 (Boeing 737-800)
-(1, 'Economy', 150),
-(1, 'Business', 30),
-(1, 'First Class', 9),
+(1, 'Economy',100,0.8, 150),
+(1, 'Business',200,0.7, 30),
+(1, 'First Class',500,0.6, 9),
 --Flight 2 (Airbus A320)
-(2, 'Economy', 144),
-(2, 'Business', 28),
-(2, 'First Class', 8),
+(2, 'Economy',100,0.8, 144),
+(2, 'Business',200,0.7, 28),
+(2, 'First Class',500,0.6, 8),
 --Flight 3 (Boeing 787-9)
-(3, 'Economy', 220),
-(3, 'Business', 48),
-(3, 'First Class', 22),
-(15, 'Economy', 320),
-(15, 'Business', 65),
-(15, 'First Class', 25);
+(3, 'Economy',100,0.8,220),
+(3, 'Business',200,0.7 48),
+(3, 'First Class',500,0.6, 22),
+(15, 'Economy', 100,0.8,320),
+(15, 'Business',200,0.7, 65),
+(15, 'First Class',500,0.6 25);
 
 -- Insert bookings (booking_id will auto-increment)
-INSERT INTO "booking" (passenger_id, number_of_adults, number_of_children, 
+INSERT INTO "booking" (passenger_id, number_of_adults, number_of_children,
                        flight_class, cancelled, flight_id, booking_date) VALUES
 (1, 2, 1, 'Economy', FALSE, 1, '2024-11-01 10:00:00'),
 (2, 1, 0, 'Business', FALSE, 2, '2024-11-02 11:00:00'),
@@ -259,9 +263,9 @@ INSERT INTO "booking" (passenger_id, number_of_adults, number_of_children,
 (4, 2, 1, 'Economy', FALSE, 5, '2024-11-05 14:00:00'),
 (5, 1, 0, 'Business', FALSE, 6, '2024-11-06 15:00:00'),
 (6, 2, 0, 'First Class', FALSE, 7, '2024-11-07 16:00:00'),
-(1, 1, 1, 'Economy', FALSE, 8, '2024-11-08 17:00:00'),
-(2, 2, 0, 'Business', FALSE, 9, '2024-11-09 18:00:00'),
-(4, 1, 0, 'First Class', FALSE, 10, '2024-11-10 19:00:00');
+(1, 1, 1,'Economy', FALSE, 8, '2024-11-08 17:00:00'),
+(2, 2, 0,'Business', FALSE, 9, '2024-11-09 18:00:00'),
+(4, 1, 0,'First Class', FALSE, 10, '2024-11-10 19:00:00');
 
 -- Insert payments (payment_id will auto-increment)
 INSERT INTO "payment" (transaction_date_time, amount, currency, 
@@ -276,3 +280,4 @@ INSERT INTO "payment" (transaction_date_time, amount, currency,
 ('2024-11-08 17:05:00', 1200, 'USD', 'Credit Card', 'completed', 8),
 ('2024-11-09 18:05:00', 2800, 'USD', 'Debit Card', 'completed', 9),
 ('2024-11-10 19:05:00', 3800, 'USD', 'Credit Card', 'completed', 10);
+
