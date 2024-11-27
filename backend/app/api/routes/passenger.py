@@ -3,7 +3,7 @@ import schemas, models
 from crud.passenger import *
 from crud.user import get_user
 from sqlalchemy.orm import Session
-from database import get_db
+from core.database import get_db
 
 router = APIRouter(prefix="/passenger", tags=["Passenger"])
 

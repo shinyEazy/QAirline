@@ -3,7 +3,7 @@ import schemas, models
 from sqlalchemy.exc import IntegrityError
 from crud.booking import *
 from sqlalchemy.orm import Session
-from database import get_db
+from core.database import get_db
 from models import FlightClass
 
 router = APIRouter(prefix="/booking", tags=["Booking"])

@@ -4,6 +4,7 @@ from .base import SchemaModel
 from .airplane import AirplaneBase as Airplane
 from .flight_seats import FlightSeats
 
+
 class Flight(SchemaModel):
     flight_id: int
     estimated_departure_time: datetime

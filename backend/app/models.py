@@ -8,7 +8,7 @@ from sqlalchemy import (
     DateTime,
     Enum,
 )
-from app.database import Base
+from core.database import Base
 from datetime import datetime
 from enum import Enum as PyEnum
 
