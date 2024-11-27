@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "a
 import fastapi
 from sqlalchemy.exc import OperationalError
 import models
-from database import engine
+from core.database import engine
 import time
 from api.main import api_router
 
