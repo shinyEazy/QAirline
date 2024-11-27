@@ -12,12 +12,18 @@ class AirplaneModelCreate(SchemaModel):
     total_seats: int
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/main
 class AirplaneModelUpdate(SchemaModel):
     name: str
     manufacturer: str
     total_seats: int
 
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
 class AirplaneBase(SchemaModel):
     airplane_id: int

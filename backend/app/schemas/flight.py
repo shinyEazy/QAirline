@@ -2,7 +2,11 @@ from datetime import datetime
 from typing import List, Optional
 from .base import SchemaModel
 <<<<<<< HEAD
+<<<<<<< HEAD
 from .airplane import AirplaneBase
+=======
+from .airplane import AirplaneBase as Airplane
+>>>>>>> origin/main
 =======
 from .airplane import AirplaneBase as Airplane
 >>>>>>> origin/main
