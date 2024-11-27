@@ -5,10 +5,16 @@ from schemas.user import *
 from crud.user import *
 from sqlalchemy.orm import Session
 from core.database import get_db
-from core.security import authenticate_user, bcrypt_context, create_access_token
+from core.security import (
+    authenticate_user,
+    bcrypt_context,
+    create_access_token,
+    get_current_user,
+)
 from datetime import timedelta
 
 router = APIRouter(prefix="/user", tags=["User"])
+ACCESS_TOKEN_EXPIRES_MIUTES = timedelta(minutes=20)
 
 
 @router.get("/{user_id}")
@@ -94,7 +100,12 @@ async def update_user_end_point(
     return update_user(db_user, user, db)
 
 
-@router.post("/auth/", response_model=UserToken)
+@router.get("/me")
+async def get_users_me_end_point(current_user: User = Depends(get_current_user)):
+    return current_user
+
+
+@router.post("/auth", response_model=UserToken)
 async def authenticate_user_end_point(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
@@ -111,10 +122,12 @@ async def authenticate_user_end_point(
 
     if not authenticate_user(db_user, form_data.password):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate user",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token = create_access_token(db_user, timedelta(minutes=20))
+    token = create_access_token(db_user, ACCESS_TOKEN_EXPIRES_MIUTES)
     return {
         "access_token": token,
         "token_type": "bearer",
