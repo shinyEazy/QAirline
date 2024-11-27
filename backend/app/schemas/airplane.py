@@ -13,7 +13,10 @@ class AirplaneModelCreate(SchemaModel):
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/main
 =======
 >>>>>>> origin/main
 class AirplaneModelUpdate(SchemaModel):
@@ -22,6 +25,9 @@ class AirplaneModelUpdate(SchemaModel):
     total_seats: int
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
 =======
 >>>>>>> origin/main
