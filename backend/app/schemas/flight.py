@@ -4,7 +4,11 @@ from .base import SchemaModel
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 from .airplane import AirplaneBase
+=======
+from .airplane import AirplaneBase as Airplane
+>>>>>>> origin/main
 =======
 from .airplane import AirplaneBase as Airplane
 >>>>>>> origin/main
