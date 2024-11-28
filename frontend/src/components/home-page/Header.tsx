@@ -1,12 +1,34 @@
 import React, { useState } from "react";
-import { Box, Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useNavigate, useLocation } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import HomeIcon from "@mui/icons-material/Home";
+import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import HotelIcon from "@mui/icons-material/Hotel";
+import NewsIcon from "@mui/icons-material/Newspaper";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useMediaQuery("(max-width:1100px)");
+
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const menuItems = [
     {
@@ -56,8 +78,7 @@ const Header = () => {
     fontWeight: "500",
     fontSize: "1.2rem",
     textTransform: "none",
-    padding: "4px 20px",
-    borderRadius: "100px",
+    padding: "4px 10px",
     transition: "color 0.3s ease-in-out, transform 0.3s ease-in-out",
     "&:hover": {
       backgroundColor: "inherit",
@@ -66,41 +87,276 @@ const Header = () => {
     },
   };
 
-  const subMenuStyles = {
-    position: "absolute",
-    left: "0",
-    bgcolor: "rgb(230, 238, 245)",
-    borderRadius: "8px",
-    padding: "10px",
-    mt: "5px",
-    zIndex: 1,
-    width: "200px",
-    margin: "0",
-  };
-
   const handleMouseEnter = (menu: string) => setHoveredMenu(menu);
   const handleMouseLeave = () => setHoveredMenu(null);
 
-  const isActive = (path: string) => location.pathname === path;
+  const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
-  const getMenuItemColor = (menuLabel: string) => {
-    if (location.pathname.includes(menuLabel.toLowerCase())) {
-      return "#1e90ff";
-    }
-    return "black";
-  };
+  const renderDesktopMenu = () => (
+    <Box display="flex" gap="10px">
+      <Button
+        sx={{
+          ...buttonStyles,
+          color: location.pathname === "/" ? "#1e90ff" : "black",
+          fontWeight: "500",
+          fontSize: "1.2rem",
+          textTransform: "none",
+        }}
+        onClick={() => navigate("/")}
+      >
+        Home
+      </Button>
+      {menuItems.map((menu) => (
+        <Box
+          key={menu.label}
+          onMouseEnter={() => handleMouseEnter(menu.label)}
+          onMouseLeave={handleMouseLeave}
+          position="relative"
+        >
+          <Button
+            sx={{
+              ...buttonStyles,
+              color: location.pathname.includes(menu.label.toLowerCase())
+                ? "#1e90ff"
+                : "black",
+              fontWeight: "500",
+              fontSize: "1.2rem",
+              textTransform: "none",
+            }}
+          >
+            {menu.label}
+          </Button>
+          {hoveredMenu === menu.label && (
+            <Box
+              sx={{
+                position: "absolute",
+                left: 0,
+                bgcolor: "rgb(230, 238, 245)",
+                borderRadius: "8px",
+                padding: "10px",
+                zIndex: 1,
+                width: "200px",
+              }}
+            >
+              {menu.subItems.map((subItem) => (
+                <Button
+                  key={subItem.path}
+                  onClick={() => navigate(subItem.path)}
+                  sx={{
+                    width: "100%",
+                    textAlign: "left",
+                    justifyContent: "space-between",
+                    textTransform: "none",
+                    color:
+                      location.pathname === subItem.path ? "#1e90ff" : "black",
+                    "&:hover": {
+                      backgroundColor: "#1e90ff",
+                      color: "white",
+                    },
+                  }}
+                >
+                  {subItem.label}
+                  <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
+                </Button>
+              ))}
+            </Box>
+          )}
+        </Box>
+      ))}
+    </Box>
+  );
+
+  const renderMobileMenu = () => (
+    <>
+      <IconButton onClick={toggleDrawer}>
+        {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
+      </IconButton>
+      <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
+        <List
+          sx={{
+            width: "250px",
+            padding: "0 10px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* Logo */}
+          <ListItem>
+            <img
+              src="/logo.png"
+              alt="QAirline Logo"
+              onClick={() => navigate("/")}
+              style={{
+                cursor: "pointer",
+                width: "200px",
+              }}
+            />
+          </ListItem>
+
+          {/* Home */}
+          <ListItemButton
+            onClick={() => {
+              navigate("/");
+              toggleDrawer();
+            }}
+            sx={{
+              backgroundColor:
+                location.pathname === "/" ? "#1e90ff" : "inherit",
+              color: location.pathname === "/" ? "white" : "black",
+              borderRadius: "100px",
+              transition:
+                "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
+              "&:hover": {
+                backgroundColor: "#1e90ff",
+                color: "white",
+              },
+            }}
+          >
+            <HomeIcon sx={{ mr: 1, fontSize: "1.3rem" }} />
+            <ListItemText
+              primary={
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                  }}
+                >
+                  Home
+                </Typography>
+              }
+            />
+          </ListItemButton>
+
+          {/* Menu Items */}
+          {menuItems.map((menu) => (
+            <Box key={menu.label}>
+              {/* Parent Menu with Icon */}
+              <ListItem>
+                {menu.label === "Flight" && (
+                  <FlightTakeoffIcon
+                    sx={{
+                      mr: 1,
+                      fontSize: "1.3rem",
+                      color: location.pathname.includes(
+                        menu.label.toLowerCase()
+                      )
+                        ? "#1e90ff"
+                        : "black",
+                    }}
+                  />
+                )}
+                {menu.label === "Car" && (
+                  <DirectionsCarIcon
+                    sx={{
+                      mr: 1,
+                      fontSize: "1.3rem",
+                      color: location.pathname.includes(
+                        menu.label.toLowerCase()
+                      )
+                        ? "#1e90ff"
+                        : "black",
+                    }}
+                  />
+                )}
+                {menu.label === "Hotel" && (
+                  <HotelIcon
+                    sx={{
+                      mr: 1,
+                      fontSize: "1.3rem",
+                      color: location.pathname.includes(
+                        menu.label.toLowerCase()
+                      )
+                        ? "#1e90ff"
+                        : "black",
+                    }}
+                  />
+                )}
+                {menu.label === "Pages" && (
+                  <ExitToAppIcon
+                    sx={{
+                      mr: 1,
+                      fontSize: "1.3rem",
+                      color: location.pathname.includes(
+                        menu.label.toLowerCase()
+                      )
+                        ? "#1e90ff"
+                        : "black",
+                    }}
+                  />
+                )}
+                {menu.label === "News" && (
+                  <NewsIcon
+                    sx={{
+                      mr: 1,
+                      fontSize: "1.3rem",
+                      color: location.pathname.includes(
+                        menu.label.toLowerCase()
+                      )
+                        ? "#1e90ff"
+                        : "black",
+                    }}
+                  />
+                )}
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    color: location.pathname.includes(menu.label.toLowerCase())
+                      ? "#1e90ff"
+                      : "black",
+                    transition: "color 0.3s ease-in-out",
+                  }}
+                >
+                  {menu.label}
+                </Typography>
+              </ListItem>
+
+              {/* Subitems */}
+              {menu.subItems.map((subItem) => (
+                <ListItemButton
+                  key={subItem.path}
+                  onClick={() => {
+                    navigate(subItem.path);
+                    toggleDrawer();
+                  }}
+                  sx={{
+                    borderRadius: "100px",
+                    transition:
+                      "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
+                    pl: 4,
+                    backgroundColor:
+                      location.pathname === subItem.path
+                        ? "#1e90ff"
+                        : "inherit",
+                    color:
+                      location.pathname === subItem.path ? "white" : "black",
+                    marginBottom: "2px",
+                    "&:hover": {
+                      backgroundColor: "#1e90ff",
+                      color: "white",
+                    },
+                  }}
+                >
+                  <ListItemText primary={subItem.label} />
+                </ListItemButton>
+              ))}
+            </Box>
+          ))}
+        </List>
+      </Drawer>
+    </>
+  );
 
   return (
     <Box
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      padding="10px 80px"
       position="sticky"
       sx={{
         backgroundColor: "#ffffff",
         top: 0,
         zIndex: 1100,
+        padding: { xs: "10px 20px", sm: "10px 80px" },
       }}
     >
       {/* Logo */}
@@ -110,8 +366,8 @@ const Header = () => {
           alt="QAirline Logo"
           onClick={() => navigate("/")}
           style={{
-            width: "100%",
-            height: "100%",
+            width: "200px",
+            height: "auto",
             maxWidth: "200px",
             cursor: "pointer",
           }}
@@ -119,84 +375,30 @@ const Header = () => {
       </Box>
 
       {/* Main Menu */}
-      <Box display="flex" gap="10px">
-        <Button
-          sx={{
-            ...buttonStyles,
-            color: isActive("/") ? "#1e90ff" : "black",
-          }}
-          onClick={() => navigate("/")}
-        >
-          Home
-        </Button>
-
-        {menuItems.map((menu) => (
-          <Box
-            key={menu.label}
-            onMouseEnter={() => handleMouseEnter(menu.label)}
-            onMouseLeave={handleMouseLeave}
-            position="relative"
-          >
-            <Button
-              sx={{
-                ...buttonStyles,
-                color: getMenuItemColor(menu.label),
-              }}
-            >
-              {menu.label}
-            </Button>
-            {hoveredMenu === menu.label && (
-              <Box sx={subMenuStyles}>
-                {menu.subItems.map((subItem, index) => {
-                  const isActiveSubItem = location.pathname === subItem.path;
-                  return (
-                    <Button
-                      key={index}
-                      onClick={() => navigate(subItem.path)}
-                      sx={{
-                        margin: "4px auto",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        width: "100%",
-                        color: isActiveSubItem ? "#1e90ff" : "black",
-                        backgroundColor: "transparent",
-                        borderRadius: "4px",
-                        textTransform: "none",
-                        "&:hover": {
-                          backgroundColor: "rgb(77,115,252)",
-                          color: "white",
-                        },
-                        padding: "8px 12px",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      {subItem.label}
-                      <ArrowForwardIosIcon sx={{ fontSize: "16px" }} />
-                    </Button>
-                  );
-                })}
-              </Box>
-            )}
-          </Box>
-        ))}
-
-        <Button
-          sx={{
-            ...buttonStyles,
-            color: location.pathname.includes("/tour-packages")
-              ? "#1e90ff"
-              : "black",
-          }}
-          onClick={() => navigate("/tour-packages")}
-        >
-          Tour Package
-        </Button>
-      </Box>
+      {isMobile ? renderMobileMenu() : renderDesktopMenu()}
 
       {/* Authentication Links */}
       <Box display="flex" gap="10px">
-        <Button sx={buttonStyles} onClick={() => navigate("/auth/login")}>
+        <Button
+          sx={{
+            color: "#1e90ff",
+            fontWeight: "500",
+            fontSize: "1.2rem",
+            textTransform: "none",
+            border: "1px solid #1e90ff",
+            borderRadius: "100px",
+            padding: "0 20px",
+            transition:
+              "background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out",
+            "&:hover": {
+              backgroundColor: "#1e90ff",
+              color: "white",
+              transform: "scale(1.05)",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            },
+          }}
+          onClick={() => navigate("/auth/login")}
+        >
           Login
         </Button>
         <Button
