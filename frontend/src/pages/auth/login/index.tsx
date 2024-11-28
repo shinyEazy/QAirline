@@ -17,6 +17,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Link as RouterLink } from "react-router-dom";
 import "../login/login.css";
+import { useEffect } from "react";
 
 const Login = () => {
   const [checked, setChecked] = React.useState(false);
@@ -39,6 +40,19 @@ const Login = () => {
     setIsRightPanelActive(false);
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 750);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <div
       className={`container ${isRightPanelActive ? "right-panel-active" : ""}`}
@@ -55,6 +69,7 @@ const Login = () => {
         autoPlay
         loop
         muted
+        className="background-video"
         style={{
           position: "absolute",
           top: 0,
@@ -69,360 +84,409 @@ const Login = () => {
         Your browser does not support the video tag.
       </video>
 
-      {/* Register Form */}
-      <div className="form-container register-container">
-        <Box
-          display="flex"
-          flexDirection="column"
-          padding={3}
-          width="100%"
-          height="100%"
-          bgcolor="#f8f8f2"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Box component="form" noValidate maxWidth="450px">
-            <Box display="flex" justifyContent="center" mb={2}>
-              <Typography variant="h3" fontWeight="500" color="#1e90ff">
-                Sign up
-              </Typography>
-            </Box>
-            <TextField
-              fullWidth
-              label="First name"
-              variant="outlined"
-              sx={{
-                margin: "10px auto",
-                backgroundColor: "#f0f8ff",
-                "& .MuiOutlinedInput-root": {
+      <Box>
+        {/* Register Form */}
+        <Box className="form-container register-container">
+          <Box
+            display="flex"
+            flexDirection="column"
+            padding={3}
+            width="100%"
+            height="100%"
+            bgcolor="white"
+            justifyContent="center"
+            alignItems="center"
+            // sx={{
+            //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+            // }}
+          >
+            <Box component="form" noValidate maxWidth="450px">
+              <Box display="flex" justifyContent="center" mb={2}>
+                <Typography variant="h3" fontWeight="500" color="#1e90ff">
+                  Sign up
+                </Typography>
+              </Box>
+              <TextField
+                fullWidth
+                label="First name"
+                variant="outlined"
+                sx={{
                   borderRadius: "8px",
-                  "& fieldset": { borderColor: "#b0c4de" },
-                  "&:hover fieldset": { borderColor: "#1e90ff" },
-                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Last name"
-              variant="outlined"
-              sx={{
-                margin: "10px auto",
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "8px",
+                  margin: "10px auto",
                   backgroundColor: "#f0f8ff",
-                  "& fieldset": { borderColor: "#b0c4de" },
-                  "&:hover fieldset": { borderColor: "#1e90ff" },
-                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Email address"
-              variant="outlined"
-              sx={{
-                margin: "10px auto",
-                backgroundColor: "#f0f8ff",
-                "& .MuiOutlinedInput-root": {
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                label="Last name"
+                variant="outlined"
+                sx={{
+                  margin: "10px auto",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    backgroundColor: "#f0f8ff",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                label="Email address"
+                variant="outlined"
+                sx={{
                   borderRadius: "8px",
-                  "& fieldset": { borderColor: "#b0c4de" },
-                  "&:hover fieldset": { borderColor: "#1e90ff" },
-                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Password"
-              variant="outlined"
-              type="password"
-              sx={{
-                margin: "10px auto",
-                backgroundColor: "#f0f8ff",
-                "& .MuiOutlinedInput-root": {
+                  margin: "10px auto",
+                  backgroundColor: "#f0f8ff",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                label="Password"
+                variant="outlined"
+                type="password"
+                sx={{
                   borderRadius: "8px",
-                  "& fieldset": { borderColor: "#b0c4de" },
-                  "&:hover fieldset": { borderColor: "#1e90ff" },
-                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
-                },
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Confirm password"
-              variant="outlined"
-              margin="normal"
-              type="password"
-              sx={{
-                margin: "10px auto",
-                backgroundColor: "#f0f8ff",
-                "& .MuiOutlinedInput-root": {
+                  margin: "10px auto",
+                  backgroundColor: "#f0f8ff",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                label="Confirm password"
+                variant="outlined"
+                margin="normal"
+                type="password"
+                sx={{
                   borderRadius: "8px",
-                  "& fieldset": { borderColor: "#b0c4de" },
-                  "&:hover fieldset": { borderColor: "#1e90ff" },
-                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
-                },
-              }}
-            />
-            <Box width="100%" display="flex" justifyContent="start">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checked}
-                    onChange={handleChange}
-                    color="primary"
-                  />
-                }
-                label={
-                  <span>
-                    I have read the{" "}
-                    <Link
-                      href="#"
-                      underline="none"
-                      sx={{
-                        color: "#1e90ff",
-                        fontSize: "1rem",
-                        "&:hover": { textDecoration: "underline" },
+                  margin: "10px auto",
+                  backgroundColor: "#f0f8ff",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+              />
+              <Box width="100%" display="flex" justifyContent="start">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked}
+                      onChange={handleChange}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <span>
+                      I have read the{" "}
+                      <Link
+                        href="#"
+                        underline="none"
+                        sx={{
+                          color: "#1e90ff",
+                          fontSize: "1rem",
+                          "&:hover": { textDecoration: "underline" },
+                        }}
+                      >
+                        terms and conditions
+                      </Link>
+                    </span>
+                  }
+                />
+              </Box>
+              <Box display="flex" justifyContent="center" width="100%">
+                <Button
+                  className="auth-button"
+                  variant="contained"
+                  sx={{
+                    marginTop: "20px",
+                    width: "60%",
+                    position: "relative",
+                    padding: "12px 24px",
+                    textTransform: "none",
+                    fontWeight: "500",
+                    fontSize: "1rem",
+                    color: "#ffffff",
+                    background: "linear-gradient(to right, #1e90ff, #87ceeb)",
+                    border: "2px solid transparent",
+                    borderRadius: "50px",
+                    overflow: "hidden",
+                    transition: "all 0.3s ease-in-out",
+                    "&:hover": {
+                      background: "linear-gradient(to right, #1c86ee, #4682b4)",
+                      transform: "scale(1.05)",
+                      "&::after": {
+                        transform: "translateX(0)",
+                        opacity: 1,
+                      },
+                    },
+                  }}
+                >
+                  Sign up
+                </Button>
+              </Box>
+
+              <Typography textAlign="center" marginTop={2} fontSize="1rem">
+                or use your account
+              </Typography>
+              <Box display="flex" justifyContent="center" gap={2} marginTop={1}>
+                <IconButton
+                  sx={{
+                    backgroundColor: "#3b5998",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#2d4373" },
+                  }}
+                >
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton
+                  sx={{
+                    backgroundColor: "#db4437",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#a33327" },
+                  }}
+                >
+                  <GoogleIcon />
+                </IconButton>
+                <IconButton
+                  sx={{
+                    backgroundColor: "#0077b5",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#005582" },
+                  }}
+                >
+                  <LinkedInIcon />
+                </IconButton>
+              </Box>
+              {isMobile && (
+                <Box>
+                  <Typography textAlign="center" marginTop={1} fontSize="1rem">
+                    Already have an account?{" "}
+                    <span
+                      onClick={handleLoginClick}
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "none",
+                        borderBottom: "1px solid transparent",
+                        transition: "border-color 0.3s",
                       }}
+                      onMouseEnter={(e) =>
+                        (e.target.style.borderBottom = "2px solid #000")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.borderBottom = "2px solid transparent")
+                      }
                     >
-                      terms and conditions
-                    </Link>
-                  </span>
-                }
-              />
-            </Box>
-            <Box display="flex" justifyContent="center" width="100%">
-              <Button
-                className="auth-button"
-                variant="contained"
-                sx={{
-                  marginTop: "20px",
-                  width: "60%",
-                  position: "relative",
-                  padding: "12px 24px",
-                  textTransform: "none",
-                  fontWeight: "500",
-                  fontSize: "1rem",
-                  color: "#ffffff",
-                  background: "linear-gradient(to right, #1e90ff, #87ceeb)",
-                  border: "2px solid transparent",
-                  borderRadius: "50px",
-                  overflow: "hidden",
-                  transition: "all 0.3s ease-in-out",
-                  "&:hover": {
-                    background: "linear-gradient(to right, #1c86ee, #4682b4)",
-                    transform: "scale(1.05)",
-                    "&::after": {
-                      transform: "translateX(0)",
-                      opacity: 1,
-                    },
-                  },
-                }}
-              >
-                Sign up
-              </Button>
-            </Box>
-
-            <Typography
-              textAlign="center"
-              marginTop={3}
-              color="textSecondary"
-              fontSize="1rem"
-            >
-              or use your account
-            </Typography>
-            <Box display="flex" justifyContent="center" gap={2} marginTop={2}>
-              <IconButton
-                sx={{
-                  backgroundColor: "#3b5998",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#2d4373" },
-                }}
-              >
-                <FacebookIcon />
-              </IconButton>
-              <IconButton
-                sx={{
-                  backgroundColor: "#db4437",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#a33327" },
-                }}
-              >
-                <GoogleIcon />
-              </IconButton>
-              <IconButton
-                sx={{
-                  backgroundColor: "#0077b5",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#005582" },
-                }}
-              >
-                <LinkedInIcon />
-              </IconButton>
+                      Login
+                    </span>
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
-      </div>
+        {/* Login Form */}
+        <Box className="form-container login-container">
+          <Box
+            display="flex"
+            flexDirection="column"
+            padding={3}
+            width="100%"
+            height="100%"
+            bgcolor="white"
+            justifyContent="center"
+            alignItems="center"
+            // sx={{
+            //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+            // }}
+          >
+            <Box component="form" noValidate maxWidth="450px">
+              <Box display="flex" justifyContent="center" mb={2}>
+                <Typography variant="h3" fontWeight="500" color="#1e90ff">
+                  Login
+                </Typography>
+              </Box>
+              <TextField
+                fullWidth
+                label="Email"
+                variant="outlined"
+                sx={{
+                  margin: "10px auto",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    backgroundColor: "#f0f8ff",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+              />
 
-      {/* Login Form */}
-      <div className="form-container login-container">
-        <Box
-          display="flex"
-          flexDirection="column"
-          padding={3}
-          width="100%"
-          height="100%"
-          bgcolor="#f8f8f2"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Box component="form" noValidate maxWidth="450px">
-            <Box display="flex" justifyContent="center" mb={2}>
-              <Typography variant="h3" fontWeight="500" color="#1e90ff">
-                Login
+              <TextField
+                fullWidth
+                label="Password"
+                variant="outlined"
+                margin="normal"
+                type={showPassword ? "text" : "password"}
+                sx={{
+                  margin: "10px auto 20px",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    backgroundColor: "#f0f8ff",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <Box
+                width="100%"
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <FormControlLabel
+                  control={<Checkbox color="primary" />}
+                  label="Remember me"
+                />
+                <Link
+                  component={RouterLink}
+                  to="/auth/recovery"
+                  underline="none"
+                  sx={{
+                    color: "#1e90ff",
+                    fontSize: "1rem",
+                    "&:hover": { textDecoration: "underline" },
+                  }}
+                >
+                  Forgot password?
+                </Link>
+              </Box>
+              <Box display="flex" justifyContent="center" width="100%">
+                <Button
+                  variant="contained"
+                  sx={{
+                    marginTop: "20px",
+                    width: "60%",
+                    position: "relative",
+                    padding: "12px 24px",
+                    textTransform: "none",
+                    fontWeight: "500",
+                    fontSize: "1rem",
+                    color: "#ffffff",
+                    background: "linear-gradient(to right, #1e90ff, #87ceeb)",
+                    border: "2px solid transparent",
+                    borderRadius: "50px",
+                    overflow: "hidden",
+                    transition: "all 0.3s ease-in-out",
+                    "&:hover": {
+                      background: "linear-gradient(to right, #1c86ee, #4682b4)",
+                      transform: "scale(1.05)",
+                      "&::after": {
+                        transform: "translateX(0)",
+                        opacity: 1,
+                      },
+                    },
+                  }}
+                >
+                  Login
+                </Button>
+              </Box>
+              <Typography textAlign="center" marginTop={2} fontSize="1rem">
+                or use your account
               </Typography>
-            </Box>
-            <TextField
-              fullWidth
-              label="Email"
-              variant="outlined"
-              sx={{
-                margin: "10px auto",
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "8px",
-                  backgroundColor: "#f0f8ff",
-                  "& fieldset": { borderColor: "#b0c4de" },
-                  "&:hover fieldset": { borderColor: "#1e90ff" },
-                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
-                },
-              }}
-            />
-
-            <TextField
-              fullWidth
-              label="Password"
-              variant="outlined"
-              margin="normal"
-              type={showPassword ? "text" : "password"}
-              sx={{
-                margin: "10px auto 20px",
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "8px",
-                  backgroundColor: "#f0f8ff",
-                  "& fieldset": { borderColor: "#b0c4de" },
-                  "&:hover fieldset": { borderColor: "#1e90ff" },
-                  "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
-                },
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                      aria-label="toggle password visibility"
+              <Box display="flex" justifyContent="center" gap={2} marginTop={1}>
+                <IconButton
+                  sx={{
+                    backgroundColor: "#3b5998",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#2d4373" },
+                  }}
+                >
+                  <FacebookIcon />
+                </IconButton>
+                <IconButton
+                  sx={{
+                    backgroundColor: "#db4437",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#a33327" },
+                  }}
+                >
+                  <GoogleIcon />
+                </IconButton>
+                <IconButton
+                  sx={{
+                    backgroundColor: "#0077b5",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#005582" },
+                  }}
+                >
+                  <LinkedInIcon />
+                </IconButton>
+              </Box>
+              {isMobile && (
+                <Box>
+                  <Typography textAlign="center" marginTop={1} fontSize="1rem">
+                    Don't have an account?{" "}
+                    <span
+                      onClick={handleRegisterClick}
+                      style={{
+                        cursor: "pointer",
+                        textDecoration: "none",
+                        borderBottom: "1px solid transparent",
+                        transition: "border-color 0.3s",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.target.style.borderBottom = "2px solid #000")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.borderBottom = "2px solid transparent")
+                      }
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <Box
-              width="100%"
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <FormControlLabel
-                control={<Checkbox color="primary" />}
-                label="Remember me"
-              />
-              <Link
-                component={RouterLink}
-                to="/auth/recovery"
-                underline="none"
-                sx={{
-                  color: "#1e90ff",
-                  fontSize: "1rem",
-                  "&:hover": { textDecoration: "underline" },
-                }}
-              >
-                Forgot password?
-              </Link>
-            </Box>
-            <Box display="flex" justifyContent="center" width="100%">
-              <Button
-                variant="contained"
-                sx={{
-                  marginTop: "20px",
-                  width: "60%",
-                  position: "relative",
-                  padding: "12px 24px",
-                  textTransform: "none",
-                  fontWeight: "500",
-                  fontSize: "1rem",
-                  color: "#ffffff",
-                  background: "linear-gradient(to right, #1e90ff, #87ceeb)",
-                  border: "2px solid transparent",
-                  borderRadius: "50px",
-                  overflow: "hidden",
-                  transition: "all 0.3s ease-in-out",
-                  "&:hover": {
-                    background: "linear-gradient(to right, #1c86ee, #4682b4)",
-                    transform: "scale(1.05)",
-                    "&::after": {
-                      transform: "translateX(0)",
-                      opacity: 1,
-                    },
-                  },
-                }}
-              >
-                Login
-              </Button>
-            </Box>
-            <Typography
-              textAlign="center"
-              marginTop={3}
-              color="textSecondary"
-              fontSize="1rem"
-            >
-              or use your account
-            </Typography>
-            <Box display="flex" justifyContent="center" gap={2} marginTop={2}>
-              <IconButton
-                sx={{
-                  backgroundColor: "#3b5998",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#2d4373" },
-                }}
-              >
-                <FacebookIcon />
-              </IconButton>
-              <IconButton
-                sx={{
-                  backgroundColor: "#db4437",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#a33327" },
-                }}
-              >
-                <GoogleIcon />
-              </IconButton>
-              <IconButton
-                sx={{
-                  backgroundColor: "#0077b5",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#005582" },
-                }}
-              >
-                <LinkedInIcon />
-              </IconButton>
+                      Sign up
+                    </span>
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
-      </div>
+      </Box>
 
       {/* Overlay */}
       <div className="overlay-container">

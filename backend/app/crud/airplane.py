@@ -30,5 +30,9 @@ def get_airplane(db: Session, airplane_id: int) -> Airplane:
 def update_airplane(db: Session, db_airplane:Airplane,airplane:AirplaneUpdate) -> Airplane:
     return update(db_airplane, db, airplane.model_dump())
 
+def update_airplane_location(db: Session, db_airplane:Airplane,airport_id:int) -> Airplane:
+    db_airplane.current_airport_id = airport_id
+    return update(db_airplane, db, db_airplane.model_dump())
+
 def delete_airplane(db:Session, db_airplane:Airplane) -> Airplane:
     return delete(db_airplane,db)

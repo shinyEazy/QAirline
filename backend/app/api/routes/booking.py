@@ -1,11 +1,13 @@
 from fastapi import APIRouter, HTTPException, Depends
-import schemas, models
+import schemas
 from sqlalchemy.exc import IntegrityError
 from crud.booking import *
-from sqlalchemy.orm import Session
-from database import get_db
-from models import FlightClass
+from crud.passenger import *
 from crud.flight_seat import get_flight_seat_by_flight_id_and_class
+from sqlalchemy.orm import Session
+from core.database import get_db
+from models import FlightClass
+
 
 router = APIRouter(prefix="/booking", tags=["Booking"])
 
@@ -32,10 +34,10 @@ def create_booking_end_point(
     Create a booking
     """
     # Manually validate the flight_class value against the Enum
-    if not get_booking_by_passenger_id(booking.passenger_id, db):
+    if not get_passenger(booking.passenger_id, db):
         raise HTTPException(status_code=404, detail="Referenced passenger not found")
-    if not get_booking_by_flight_id(booking.flight_id, db):
-        raise HTTPException(status_code=404, detail="Referenced flight not found")
+    # if not get_booking_by_flight_id(booking.flight_id, db):
+    #     raise HTTPException(status_code=404, detail="Referenced flight not found")
     if booking.flight_class not in FlightClass.__members__:
         raise HTTPException(
             status_code=400,
@@ -49,7 +51,7 @@ def create_booking_end_point(
     flight_seat = get_flight_seat_by_flight_id_and_class(db, booking.flight_id, booking.flight_class) 
     
     price_per_adult = flight_seat.flight_price
-    price_per_child = price_per_adult * flight_seat.children_multiplier
+    price_per_child = price_per_adult * flight_seat.child_multiplier
     total_price = (db_booking.number_of_adults * price_per_adult) + (db_booking.number_of_children * price_per_child)
 
 

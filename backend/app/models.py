@@ -10,7 +10,7 @@ from sqlalchemy import (
     DateTime,
     Enum,
 )
-from app.database import Base
+from core.database import Base
 from datetime import datetime
 from enum import Enum as PyEnum
 
@@ -64,7 +64,6 @@ class Booking(Base):
     number_of_children = Column(Integer)
     flight_class = Column(Enum(FlightClass), nullable=False)
     cancelled = Column(Boolean, default=False)
-    # children_multiplier = Column(DECIMAL,default=0)
     flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
     booking_date = Column(DateTime)
 
@@ -139,5 +138,5 @@ class FlightSeats(Base):
     flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
     flight_class = Column(String)
     flight_price = Column(Float)
-    child_multiplier = Column(DECIMAL)
+    child_multiplier = Column(Float)
     available_seats = Column(Integer)

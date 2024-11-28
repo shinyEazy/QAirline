@@ -5,3 +5,4 @@ from .airplane import *
 from .passenger import *
 from .payment import *
 from .airport import *
+from .flight_seat import *

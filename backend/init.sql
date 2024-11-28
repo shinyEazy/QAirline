@@ -79,8 +79,8 @@ CREATE TABLE IF NOT EXISTS "flight_seats" (
     flight_seats_id SERIAL PRIMARY KEY,
     flight_id INTEGER REFERENCES "flight"(flight_id) ON DELETE CASCADE,
     flight_class VARCHAR(255) NOT NULL,
-    flight_price INTEGER,
-    child_multiplier DECIMAL(5,2),
+    flight_price FLOAT,
+    child_multiplier FLOAT,
     available_seats INTEGER
 );
 
@@ -236,22 +236,24 @@ INSERT INTO "flight" (airplane_id, estimated_departure_time, actual_departure_ti
 (29, '2024-11-26 14:00:00', NULL, '2024-11-26 22:00:00', NULL, 29, 30, 'Scheduled'),
 (30, '2024-11-26 15:00:00', NULL, '2024-11-26 23:00:00', NULL, 30, 31, 'Scheduled');
 -- Insert flight seats for each flight
+-- Insert sample data into flight_seats
 INSERT INTO "flight_seats" (flight_id, flight_class, flight_price, child_multiplier, available_seats) VALUES
 -- Flight 1 (Boeing 737-800)
-(1, 'Economy',100,0.8, 150),
-(1, 'Business',200,0.7, 30),
-(1, 'First Class',500,0.6, 9),
---Flight 2 (Airbus A320)
-(2, 'Economy',100,0.8, 144),
-(2, 'Business',200,0.7, 28),
-(2, 'First Class',500,0.6, 8),
---Flight 3 (Boeing 787-9)
-(3, 'Economy',100,0.8,220),
-(3, 'Business',200,0.7 48),
-(3, 'First Class',500,0.6, 22),
-(15, 'Economy', 100,0.8,320),
-(15, 'Business',200,0.7, 65),
-(15, 'First Class',500,0.6 25);
+(1, 'Economy', 100.0, 0.8, 150),
+(1, 'Business', 200.0, 0.7, 30),
+(1, 'First Class', 500.0, 0.6, 9),
+-- Flight 2 (Airbus A320)
+(2, 'Economy', 100.0, 0.8, 144),
+(2, 'Business', 200.0, 0.7, 28),
+(2, 'First Class', 500.0, 0.6, 8),
+-- Flight 3 (Boeing 787-9)
+(3, 'Economy', 100.0, 0.8, 220),
+(3, 'Business', 200.0, 0.7, 48),
+(3, 'First Class', 500.0, 0.6, 22),
+-- Flight 15 (Unknown)
+(15, 'Economy', 100.0, 0.8, 320),
+(15, 'Business', 200.0, 0.7, 65),
+(15, 'First Class', 500.0, 0.6, 25);
 
 -- Insert bookings (booking_id will auto-increment)
 INSERT INTO "booking" (passenger_id, number_of_adults, number_of_children,
