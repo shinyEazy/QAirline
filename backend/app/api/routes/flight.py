@@ -16,6 +16,9 @@ async def get_flight_end_point(flight_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Flight not found")
     return db_flight
 
+# #Find list flight by departure time and location
+# @router.get("/list-flight")
+# async def get_flights_
 
 @router.post("/")
 async def create_flight_end_point(flight: FlightCreate, db: Session = Depends(get_db)):

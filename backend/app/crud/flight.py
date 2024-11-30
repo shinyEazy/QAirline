@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
 from schemas import FlightCreate, FlightUpdate
 from .crud_utils import *
@@ -16,6 +17,13 @@ def get_flight(db: Session, flight_id: int) -> Flight:
     db_flight = db.query(Flight).filter(Flight.flight_id == flight_id).first()
     return db_flight
 
+def get_flight_by_departure_time_and_location(db:Session,departure_time:datetime, departure_airport_id: int ,destination_airport_id: int) -> Flight:
+    db_flight =db.query(Flight).fitler(
+        Flight.estimated_departure_time == departure_time,
+        Flight.departure_airport_id == departure_airport_id,
+        Flight.destination_airport_id == destination_airport_id
+
+    )
 def update_flight(db: Session, db_flight:Flight,flight:FlightUpdate) -> Flight:
     return update(db_flight, db, flight.model_dump())
 
