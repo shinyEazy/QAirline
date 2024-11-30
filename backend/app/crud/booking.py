@@ -36,7 +36,7 @@ def get_booking(booking_id: int, db: Session) -> Booking:
     return db_booking
 
 
-def create_booking(booking: schemas.BookingCreate, db: Session) -> Booking:
+def create_booking(booking: schemas.BookingBase, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'INSERT INTO booking values ()'
     When creating the booking, we need to ensure that the passenger_id and flight_id are valid
