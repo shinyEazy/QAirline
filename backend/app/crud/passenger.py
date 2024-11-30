@@ -1,5 +1,5 @@
 from schemas.passenger import PassengerCreate, PassengerUpdate, PassengerBase
-from models import Passenger
+from models import Passenger, Flight
 from sqlalchemy.orm import Session
 from .crud_utils import *
 
@@ -21,6 +21,18 @@ def get_passenger(citizen_id: str, db: Session) -> Passenger:
         db.query(Passenger).filter(Passenger.citizen_id == citizen_id).first()
     )
 
+    return db_passenger
+
+
+def get_passenger_by_flight(citizen_id: str, flight_id: int, db: Session) -> Passenger:
+    db_passenger = (
+        db.query(Passenger)
+        .join(Flight)  # Join the Flight model to filter by flight_id
+        .filter(
+            Passenger.citizen_id == citizen_id, Flight.flight_id == flight_id
+        )  # Both filters
+        .first()
+    )
     return db_passenger
 
 

@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from schemas import FlightCreate, FlightUpdate
 from .crud_utils import *
-from models import Flight, Airplane
+from models import Flight, Airplane, Passenger, Booking
+from typing import List
 
 
 # CRUD for Flight
@@ -27,3 +28,17 @@ def update_flight(db: Session, db_flight: Flight, flight: FlightUpdate) -> Fligh
 
 def delete_flight(db: Session, db_flight: Flight) -> Flight:
     return delete(db_flight, db)
+
+
+def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
+    """
+    Get all passengers in a given flight
+    """
+    passengers = (
+        db.query(Passenger)
+        .join(Booking, Booking.booking_id == Passenger.booking_id)
+        .filter(Booking.flight_id == flight_id)
+        .all()
+    )
+
+    return passengers

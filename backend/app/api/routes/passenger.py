@@ -46,16 +46,45 @@ def update_passenger_end_point(
     return update_passenger(db_passenger, passenger, db)
 
 
-@router.delete("/{citizen_id}")
-def delete_passenger_end_point(citizen_id: str, db: Session = Depends(get_db)):
+@router.get("/{passenger_id}/{flight_id}")
+def get_passenger_by_flight_end_point(
+    citizen_id: str, flight_id: int, db: Session = Depends(get_db)
+):
     """
-    Delete a passenger
+    Get a passenger by citizen_id and flight_id
     """
-    db_passenger = get_passenger(citizen_id, db)
+
+    db_passenger = get_passenger_by_flight(
+        citizen_id=citizen_id, flight_id=flight_id, db=db
+    )
 
     if not db_passenger:
-        raise HTTPException(status_code=404, detail="Passenger not found")
+        raise HTTPException(
+            status_code=404, detail="Passenger not found for the given flight"
+        )
 
+    return db_passenger
+
+
+@router.delete("/{citizen_id}/{flight_id}")
+def delete_passenger_end_point(
+    citizen_id: str, flight_id: int, db: Session = Depends(get_db)
+):
+    """
+    Delete a passenger by citizen_id and flight_id
+    """
+    # Get the passenger based on both passenger_id and flight_id
+    db_passenger = get_passenger_by_flight(
+        citizen_id=citizen_id, flight_id=flight_id, db=db
+    )
+
+    # If the passenger doesn't exist, raise a 404 error
+    if not db_passenger:
+        raise HTTPException(
+            status_code=404, detail="Passenger not found for the given flight"
+        )
+
+    # Call the delete_passenger function to delete the passenger
     return delete_passenger(db_passenger, db)
 
 

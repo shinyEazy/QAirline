@@ -104,3 +104,19 @@ async def delete_airplane_end_point(airplane_id: int, db: Session = Depends(get_
     if not db_airplane:
         raise HTTPException(status_code=404, detail="Airplane not found")
     return delete_airplane(db, db_airplane)
+
+
+@router.get("/flight/passengers/{flight_id}")
+async def create_passengers_for_flight(flight_id: int, db: Session = Depends(get_db)):
+    """
+    Post API to get all passengers for a specific flight.
+    """
+    # Call the function to retrieve all passengers for the given flight_id
+    passengers = get_all_passenger_in_flight(flight_id, db)
+
+    if not passengers:
+        raise HTTPException(
+            status_code=404, detail="No passengers found for this flight"
+        )
+
+    return {"flight_id": flight_data.flight_id, "passengers": passengers}
