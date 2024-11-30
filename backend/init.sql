@@ -68,8 +68,9 @@ CREATE TABLE booking (
 
 -- Create Passenger Table
 CREATE TABLE passengers (
+    passenger_id SERIAL PRIMARY KEY, 
     booking_id INTEGER NOT NULL,
-    citizen_id TEXT PRIMARY KEY,
+    citizen_id TEXT NOT NULL,
     passport_number TEXT,
     gender BOOLEAN NOT NULL,
     phone_number TEXT NOT NULL,
@@ -77,14 +78,9 @@ CREATE TABLE passengers (
     last_name TEXT NOT NULL,
     nationality TEXT NOT NULL,
     date_of_birth TIMESTAMP NOT NULL,
+    seat_row INTEGER NOT NULL,
+    seat_col VARCHAR NOT NULL,
     FOREIGN KEY (booking_id) REFERENCES booking(booking_id) ON DELETE CASCADE
-);
-
--- Create Passenger Seat Table
-CREATE TABLE passenger_seat (
-    row_seat INTEGER NOT NULL CHECK (row_seat > 0),
-    col_seat INTEGER NOT NULL CHECK (col_seat > 0),
-    passenger_id INTEGER PRIMARY KEY
 );
 
 -- Create Payment Table
@@ -106,203 +102,12 @@ CREATE TABLE admin (
     password TEXT
 );
 
--- Insert Airport Data
-INSERT INTO airport (airport_code, city, name) VALUES 
-('JFK', 'New York', 'John F. Kennedy International Airport'),
-('LAX', 'Los Angeles', 'Los Angeles International Airport'),
-('LHR', 'London', 'Heathrow Airport');
-
--- Insert Airplane Model Data
-INSERT INTO airplane_model (name, manufacturer, total_seats) VALUES 
-('Boeing 787 Dreamliner', 'Boeing', 330),
-('Airbus A350', 'Airbus', 300);
-
--- Insert Airplane Data
-INSERT INTO airplane (airplane_model_id, registration_number, current_airport_id) VALUES 
-(1, 'N789BA', 1),
-(2, 'G-XWBA', 2);
-
--- Insert Flight Data
-INSERT INTO flight (
-    airplane_id, 
-    estimated_departure_time, 
-    actual_departure_time, 
-    estimated_arrival_time, 
-    actual_arrival_time, 
-    departure_airport_id, 
-    destination_airport_id, 
-    status
-) VALUES 
-(1, '2024-06-15 10:00:00', '2024-06-15 10:15:00', '2024-06-15 13:00:00', '2024-06-15 13:10:00', 1, 2, 'Completed'),
-(2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress');
-
--- Insert Flight Seats Data
-INSERT INTO flight_seats (
-    flight_id, 
-    flight_class, 
-    flight_price, 
-    child_multiplier, 
-    available_seats, 
-    max_row_seat, 
-    max_col_seat
-) VALUES 
-(1, 'Economy', 250.50, 0.8, 200, 20, 10),
-(1, 'Business', 750.75, 0.9, 50, 10, 4);
-
--- Insert Booking Data
-INSERT INTO booking (
-    booker_email, 
-    number_of_adults, 
-    number_of_children, 
-    flight_class, 
-    cancelled, 
-    flight_id, 
-    booking_date
-) VALUES 
-('john.doe@example.com', 2, 1, 'Economy', FALSE, 1, '2024-05-20 09:30:00'),
-('jane.smith@example.com', 1, 0, 'Business', FALSE, 2, '2024-05-22 14:45:00');
-
--- Insert Passenger Data
-INSERT INTO passengers (
-    booking_id, 
-    citizen_id, 
-    passport_number, 
-    gender, 
-    phone_number, 
-    first_name, 
-    last_name, 
-    nationality, 
-    date_of_birth
-) VALUES 
-(1, 'US12345678', 'P987654', TRUE, '+1-555-123-4567', 'John', 'Doe', 'United States', '1985-03-15'),
-(1, 'US87654321', 'P123456', FALSE, '+1-555-987-6543', 'Jane', 'Doe', 'United States', '1987-07-22'),
-(1, 'US11223344', NULL, FALSE, '+1-555-111-2222', 'Emily', 'Doe', 'United States', '2018-09-10'),
-(2, 'UK87654321', 'B456789', TRUE, '+44-7700-900123', 'James', 'Smith', 'United Kingdom', '1990-11-05');
-
--- Insert Passenger Seat Data
-INSERT INTO passenger_seat (row_seat, col_seat, passenger_id) VALUES 
-(5, 3, 1),
-(5, 4, 2),
-(10, 2, 3),
-(2, 1, 4);
-
--- Insert Payment Data
-INSERT INTO payment (
-    transaction_date_time, 
-    amount, 
-    currency, 
-    payment_method, 
-    status, 
-    booking_id
-) VALUES 
-('2024-05-20 10:00:00', 800, 'USD', 'Credit Card', 'completed', 1),
-('2024-05-22 15:00:00', 1200, 'USD', 'PayPal', 'completed', 2);
-
 -- Insert Admin Data
 INSERT INTO admin (username, password) VALUES 
 ('admin1', 'hashed_password_1'),
 ('admin2', 'hashed_password_2');
--- Insert Airport Data
-INSERT INTO airport (airport_id, airport_code, city, name) VALUES 
-(1, 'JFK', 'New York', 'John F. Kennedy International Airport'),
-(2, 'LAX', 'Los Angeles', 'Los Angeles International Airport'),
-(3, 'LHR', 'London', 'Heathrow Airport');
 
--- Insert Airplane Model Data
-INSERT INTO airplane_model (airplane_model_id, name, manufacturer, total_seats) VALUES 
-(1, 'Boeing 787 Dreamliner', 'Boeing', 330),
-(2, 'Airbus A350', 'Airbus', 300);
 
--- Insert Airplane Data
-INSERT INTO airplane (airplane_id, airplane_model_id, registration_number, current_airport_id) VALUES 
-(1, 1, 'N789BA', 1),
-(2, 2, 'G-XWBA', 2);
-
--- Insert Flight Data
-INSERT INTO flight (
-    airplane_id, 
-    estimated_departure_time, 
-    actual_departure_time, 
-    estimated_arrival_time, 
-    actual_arrival_time, 
-    departure_airport_id, 
-    destination_airport_id, 
-    status
-) VALUES 
-(1, '2024-06-15 10:00:00', '2024-06-15 10:15:00', '2024-06-15 13:00:00', '2024-06-15 13:10:00', 1, 2, 'Completed'),
-(2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress');
-
--- Insert Flight Seats Data
-INSERT INTO flight_seats (
-    flight_id, 
-    flight_class, 
-    flight_price, 
-    child_multiplier, 
-    available_seats, 
-    max_row_seat, 
-    max_col_seat
-) VALUES 
-(1, 'Economy', 250.50, 0.8, 200, 20, 10),
-(1, 'Business', 750.75, 0.9, 50, 10, 4);
-
--- Insert Booking Data
-INSERT INTO booking (
-    booking_id, 
-    booker_email, 
-    number_of_adults, 
-    number_of_children, 
-    flight_class, 
-    cancelled, 
-    flight_id, 
-    booking_date
-) VALUES 
-(1, 'john.doe@example.com', 2, 1, 'Economy', 0, 1, '2024-05-20 09:30:00'),
-(2, 'jane.smith@example.com', 1, 0, 'Business', 0, 2, '2024-05-22 14:45:00');
-
--- Insert Passenger Data
-INSERT INTO passengers (
-    booking_id, 
-    citizen_id, 
-    passport_number, 
-    gender, 
-    phone_number, 
-    first_name, 
-    last_name, 
-    nationality, 
-    date_of_birth
-) VALUES 
-(1, 'US12345678', 'P987654', 1, '+1-555-123-4567', 'John', 'Doe', 'United States', '1985-03-15'),
-(1, 'US87654321', 'P123456', 0, '+1-555-987-6543', 'Jane', 'Doe', 'United States', '1987-07-22'),
-(1, 'US11223344', NULL, 0, '+1-555-111-2222', 'Emily', 'Doe', 'United States', '2018-09-10'),
-(2, 'UK87654321', 'B456789', 1, '+44-7700-900123', 'James', 'Smith', 'United Kingdom', '1990-11-05');
-
--- Insert Passenger Seat Data
-INSERT INTO passenger_seat (row_seat, col_seat, passenger_id) VALUES 
-(5, 3, 1),
-(5, 4, 2),
-(10, 2, 3),
-(2, 1, 4);
-
--- Insert Payment Data
-INSERT INTO payment (
-    payment_id, 
-    transaction_date_time, 
-    amount, 
-    currency, 
-    payment_method, 
-    status, 
-    booking_id
-) VALUES 
-(1, '2024-05-20 10:00:00', 800, 'USD', 'Credit Card', 'completed', 1),
-(2, '2024-05-22 15:00:00', 1200, 'USD', 'PayPal', 'completed', 2);
-
--- Insert Admin Data
-INSERT INTO admin (admin_id, username, password) VALUES 
-(1, 'admin1', 'hashed_password_1'),
-(2, 'admin2', 'hashed_password_2');
-
--- Re-enable foreign key checks
-PRAGMA foreign_keys = ON;
 INSERT INTO "airplane_model" (name, manufacturer, total_seats) VALUES
 ('Boeing 737 MAX 9', 'Boeing', 178),
 ('Airbus A321neo', 'Airbus', 244),
@@ -318,8 +123,42 @@ INSERT INTO "airplane_model" (name, manufacturer, total_seats) VALUES
 ('Embraer E195-E2', 'Embraer', 146),
 ('Tupolev Tu-154', 'Tupolev', 180),
 ('Ilyushin Il-96-300', 'Ilyushin', 262),
-('COMAC C919', 'COMAC', 168);
-
+('COMAC C919', 'COMAC', 168),
+('Boeing 737-800', 'Boeing', 189),
+('Airbus A330-300', 'Airbus', 277),
+('Boeing 747-8', 'Boeing', 467),
+('Airbus A350-900', 'Airbus', 350),
+('Boeing 787-9', 'Boeing', 296),
+('Airbus A318', 'Airbus', 107),
+('Antonov An-225', 'Antonov', 640),
+('Sukhoi Superjet 100', 'Sukhoi', 108),
+('McDonnell Douglas DC-10', 'McDonnell Douglas', 380),
+('Lockheed C-130 Hercules', 'Lockheed', 92),
+('Bombardier Q400', 'Bombardier', 86),
+('Embraer E175', 'Embraer', 88),
+('Tupolev Tu-204', 'Tupolev', 210),
+('Ilyushin Il-76', 'Ilyushin', 190),
+('COMAC ARJ21', 'COMAC', 90),
+('Boeing 707', 'Boeing', 189),
+('Airbus A220-100', 'Airbus', 120),
+('Boeing 727-200', 'Boeing', 189),
+('Airbus A340-600', 'Airbus', 380),
+('Boeing 737-700', 'Boeing', 148),
+('Airbus A380-800', 'Airbus', 853),
+('Bombardier Global 7500', 'Bombardier', 19),
+('Embraer Phenom 300E', 'Embraer', 9),
+('Cessna Citation X', 'Cessna', 12),
+('Dassault Falcon 8X', 'Dassault', 19),
+('Beechcraft King Air 350', 'Beechcraft', 11),
+('Piaggio P.180 Avanti', 'Piaggio Aerospace', 9),
+('Antonov An-148', 'Antonov', 80),
+('Sukhoi Su-57 (Transport Variant)', 'Sukhoi', 72),
+('Boeing KC-135 Stratotanker', 'Boeing', 128),
+('Airbus Beluga XL', 'Airbus', 50),
+('Lockheed P-3 Orion', 'Lockheed', 21),
+('De Havilland Canada Dash 8-100', 'De Havilland Canada', 37),
+('ATR 72-600', 'ATR', 78),
+('Saab 2000', 'Saab', 50);
 INSERT INTO "airport" (airport_code, city, name) VALUES
 ('SFO', 'San Francisco', 'San Francisco International Airport'),
 ('MIA', 'Miami', 'Miami International Airport'),
@@ -353,6 +192,97 @@ INSERT INTO "airport" (airport_code, city, name) VALUES
 ('PER', 'Perth', 'Perth Airport'),
 ('DOH', 'Doha', 'Hamad International Airport'),
 ('JED', 'Jeddah', 'King Abdulaziz International Airport');
--- Insert flights (flight_id will auto-increment)
 
 
+-- Insert Airplane Data
+INSERT INTO airplane (airplane_model_id, registration_number, current_airport_id) 
+VALUES 
+(1, 'N789BA', 1),
+(2, 'G-XWBA', 2),
+(3, 'F-HZBA', 3),
+(4, 'D-ABYC', 4),
+(5, 'C-FZBA', 5),
+(6, 'JA123A', 6),
+(7, 'VH-ZNA', 7),
+(8, '9V-SKA', 8),
+(9, 'HS-TKA', 9),
+(10, 'B-2088', 10),
+(11, 'CC-BGA', 11),
+(12, 'XA-ZAA', 12),
+(13, 'EI-DYC', 13),
+(14, 'CS-TKA', 14),
+(15, 'EC-MUA', 15),
+(16, 'OO-SBA', 16),
+(17, 'PH-BHA', 17),
+(18, 'LN-NOR', 18),
+(19, 'SE-RKA', 19),
+(20, 'OY-KBA', 20),
+(21, 'SP-LRA', 21),
+(22, 'TC-LKA', 22),
+(23, 'SU-GEA', 23),
+(24, 'ET-ASK', 24),
+(25, 'ZK-NZE', 25),
+(26, 'JA803A', 26),
+(27, 'HL8003', 27),
+(28, 'PR-OPA', 28),
+(29, 'LV-FQA', 29),
+(30, 'CC-BGC', 30),
+(31, 'VT-ALJ', 31),
+(32, 'PK-GIC', 32);
+
+-- Insert Flight Data
+INSERT INTO flight (
+    airplane_id, 
+    estimated_departure_time, 
+    actual_departure_time, 
+    estimated_arrival_time, 
+    actual_arrival_time, 
+    departure_airport_id, 
+    destination_airport_id, 
+    status
+) VALUES 
+(1, '2024-06-15 10:00:00', '2024-06-15 10:15:00', '2024-06-15 13:00:00', '2024-06-15 13:10:00', 1, 2, 'Completed'),
+(2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress');
+
+-- Insert Flight Seats Data
+INSERT INTO flight_seats (
+    flight_id, 
+    flight_class, 
+    flight_price, 
+    child_multiplier, 
+    available_seats, 
+    max_row_seat, 
+    max_col_seat
+) VALUES 
+(1, 'Economy', 250.50, 0.8, 200, 20, 10),
+(1, 'Business', 750.75, 0.9, 50, 10, 4);
+
+INSERT INTO booking (
+    booker_email, 
+    number_of_adults, 
+    number_of_children, 
+    flight_class, 
+    cancelled, 
+    flight_id, 
+    booking_date
+) VALUES 
+('john.doe@example.com', 2, 1, 'Economy', FALSE, 1, '2024-05-20 09:30:00'),
+('jane.smith@example.com', 1, 0, 'Business', FALSE, 2, '2024-05-22 14:45:00');
+
+-- Insert Payment Data
+INSERT INTO payment (
+    payment_id, 
+    transaction_date_time, 
+    amount, 
+    currency, 
+    payment_method, 
+    status, 
+    booking_id
+) VALUES 
+(1, '2024-05-20 10:00:00', 800, 'USD', 'Credit Card', 'completed', 1),
+(2, '2024-05-22 15:00:00', 1200, 'USD', 'PayPal', 'completed', 2);
+
+INSERT INTO passengers (booking_id, citizen_id, passport_number, gender, phone_number, first_name, last_name, nationality, date_of_birth, seat_row, seat_col)
+VALUES
+    (1, 'CIT123456', 'P1234567', TRUE, '+1234567890', 'John', 'Doe', 'USA', '1985-01-15 00:00:00', 12, 'A'),
+    (1, 'CIT789012', 'P7890123', FALSE, '+9876543210', 'Jane', 'Smith', 'CAN', '1990-06-25 00:00:00', 14, 'C');
