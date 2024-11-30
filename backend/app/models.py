@@ -9,7 +9,9 @@ from sqlalchemy import (
     Text,
     DateTime,
     Enum,
+    CheckConstraint,
 )
+from sqlalchemy.orm import relationship
 from core.database import Base
 from datetime import datetime
 from enum import Enum as PyEnum
@@ -21,51 +23,61 @@ class FlightClass(PyEnum):
     FirstClass = "First Class"
 
 
-class User(Base):
-    __tablename__ = "users"
+class Admin(Base):
+    __tablename__ = "admin"
 
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
+    admin_id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True)
     password = Column(String)
-    created_at = Column(DateTime)
 
 
 class Passenger(Base):
     __tablename__ = "passengers"
-
-    passenger_id = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    booking_id = Column(
+        Integer, ForeignKey("booking.booking_id", ondelete="CASCADE"), nullable=False
     )
-    passport_number = Column(String)
-    gender = Column(Boolean)
-    phone_number = Column(String)
-    first_name = Column(String)
-    last_name = Column(String)
-    nationality = Column(String)
-    date_of_birth = Column(DateTime)
 
+    citizen_id = Column(
+        String, primary_key=True, index=True
+    )  # Unique citizen identifier
+    passport_number = Column(String, nullable=True)  # Optional passport number
+    gender = Column(Boolean, nullable=False)  # TRUE for male, FALSE for female
+    phone_number = Column(String, nullable=False)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    nationality = Column(String, nullable=False)
+    date_of_birth = Column(DateTime, nullable=False)
 
-class Admin(Base):
-    __tablename__ = "admin"
-
-    admin_id = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
-    )
+    # Relationship to booking
+    booking = relationship("Booking", back_populates="passengers")
 
 
 class Booking(Base):
     __tablename__ = "booking"
 
-    booking_id = Column(Integer, primary_key=True, index=True)
-    passenger_id = Column(
-        Integer, ForeignKey("passengers.passenger_id", ondelete="CASCADE")
+    booking_id = Column(
+        Integer, primary_key=True, index=True
+    )  # Unique identifier for each booking
+    booker_email = Column(String, nullable=False)
+    number_of_adults = Column(Integer, nullable=False)
+    number_of_children = Column(Integer, nullable=False)
+    flight_class = Column(
+        String, nullable=False
+    )  # Booking class (e.g., economy, business)
+    cancelled = Column(Boolean, default=False)  # Whether the booking was cancelled
+    flight_id = Column(
+        Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"), nullable=False
     )
-    number_of_adults = Column(Integer)
-    number_of_children = Column(Integer)
-    flight_class = Column(Enum(FlightClass), nullable=False)
-    cancelled = Column(Boolean, default=False)
-    flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
-    booking_date = Column(DateTime)
+    booking_date = Column(DateTime, default="now()")  # Defaults to current timestamp
+
+    __table_args__ = (
+        CheckConstraint("number_of_adults >= 0", name="check_number_of_adults"),
+        CheckConstraint("number_of_children >= 0", name="check_number_of_children"),
+    )
+
+    passengers = relationship(
+        "Passenger", back_populates="booking", cascade="all, delete-orphan"
+    )
 
 
 class Payment(Base):
@@ -118,7 +130,7 @@ class Airplane(Base):
     )
     registration_number = Column(String, unique=True)
     current_airport_id = Column(
-        Integer, ForeignKey("airport.airport_code", ondelete="CASCADE")
+        Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
     )
 
 
@@ -135,8 +147,29 @@ class FlightSeats(Base):
     __tablename__ = "flight_seats"
 
     flight_seats_id = Column(Integer, primary_key=True, index=True)
-    flight_id = Column(Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"))
-    flight_class = Column(String)
-    flight_price = Column(Float)
-    child_multiplier = Column(Float)
-    available_seats = Column(Integer)
+    flight_id = Column(
+        Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"), nullable=False
+    )
+    flight_class = Column(String, nullable=False)
+    flight_price = Column(Float, nullable=True)
+    child_multiplier = Column(Float, nullable=True)
+    available_seats = Column(Integer, nullable=True)
+    max_row_seat = Column(Integer, nullable=False)
+    max_col_seat = Column(Integer, nullable=False)
+
+    __table_args__ = (
+        CheckConstraint("max_row_seat > 0", name="check_max_row_seat"),
+        CheckConstraint("max_col_seat > 0", name="check_max_col_seat"),
+    )
+
+
+class PassengerSeat(Base):
+    __tablename__ = "passenger_seat"
+
+    row_seat = Column(Integer, nullable=False)
+    col_seat = Column(Integer, nullable=False)
+    passenger_id = Column(Integer, primary_key=True, index=True)
+    __table_args__ = (
+        CheckConstraint("row_seat > 0", name="check_row_seat"),
+        CheckConstraint("col_seat > 0", name="check_col_seat"),
+    )

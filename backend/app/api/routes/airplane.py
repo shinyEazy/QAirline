@@ -64,7 +64,9 @@ async def delete_airplane_model_end_point(
 
 
 @router.post("/")
-async def create_airplane_end_point(airplane: AirplaneCreate, db: Session = Depends(get_db)):
+async def create_airplane_end_point(
+    airplane: AirplaneCreate, db: Session = Depends(get_db)
+):
     if not get_airport(db, airplane.current_airport_id):
         raise HTTPException(status_code=404, detail="Airport not found")
     if not get_airplane_model(db, airplane.airplane_model_id):
