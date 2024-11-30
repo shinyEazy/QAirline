@@ -33,13 +33,14 @@ class Admin(Base):
 
 class Passenger(Base):
     __tablename__ = "passengers"
+
+    passenger_id = Column(
+        Integer, primary_key=True, autoincrement=True
+    )  # Auto-incrementing primary key
     booking_id = Column(
         Integer, ForeignKey("booking.booking_id", ondelete="CASCADE"), nullable=False
     )
-
-    citizen_id = Column(
-        String, primary_key=True, index=True
-    )  # Unique citizen identifier
+    citizen_id = Column(String, nullable=True)
     passport_number = Column(String, nullable=True)  # Optional passport number
     gender = Column(Boolean, nullable=False)  # TRUE for male, FALSE for female
     phone_number = Column(String, nullable=False)
@@ -47,7 +48,8 @@ class Passenger(Base):
     last_name = Column(String, nullable=False)
     nationality = Column(String, nullable=False)
     date_of_birth = Column(DateTime, nullable=False)
-
+    seat_row = Column(Integer, nullable=False)
+    seat_col = Column(String, nullable=False)
     # Relationship to booking
     booking = relationship("Booking", back_populates="passengers")
 
@@ -160,16 +162,4 @@ class FlightSeats(Base):
     __table_args__ = (
         CheckConstraint("max_row_seat > 0", name="check_max_row_seat"),
         CheckConstraint("max_col_seat > 0", name="check_max_col_seat"),
-    )
-
-
-class PassengerSeat(Base):
-    __tablename__ = "passenger_seat"
-
-    row_seat = Column(Integer, nullable=False)
-    col_seat = Column(Integer, nullable=False)
-    passenger_id = Column(Integer, primary_key=True, index=True)
-    __table_args__ = (
-        CheckConstraint("row_seat > 0", name="check_row_seat"),
-        CheckConstraint("col_seat > 0", name="check_col_seat"),
     )
