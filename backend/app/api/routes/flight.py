@@ -40,3 +40,10 @@ async def delete_flight_end_point(flight_id: int, db: Session = Depends(get_db))
     if not db_flight:
         raise HTTPException(status_code=404, detail="Flight not found")
     return delete_flight(db, db_flight)
+
+@router.get("/search/")
+async def search_flights_end_point(departure_city: str, arrival_city: str, departure_time: datetime, db: Session = Depends(get_db)):
+    db_flights = get_flights_by_departure_time_and_cities(db, departure_city, arrival_city, departure_time)
+    if not db_flights:
+        raise HTTPException(status_code=404, detail="Flight not found")
+    return db_flights
