@@ -1,10 +1,11 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from .base import SchemaModel
+from .passenger import PassengerCreate, PassengerBase
 
 
-class BookingCreate(SchemaModel):
-    passenger_id: int
+class BookingBase(SchemaModel):
+    booker_email: str
     number_of_adults: int
     number_of_children: int
     flight_class: str  # Assuming `FlightClass` is an enum
@@ -12,8 +13,8 @@ class BookingCreate(SchemaModel):
     flight_id: int
 
 
-class BookingBase(BookingCreate):
-    booking_date: datetime
+class BookingCreate(BookingBase):
+    passengers: List[PassengerBase]
 
 
 class BookingUpdate(SchemaModel):

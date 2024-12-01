@@ -22,7 +22,10 @@ class FlightCreate(SchemaModel):
     estimated_departure_time: datetime
     estimated_arrival_time: datetime
     destination_airport_id: int
-    status: str = "Scheduled" #Trạng thái chuyến bay, ví dụ: "Scheduled", "In-Flight", "Landed".
+    status: str = (
+        "Scheduled"  # Trạng thái chuyến bay, ví dụ: "Scheduled", "In-Flight", "Landed".
+    )
+
 
 class FlightUpdate(SchemaModel):
     estimated_departure_time: datetime
