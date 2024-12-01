@@ -87,7 +87,7 @@ class Payment(Base):
 
     payment_id = Column(Integer, primary_key=True, index=True)
     transaction_date_time = Column(DateTime)
-    amount = Column(Integer)
+    amount = Column(Float)
     currency = Column(String, default="USD")
     payment_method = Column(String)
     status = Column(String, default="pending")

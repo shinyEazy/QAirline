@@ -87,7 +87,7 @@ CREATE TABLE passengers (
 CREATE TABLE payment (
     payment_id SERIAL PRIMARY KEY,
     transaction_date_time TIMESTAMP,
-    amount INTEGER,
+    amount FLOAT,
     currency TEXT DEFAULT 'USD',
     payment_method TEXT,
     status TEXT DEFAULT 'pending',
@@ -267,7 +267,8 @@ INSERT INTO booking (
     booking_date
 ) VALUES 
 ('john.doe@example.com', 2, 1, 'Economy', FALSE, 1, '2024-05-20 09:30:00'),
-('jane.smith@example.com', 1, 0, 'Business', FALSE, 2, '2024-05-22 14:45:00');
+('jane.smith@example.com', 1, 0, 'Business', FALSE, 2, '2024-05-22 14:45:00'),
+('james.smith@example.com', 1, 0, 'Business', FALSE, 1, '2024-05-22 14:46:00');
 
 -- Insert Payment Data
 INSERT INTO payment (
