@@ -7,6 +7,8 @@ import {
   FormControlLabel,
   Radio,
   TextField,
+  Typography,
+  Divider,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -54,7 +56,7 @@ const FlightSearch = () => {
             fontWeight: "bold",
             borderRadius: "8px",
             marginRight: "20px",
-            padding: "10px 40px",
+            padding: "10px 20px",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             "&:hover": { backgroundColor: "#2177cb" },
           }}
@@ -100,7 +102,7 @@ const FlightSearch = () => {
                     fontSize: "1rem",
                     fontWeight: "bold",
                     borderRadius: "8px",
-                    marginRight: "20px",
+                    marginRight: "10px",
                     padding: "10px 40px",
                     border: "1px solid white",
                     "&:hover": { border: "1px solid white" },
@@ -121,7 +123,6 @@ const FlightSearch = () => {
                     fontSize: "1rem",
                     fontWeight: "bold",
                     borderRadius: "8px",
-                    marginRight: "20px",
                     padding: "10px 40px",
                     border: "1px solid transparent",
                     "&:hover": { border: "1px solid white" },
@@ -138,87 +139,175 @@ const FlightSearch = () => {
         <Box
           gap="10px"
           bgcolor="white"
-          borderRadius="12px"
-          sx={{ padding: "20px" }}
+          borderRadius="0 0 12px 12px"
+          sx={{ padding: "20px 40px" }}
+          color="#1e90ff"
         >
-          <Box display="flex" gap="10px">
-            <Box display="flex" gap="10px" alignItems="center">
-              <TextField
-                label="From"
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  style: {
-                    borderRadius: "10px",
-                    backgroundColor: "rgba(240, 240, 240, 0.8)",
-                  },
+          <Box display="flex" gap="10px" alignItems="center">
+            <Box
+              flex={1}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              margin="20px 0"
+            >
+              <Box>
+                <Typography
+                  sx={{
+                    color: "rgba(0, 0, 0, 0.6)",
+                    marginBottom: "10px",
+                  }}
+                >
+                  From
+                </Typography>
+                <TextField
+                  fullWidth
+                  defaultValue="Hanoi, Vietnam"
+                  variant="standard"
+                  InputProps={{
+                    disableUnderline: false,
+                    style: {
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                  sx={{
+                    "& .MuiInput-root": {
+                      fontSize: "1.3rem",
+                      borderRadius: "10px",
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                />
+              </Box>
+              <FontAwesomeIcon
+                icon={faArrowRightArrowLeft}
+                style={{
+                  color: "rgba(0, 0, 0, 0.6)",
+                  fontSize: "0.8rem",
+                  border: "1px solid rgba(0, 0, 0, 0.6)",
+                  borderRadius: "50%",
+                  padding: "10px",
                 }}
               />
-              <FontAwesomeIcon icon={faArrowRightArrowLeft} />
-              <TextField
-                label="To"
-                variant="outlined"
-                fullWidth
-                InputProps={{
-                  style: {
-                    borderRadius: "10px",
-                    backgroundColor: "rgba(240, 240, 240, 0.8)",
-                  },
-                }}
-              />
+              <Box>
+                <Typography
+                  sx={{
+                    color: "rgba(0, 0, 0, 0.6)",
+                    marginBottom: "10px",
+                  }}
+                >
+                  To
+                </Typography>
+                <TextField
+                  fullWidth
+                  defaultValue="Ho Chi Minh, Vietnam"
+                  variant="standard"
+                  InputProps={{
+                    disableUnderline: false,
+                    style: {
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                  sx={{
+                    "& .MuiInput-root": {
+                      fontSize: "1.3rem",
+                      borderRadius: "10px",
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                />
+              </Box>
             </Box>
-            <Box display="flex" gap="10px">
-              <DatePicker
-                selected={departing}
-                onChange={(date) => setDeparting(date)}
-                dateFormat="dd MMM yyyy"
-                customInput={
-                  <TextField
-                    label="Departure Date"
-                    variant="outlined"
-                    fullWidth
-                    InputProps={{
-                      style: {
-                        borderRadius: "10px",
-                        backgroundColor: "rgba(240, 240, 240, 0.8)",
-                      },
-                    }}
-                  />
-                }
-              />
-              <DatePicker
-                selected={returning}
-                onChange={(date) => setReturning(date)}
-                dateFormat="dd MMM yyyy"
-                customInput={
-                  <TextField
-                    label="Return Date"
-                    variant="outlined"
-                    fullWidth
-                    InputProps={{
-                      style: {
-                        borderRadius: "10px",
-                        backgroundColor: "rgba(240, 240, 240, 0.8)",
-                      },
-                    }}
-                  />
-                }
-              />
+            <Divider
+              orientation="vertical"
+              flexItem // Ensures the Divider spans the height of the parent flex container
+              sx={{ mx: 2, backgroundColor: "rgba(0, 0, 0, 0.2)" }} // Adjusts margin and color
+            />
+            <Box flex={1} display="flex" justifyContent="space-between">
+              <Box>
+                <Typography
+                  sx={{
+                    color: "rgba(0, 0, 0, 0.6)",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Departure Date
+                </Typography>
+                <DatePicker
+                  selected={departing}
+                  onChange={(date) => setDeparting(date)}
+                  dateFormat="dd MMM yyyy"
+                  customInput={
+                    <TextField
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: false,
+                        style: {
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                      sx={{
+                        "& .MuiInput-root": {
+                          fontSize: "1.3rem",
+                          borderRadius: "10px",
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                    />
+                  }
+                />
+              </Box>
+              <Box>
+                <Typography
+                  sx={{
+                    color: "rgba(0, 0, 0, 0.6)",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Return Date
+                </Typography>
+                <DatePicker
+                  selected={returning}
+                  onChange={(date) => setReturning(date)}
+                  dateFormat="dd MMM yyyy"
+                  customInput={
+                    <TextField
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: false,
+                        style: {
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                      sx={{
+                        "& .MuiInput-root": {
+                          fontSize: "1.3rem",
+                          borderRadius: "10px",
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                    />
+                  }
+                />
+              </Box>
             </Box>
           </Box>
-          <Box>
-            {/* Search Button */}
+          {/* Search Button */}
+          <Box display="flex" justifyContent="center">
             <Button
-              fullWidth
               sx={{
-                marginTop: "20px",
-                padding: "10px 0",
-                borderRadius: "8px",
-                backgroundColor: "rgb(77,115,252)",
+                width: "40%",
+                backgroundColor: "#1e90ff",
                 color: "white",
                 textTransform: "none",
                 fontSize: "1rem",
-                "&:hover": { backgroundColor: "rgb(60,90,200)" },
+                fontWeight: "bold",
+                borderRadius: "8px",
+                marginRight: "20px",
+                padding: "10px 20px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                transform: "translateY(40px)",
+                "&:hover": { backgroundColor: "#2177cb" },
               }}
               onClick={() => navigate("/flight-listing")}
             >
