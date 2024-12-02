@@ -1,27 +1,19 @@
+from sqlalchemy.exc import NoResultFound
 import schemas
 from datetime import datetime
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from .crud_utils import *
-from models import Booking
+from models import Booking, Passenger
+from typing import List
 
 
-def get_booking_by_passenger_id(passenger_id: int, db: Session) -> Booking:
-    """
-    Equivalent to a SQL query that is 'SELECT * FROM table booking where booking.passenger_id = passenger_id'
-    """
-
-    db_booking = db.query(Booking).filter(Booking.passenger_id == passenger_id).first()
-
-    return db_booking
-
-
-def get_booking_by_flight_id(flight_id: int, db: Session) -> Booking:
+def get_bookings_by_flight_id(flight_id: int, db: Session) -> List[Booking]:
     """
     Equivalent to a SQL query that is 'SELECT * FROM table booking where booking.flight_id == flight_id'
     """
 
-    db_booking = db.query(Booking).filter(Booking.flight_id == flight_id).first()
+    db_booking = db.query(Booking).filter(Booking.flight_id == flight_id).all()
 
     return db_booking
 
@@ -64,3 +56,39 @@ def delete_booking(db_booking: Booking, db: Session) -> Booking:
     """
 
     return delete(db_booking, db)
+
+
+def cancel_booking(db_booking: Booking, db: Session):
+    """
+    Update the specified 'Booking' cancelled field by booking_id in the database to True.
+    """
+
+    db_booking.cancelled = True  # type: ignore
+    db.commit()
+    db.refresh(db_booking)  # Refresh to ensure the object is up-to-date
+
+    return {
+        "message": f"Booking id {db_booking.booking_id} has been successfully cancelled"
+    }
+
+
+def get_passengers_in_booking(db_booking: Booking, db: Session) -> List[Passenger]:
+    """
+    Get all passengers in a booking by booking_id.
+    """
+    try:
+        passengers = (
+            db.query(Passenger)
+            .filter(Passenger.booking_id == db_booking.booking_id)
+            .all()
+        )
+
+        if not passengers:
+            return []  # Return empty list if no passengers are found
+
+        print(passengers)
+        return passengers
+
+    except NoResultFound:
+        # Optionally handle case where no passengers were found
+        return []

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import conint
 from sqlalchemy import Column, Integer
-from crud.flight import get_all_passenger_in_flight
+from crud.flight import delete_flight, get_all_passenger_in_flight
 from schemas.booking import BookingCreate, BookingBase
 from schemas.passenger import PassengerBase
 import schemas
@@ -30,6 +30,20 @@ def get_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Booking not found")
 
     return db_booking
+
+
+@router.get("/passengers/{booking_id}")
+def get_passenger_in_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
+    """
+    Get all passengers in a booking
+    """
+
+    db_booking = get_booking(booking_id, db)
+
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    return get_passengers_in_booking(db_booking, db)
 
 
 @router.post("/")
@@ -71,34 +85,18 @@ def create_booking_end_point(
     return {"booking": db_booking, "total_price": total_price}
 
 
-@router.get("/passenger/{passenger_id}")
-def get_booking_by_passenger_id_end_point(
-    passenger_id: int, db: Session = Depends(get_db)
-):
-    """
-    Get a specific booking by passenger_id
-    """
-
-    db_booking = get_booking_by_passenger_id(passenger_id, db)
-
-    if not db_booking:
-        raise HTTPException(status_code=404, detail="Booking not found")
-
-    return db_booking
-
-
 @router.get("/flight/{flight_id}")
 def get_booking_by_flight_id_end_point(flight_id: int, db: Session = Depends(get_db)):
     """
     Get a specific booking by flight_id
     """
 
-    db_booking = get_booking_by_flight_id(flight_id, db)
+    db_bookings = get_bookings_by_flight_id(flight_id, db)
 
-    if not db_booking:
+    if not db_bookings:
         raise HTTPException(status_code=404, detail="Booking not found")
 
-    return db_booking
+    return db_bookings
 
 
 @router.put("/{booking_id}")
@@ -123,6 +121,17 @@ def delete_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
     """
     db_booking = get_booking(booking_id, db)
 
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    return delete_booking(db_booking, db)
+
+
+@router.post("/cancel/{booking_id}")
+def cancel_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
+
+    db_booking = get_booking(booking_id, db)
+
     flight = get_flight_compared_current_time(db_booking, db)
 
     if not flight:
@@ -130,10 +139,16 @@ def delete_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
             status_code=400,
             detail="Cancelation cannot be after the flight's estimated departure time.",
         )
-    if not db_booking:
-        raise HTTPException(status_code=404, detail="Booking not found")
 
-    return delete_booking(db_booking, db)
+    # update the cancelled status to true
+    cancel_booking(db_booking, db)
+
+    # get then delete passengers from flight
+    passengers = get_passengers_in_booking(db_booking, db)
+
+    delete_passengers(passengers, db)
+
+    return {"message": "Successfully cancelled the flight"}
 
 
 # helper functions
@@ -230,9 +245,8 @@ def get_flight_compared_current_time(db_booking: Booking, db: Session) -> Flight
     flight = (
         db.query(Flight)
         .filter(
-            Flight.flight_id
-            == db_booking.flight_id & Flight.estimated_departure_time
-            < current_time
+            Flight.flight_id == db_booking.flight_id,
+            Flight.estimated_departure_time > current_time,
         )
         .first()
     )

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from crud.airplane import get_airplane
 from sqlalchemy.orm import Session
 from crud.flight import *
-from schemas import FlightCreate, FlightUpdate
+from schemas.flight import FlightCreate, FlightUpdate, FlightBase
 from core.database import get_db
 
 router = APIRouter(prefix="/flights", tags=["Flight"])
@@ -49,15 +49,24 @@ async def delete_flight_end_point(flight_id: int, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail="Flight not found")
     return delete_flight(db, db_flight)
 
+
 @router.get("/search/")
-async def search_flights_end_point(departure_city: str, arrival_city: str, departure_time: datetime, db: Session = Depends(get_db)):
-    db_flights = get_flights_by_departure_time_and_cities(db, departure_city, arrival_city, departure_time)
+async def search_flights_end_point(
+    departure_city: str,
+    arrival_city: str,
+    departure_time: datetime,
+    db: Session = Depends(get_db),
+):
+    db_flights = get_flights_by_departure_time_and_cities(
+        db, departure_city, arrival_city, departure_time
+    )
     if not db_flights:
         raise HTTPException(status_code=404, detail="Flight not found")
     return db_flights
 
+
 @router.get("/passengers/{flight_id}")
-async def create_passengers_for_flight(flight_id: int, db: Session = Depends(get_db)):
+async def get_passengers_for_flight(flight_id: int, db: Session = Depends(get_db)):
     """
     Post API to get all passengers for a specific flight.
     """
@@ -72,7 +81,7 @@ async def create_passengers_for_flight(flight_id: int, db: Session = Depends(get
     return passengers
 
 
-@router.get("/passengers/citizen/{citizen_id}", response_model=Flight)
+@router.get("/passengers/citizen/{citizen_id}", response_model=FlightBase)
 def get_flight_by_citizen_id(citizen_id: str, db: Session = Depends(get_db)):
     flight = get_flight_by_citizen_id(citizen_id, db)
     if not flight:
