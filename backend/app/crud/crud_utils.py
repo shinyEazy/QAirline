@@ -1,7 +1,4 @@
 from sqlalchemy.orm import Session
-from typing import Type
-
-# from app.data import Base
 
 
 def create(model, db: Session, data: dict):
@@ -34,3 +31,7 @@ def delete(queried_model, db: Session):
     db.delete(queried_model)
     db.commit()
     return queried_model
+
+
+def get_all(model, db: Session):
+    return db.query(model).all()
