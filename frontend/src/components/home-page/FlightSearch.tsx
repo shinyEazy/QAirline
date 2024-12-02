@@ -9,25 +9,16 @@ import {
   TextField,
   Typography,
   Divider,
+  Checkbox,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRightArrowLeft,
-  faPlane,
-  faHotel,
-  faHotTubPerson,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
 
 const FlightSearch = () => {
-  const location = useLocation();
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, [location]);
-
   const navigate = useNavigate();
   const [departing, setDeparting] = useState(new Date());
   const [returning, setReturning] = useState(() => {
@@ -35,6 +26,22 @@ const FlightSearch = () => {
     today.setDate(today.getDate() + 2);
     return today;
   });
+  const [showReturnDate, setShowReturnDate] = useState(false);
+  const [tripType, setTripType] = useState("oneway");
+  const [isRoundTrip, setIsRoundTrip] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  useEffect(() => {
+    if (tripType === "roundtrip") {
+      setShowReturnDate(true);
+    } else {
+      setShowReturnDate(false);
+    }
+  }, [tripType]);
 
   return (
     <Box
@@ -45,44 +52,6 @@ const FlightSearch = () => {
         margin: "40px auto",
       }}
     >
-      {/* Header Section */}
-      <Box padding="20px" display="flex" justifyContent="flex-start">
-        <Button
-          sx={{
-            backgroundColor: "#1e90ff",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            marginRight: "20px",
-            padding: "10px 20px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            "&:hover": { backgroundColor: "#2177cb" },
-          }}
-        >
-          <FontAwesomeIcon icon={faPlane} style={{ marginRight: "5px" }} />
-          Flight
-        </Button>
-        <Button
-          sx={{
-            backgroundColor: "white",
-            color: "#1e90ff",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            marginRight: "20px",
-            padding: "10px 40px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            "&:hover": { backgroundColor: "#1e90ff", color: "white" },
-          }}
-        >
-          <FontAwesomeIcon icon={faHotel} style={{ marginRight: "5px" }} />
-          Hotel
-        </Button>
-      </Box>
-
       <Box bgcolor="#1e90ff" borderRadius="16px">
         {/* Trip Type */}
         <FormControl fullWidth sx={{ padding: "20px" }}>
@@ -96,15 +65,22 @@ const FlightSearch = () => {
               control={<Radio sx={{ display: "none" }} />}
               label={
                 <Box
+                  onClick={() => {
+                    setTripType("oneway");
+                    setIsRoundTrip(false);
+                  }}
                   sx={{
                     color: "white",
                     textTransform: "none",
                     fontSize: "1rem",
+                    border:
+                      tripType === "oneway"
+                        ? "1px solid white"
+                        : "1px solid transparent",
                     fontWeight: "bold",
                     borderRadius: "8px",
                     marginRight: "10px",
                     padding: "10px 40px",
-                    border: "1px solid white",
                     "&:hover": { border: "1px solid white" },
                   }}
                 >
@@ -117,6 +93,10 @@ const FlightSearch = () => {
               control={<Radio sx={{ display: "none" }} />}
               label={
                 <Box
+                  onClick={() => {
+                    setTripType("roundtrip");
+                    setIsRoundTrip(true);
+                  }}
                   sx={{
                     color: "white",
                     textTransform: "none",
@@ -124,8 +104,11 @@ const FlightSearch = () => {
                     fontWeight: "bold",
                     borderRadius: "8px",
                     padding: "10px 40px",
-                    border: "1px solid transparent",
-                    "&:hover": { border: "1px solid white" },
+                    border:
+                      tripType === "roundtrip"
+                        ? "1px solid white"
+                        : "1px solid transparent",
+                    "&:hover": { border: "1px solid white", cursor: "pointer" },
                   }}
                 >
                   Round-trip
@@ -134,7 +117,6 @@ const FlightSearch = () => {
             />
           </RadioGroup>
         </FormControl>
-
         {/* Input Fields */}
         <Box
           gap="10px"
@@ -186,7 +168,7 @@ const FlightSearch = () => {
                   fontSize: "0.8rem",
                   border: "1px solid rgba(0, 0, 0, 0.6)",
                   borderRadius: "50%",
-                  padding: "10px",
+                  padding: "4px",
                 }}
               />
               <Box>
@@ -220,11 +202,11 @@ const FlightSearch = () => {
             </Box>
             <Divider
               orientation="vertical"
-              flexItem // Ensures the Divider spans the height of the parent flex container
-              sx={{ mx: 2, backgroundColor: "rgba(0, 0, 0, 0.2)" }} // Adjusts margin and color
+              flexItem
+              sx={{ mx: 2, backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             />
             <Box flex={1} display="flex" justifyContent="space-between">
-              <Box>
+              <Box flex={1}>
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -236,7 +218,7 @@ const FlightSearch = () => {
                 <DatePicker
                   selected={departing}
                   onChange={(date) => setDeparting(date)}
-                  dateFormat="dd MMM yyyy"
+                  dateFormat="MMM d, yyyy"
                   customInput={
                     <TextField
                       variant="standard"
@@ -257,38 +239,117 @@ const FlightSearch = () => {
                   }
                 />
               </Box>
-              <Box>
-                <Typography
-                  sx={{
-                    color: "rgba(0, 0, 0, 0.6)",
-                    marginBottom: "10px",
-                  }}
-                >
-                  Return Date
-                </Typography>
-                <DatePicker
-                  selected={returning}
-                  onChange={(date) => setReturning(date)}
-                  dateFormat="dd MMM yyyy"
-                  customInput={
-                    <TextField
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: false,
-                        style: {
-                          backgroundColor: "transparent",
-                        },
-                      }}
+              <Box flex={1}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={showReturnDate}
+                      onChange={(e) => setShowReturnDate(e.target.checked)}
+                      disableRipple
+                      disabled={isRoundTrip}
                       sx={{
-                        "& .MuiInput-root": {
-                          fontSize: "1.3rem",
-                          borderRadius: "10px",
-                          backgroundColor: "transparent",
+                        color: "#1e90ff",
+                        "&.Mui-checked": {
+                          color: "#1e90ff",
+                        },
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 1,
+                          borderRadius: "4px",
                         },
                       }}
+                      icon={
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            border: "2px solid rgba(0, 0, 0, 0.4)",
+                            borderRadius: "4px",
+                            backgroundColor: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "start",
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="rgba(0, 0, 0, 0.4)"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            width="16"
+                            height="16"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </Box>
+                      }
+                      checkedIcon={
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            border: "2px solid #1e90ff",
+                            borderRadius: "4px",
+                            backgroundColor: "#1e90ff",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            width="16"
+                            height="16"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </Box>
+                      }
                     />
                   }
+                  label="Return date"
+                  sx={{
+                    position: "relative",
+                    top: "-5px",
+                    color: "rgba(0, 0, 0, 0.6)",
+                  }}
                 />
+
+                {showReturnDate && (
+                  <Box>
+                    <DatePicker
+                      selected={returning}
+                      onChange={(date) => setReturning(date)}
+                      dateFormat="MMM d, yyyy"
+                      customInput={
+                        <TextField
+                          variant="standard"
+                          InputProps={{
+                            disableUnderline: false,
+                            style: {
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                          sx={{
+                            "& .MuiInput-root": {
+                              fontSize: "1.3rem",
+                              borderRadius: "10px",
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                        />
+                      }
+                    />
+                  </Box>
+                )}
               </Box>
             </Box>
           </Box>
