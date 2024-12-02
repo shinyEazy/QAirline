@@ -9,7 +9,7 @@ from sqlalchemy import (
     Text,
     DateTime,
     Enum,
-    CheckConstraint,
+    CheckConstraint
 )
 from sqlalchemy.orm import relationship
 from core.database import Base
@@ -87,7 +87,7 @@ class Payment(Base):
 
     payment_id = Column(Integer, primary_key=True, index=True)
     transaction_date_time = Column(DateTime)
-    amount = Column(Integer)
+    amount = Column(Float)
     currency = Column(String, default="USD")
     payment_method = Column(String)
     status = Column(String, default="pending")
@@ -122,6 +122,9 @@ class AirplaneModel(Base):
     manufacturer = Column(String)
     total_seats = Column(Integer)
 
+     # Thêm relationship
+    airplanes = relationship("Airplane", back_populates="airplane_model")
+
 
 class Airplane(Base):
     __tablename__ = "airplane"
@@ -135,6 +138,10 @@ class Airplane(Base):
         Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
     )
 
+    # Thêm relationship
+    airplane_model = relationship("AirplaneModel", back_populates="airplanes")
+    current_airport = relationship("Airport", back_populates="airplanes")
+
 
 class Airport(Base):
     __tablename__ = "airport"
@@ -143,6 +150,8 @@ class Airport(Base):
     airport_code = Column(String, index=True)
     city = Column(String)
     name = Column(String)
+
+    airplanes = relationship("Airplane", back_populates="current_airport")
 
 
 class FlightSeats(Base):

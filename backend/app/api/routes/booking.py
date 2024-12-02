@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import conint
 from sqlalchemy import Column, Integer
-from app.crud.flight import get_all_passenger_in_flight, get_flight
-from app.schemas.booking import BookingCreate, BookingBase
-from app.schemas.passenger import PassengerBase
+from crud.flight import get_all_passenger_in_flight
+from schemas.booking import BookingCreate, BookingBase
+from schemas.passenger import PassengerBase
 import schemas
 from sqlalchemy.exc import IntegrityError
 from crud.booking import *

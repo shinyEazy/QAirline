@@ -22,7 +22,7 @@ def get_flight(db: Session, flight_id: int) -> Flight:
     db_flight = db.query(Flight).filter(Flight.flight_id == flight_id).first()
     return db_flight
 
-def get_flights_by_departure_time_and_cities(db: Session, departure_city: str, arrival_city: str, departure_time: datetime) -> list[Flight]:
+def get_flights_by_departure_time_and_cities(db: Session, departure_city: str, arrival_city: str, departure_time: datetime) -> List[Flight]:
     departure_airport = aliased(Airport)
     arrival_airport = aliased(Airport)
     return db.query(Flight).join(

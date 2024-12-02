@@ -36,3 +36,7 @@ class AirplaneCreate(SchemaModel):
 class AirplaneUpdate(SchemaModel):
     registration_number: str
     current_airport_id: int
+
+class AirplaneInfo(SchemaModel):
+    registration_number: str
+    airplane_model_name: str

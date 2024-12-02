@@ -7,7 +7,10 @@ import Recovery from "pages/auth/recovery";
 import FlightListing from "pages/FlightListing";
 import FlightBooking from "pages/FlightBooking";
 import Payment from "pages/Payment";
-import { Component } from "react";
+import AdminPage from "pages/admin";
+import AdminLogin from "pages/admin/login";
+import AdminAuthWrapper from "wrappers/admin-auth";
+// import UserAuthWrapper from "wrappers/user-auth";
 
 const routes = [
   {
@@ -25,6 +28,21 @@ const routes = [
       {
         path: "recovery",
         component: Recovery,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    // component: AdminAuthWrapper,
+    component: AdminPage,
+    routes: [
+      {
+        path: "",
+        component: AdminPage,
+      },
+      {
+        path: "login",
+        component: AdminLogin,
       },
     ],
   },
