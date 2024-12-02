@@ -56,7 +56,7 @@ async def search_flights_end_point(departure_city: str, arrival_city: str, depar
         raise HTTPException(status_code=404, detail="Flight not found")
     return db_flights
 
-@router.get("/flight/passengers/{flight_id}")
+@router.get("/passengers/{flight_id}")
 async def create_passengers_for_flight(flight_id: int, db: Session = Depends(get_db)):
     """
     Post API to get all passengers for a specific flight.
@@ -70,3 +70,13 @@ async def create_passengers_for_flight(flight_id: int, db: Session = Depends(get
         )
 
     return passengers
+
+
+@router.get("/passengers/citizen/{citizen_id}", response_model=Flight)
+def get_flight_by_citizen_id(citizen_id: str, db: Session = Depends(get_db)):
+    flight = get_flight_by_citizen_id(citizen_id, db)
+    if not flight:
+        raise HTTPException(
+            status_code=404, detail="Flight not found for this citizen_id."
+        )
+    return flight

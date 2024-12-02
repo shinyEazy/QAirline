@@ -56,3 +56,13 @@ def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
     )
 
     return passengers
+
+
+def get_flight_by_citizen_id(citizen_id: str, db: Session) -> Flight:
+    db_flight = (
+        db.query(Flight)
+        .join(Passenger)  # Join the Passenger model to filter by citizen_id
+        .filter(Passenger.citizen_id == citizen_id)  # Filter by the citizen_id
+        .first()  # Get the first result
+    )
+    return db_flight

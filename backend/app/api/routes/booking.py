@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
+from pydantic import conint
 from sqlalchemy import Column, Integer
 from crud.flight import get_all_passenger_in_flight
 from schemas.booking import BookingCreate, BookingBase
@@ -12,6 +13,7 @@ from sqlalchemy.orm import Session
 from core.database import get_db
 from models import FlightClass, FlightSeats
 from typing import List
+from sqlalchemy import func
 
 router = APIRouter(prefix="/booking", tags=["Booking"])
 
@@ -47,6 +49,14 @@ def create_booking_end_point(
     booking_data = BookingBase(**booking.model_dump(exclude={"passengers"}))
 
     db_booking = create_booking(booking_data, db)
+
+    flight = get_flight_compared_current_time(db_booking, db)
+
+    if not flight:
+        raise HTTPException(
+            status_code=400,
+            detail="Booking date cannot be after the flight's estimated departure time.",
+        )
 
     if booking.number_of_adults + booking.number_of_children <= 0:
         raise HTTPException(
@@ -113,6 +123,13 @@ def delete_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
     """
     db_booking = get_booking(booking_id, db)
 
+    flight = get_flight_compared_current_time(db_booking, db)
+
+    if not flight:
+        raise HTTPException(
+            status_code=400,
+            detail="Cancelation cannot be after the flight's estimated departure time.",
+        )
     if not db_booking:
         raise HTTPException(status_code=404, detail="Booking not found")
 
@@ -205,6 +222,22 @@ def seat_col_to_int(seat_col: str) -> int:
     if len(seat_col) > 1:
         raise HTTPException(status_code=400, detail="Invalid length of seat column")
     return ord(seat_col.upper()) - ord("A") + 1
+
+
+def get_flight_compared_current_time(db_booking: Booking, db: Session) -> Flight:
+    current_time = datetime.now()
+
+    flight = (
+        db.query(Flight)
+        .filter(
+            Flight.flight_id
+            == db_booking.flight_id & Flight.estimated_departure_time
+            < current_time
+        )
+        .first()
+    )
+
+    return flight
 
 
 def conint(x: Column[int]):
