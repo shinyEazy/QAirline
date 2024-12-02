@@ -167,7 +167,7 @@ const FlightSeat = () => {
             </Box>
           </Box>
           <Button
-            onClick={() => navigate("/payment")}
+            onClick={() => navigate("/flight-booking")}
             fullWidth
             disabled={selectedSeats.length === 0}
             sx={{
