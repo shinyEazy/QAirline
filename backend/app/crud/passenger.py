@@ -1,3 +1,4 @@
+from typing import List
 from schemas.passenger import PassengerCreate, PassengerUpdate, PassengerBase
 from models import Passenger, Flight
 from sqlalchemy.orm import Session
@@ -52,6 +53,17 @@ def delete_passenger(db_passenger: Passenger, db: Session) -> Passenger:
     """
 
     return delete(db_passenger, db)
+
+
+def delete_passengers(db_passengers: List[Passenger], db: Session) -> List[Passenger]:
+    """
+    Equiv .. , delete all passengers
+    """
+
+    for passenger in db_passengers:
+        delete_passenger(passenger, db)
+
+    return db_passengers
 
 
 def get_all_passengers(db: Session):

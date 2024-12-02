@@ -9,7 +9,7 @@ from sqlalchemy import (
     Text,
     DateTime,
     Enum,
-    CheckConstraint
+    CheckConstraint,
 )
 from sqlalchemy.orm import relationship
 from core.database import Base
@@ -66,6 +66,7 @@ class Booking(Base):
     flight_class = Column(
         String, nullable=False
     )  # Booking class (e.g., economy, business)
+
     cancelled = Column(Boolean, default=False)  # Whether the booking was cancelled
     flight_id = Column(
         Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"), nullable=False
@@ -122,7 +123,7 @@ class AirplaneModel(Base):
     manufacturer = Column(String)
     total_seats = Column(Integer)
 
-     # Thêm relationship
+    # Thêm relationship
     airplanes = relationship("Airplane", back_populates="airplane_model")
 
 
