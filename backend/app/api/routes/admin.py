@@ -8,8 +8,8 @@ from core.database import get_db
 from core.security import (
     authenticate_user,
     bcrypt_context,
-    create_access_token,
-    get_current_user,
+    create_access_token_admin,
+    get_current_admin,
     UserToken,
 )
 from datetime import timedelta
@@ -75,7 +75,7 @@ async def create_admin_end_point(admin: AdminCreate, db: Session = Depends(get_d
     }
 
 
-@router.delete("/{user_id}")
+@router.delete("/{admin_id}")
 async def delete_admin_end_point(admin_id: int, db: Session = Depends(get_db)):
     """
     Delete a user by user_id
@@ -105,7 +105,7 @@ async def update_user_end_point(
 
 @router.get("/me")
 async def get_user_admin_me_end_point(
-    current_user_admin: Admin = Depends(get_current_user),
+    current_user_admin: Admin = Depends(get_current_admin),
 ):
     return current_user_admin
 
@@ -128,11 +128,11 @@ async def authenticate_user_admin_end_point(
     if not authenticate_user(db_user_admin, form_data.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate user",
+            detail="Could not validate admin",
             headers={"WWW-Authenticate": "Admin"},
         )
 
-    token = create_access_token(db_user_admin, ACCESS_TOKEN_EXPIRES_MIUTES)
+    token = create_access_token_admin(db_user_admin, ACCESS_TOKEN_EXPIRES_MIUTES)
     return {
         "access_token": token,
         "token_type": "admin",

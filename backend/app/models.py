@@ -16,6 +16,14 @@ from core.database import Base
 from datetime import datetime
 from enum import Enum as PyEnum
 
+class User(Base):
+    _tablename_ = "user"
+
+    user_id = Column(Integer, primary_key=True, index=True)
+    firstname = Column(String, nullable=False)
+    lastname = Column(String, nullable=False)
+    username = Column(String, unique=True, nullable=False, index=True)
+    password = Column(String, nullable=False)
 
 class FlightClass(PyEnum):
     Economy = "Economy"

@@ -6,13 +6,17 @@ from .base import SchemaModel
 
 
 class UserCreate(SchemaModel):
-    email: EmailStr
+    firstname: str
+    lastname: str
+    username: str
     password: str
 
 
 class UserBase:
     user_id: int
-    email: EmailStr
+    firstname: str
+    lastname: str
+    username: str
     password: str
 
 

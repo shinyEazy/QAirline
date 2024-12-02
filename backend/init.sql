@@ -56,13 +56,14 @@ CREATE TABLE flight_seats (
 -- Create Booking Table
 CREATE TABLE booking (
     booking_id SERIAL PRIMARY KEY,
-    booker_email TEXT NOT NULL,
+    user_id INTEGER NOT NULL,  
     number_of_adults INTEGER NOT NULL CHECK (number_of_adults >= 0),
     number_of_children INTEGER NOT NULL CHECK (number_of_children >= 0),
     flight_class TEXT NOT NULL,
     cancelled BOOLEAN DEFAULT FALSE,
     flight_id INTEGER NOT NULL,
     booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,  
     FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE
 );
 
@@ -100,6 +101,15 @@ CREATE TABLE admin (
     admin_id SERIAL PRIMARY KEY,
     username TEXT UNIQUE,
     password TEXT
+);
+
+-- Create User Table
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
 );
 
 -- Insert Admin Data
