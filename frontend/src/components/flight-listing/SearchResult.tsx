@@ -153,7 +153,7 @@ const SearchResult = () => {
               </Typography>
               <Button
                 onClick={() => {
-                  navigate("/flight-booking");
+                  navigate("/flight-seat");
                   window.scrollTo(0, 0);
                 }}
                 variant="contained"

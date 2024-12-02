@@ -1,522 +1,384 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  TextField,
-  TextFieldProps,
   Button,
-  FormControlLabel,
+  FormControl,
   RadioGroup,
+  FormControlLabel,
   Radio,
-  Input,
+  TextField,
   Typography,
+  Divider,
+  Checkbox,
 } from "@mui/material";
-import { useEffect } from "react";
-import { useRef } from "react";
+import DatePicker from "react-datepicker";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
-import "./css/DropDown.css";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 
-function FlightSearch() {
-  const location = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
-
+const FlightSearch = () => {
   const navigate = useNavigate();
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
   const [departing, setDeparting] = useState(new Date());
   const [returning, setReturning] = useState(() => {
     const today = new Date();
     today.setDate(today.getDate() + 2);
     return today;
   });
+  const [showReturnDate, setShowReturnDate] = useState(false);
+  const [tripType, setTripType] = useState("oneway");
+  const [isRoundTrip, setIsRoundTrip] = useState(false);
+  const location = useLocation();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [passengerCount, setPassengerCount] = useState({
-    adult: 0,
-    child: 0,
-    infant: 0,
-  });
-  const [travelClass, setTravelClass] = useState("Economy");
-  const dropdownRef = useRef(null);
-
-  // Toggle dropdown visibility
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prevState) => !prevState);
-  };
-
-  // Handle passenger count changes
-  const handlePassengerChange = (type, increment) => {
-    setPassengerCount((prevCount) => {
-      const newCount = { ...prevCount };
-      newCount[type] = Math.max(0, newCount[type] + increment);
-      return newCount;
-    });
-  };
-
-  // Handle travel class selection
-  const handleClassChange = (selectedClass) => {
-    setTravelClass(selectedClass);
-  };
-
-  // Close dropdown if clicked outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
+    window.scrollTo(0, 0);
+  }, [location]);
 
-    // Add mousedown listener when dropdown is open
-    if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+  useEffect(() => {
+    if (tripType === "roundtrip") {
+      setShowReturnDate(true);
+    } else {
+      setShowReturnDate(false);
     }
-
-    // Cleanup listener on component unmount or when dropdown closes
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDropdownOpen]);
+  }, [tripType]);
 
   return (
     <Box
       sx={{
-        backgroundColor: "wheat",
-        padding: "40px",
+        maxWidth: "1200px",
+        padding: "20px",
         borderRadius: "20px",
-        margin: "20px 80px",
-        color: "black",
+        margin: "40px auto",
       }}
     >
-      <Box marginBottom="20px" display="flex" gap="2px">
-        <Button
-          sx={{
-            backgroundColor: "rgb(77,115,252)",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1.2rem",
-            "&:hover": {
-              backgroundColor: "rgb(77,115,252)",
-              color: "white",
-            },
-          }}
-        >
-          Flights
-        </Button>
-        <Button
-          sx={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            color: "black",
-            textTransform: "none",
-            fontSize: "1.2rem",
-            "&:hover": {
-              backgroundColor: "rgb(77,115,252)",
-              color: "white",
-            },
-          }}
-        >
-          Hotel
-        </Button>
-        <Button
-          sx={{
-            backgroundColor: "white",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            color: "black",
-            textTransform: "none",
-            fontSize: "1.2rem",
-            "&:hover": {
-              backgroundColor: "rgb(77,115,252)",
-              color: "white",
-            },
-          }}
-        >
-          Car Rentals
-        </Button>
-      </Box>
-      <Box
-        width="100%"
-        display="flex"
-        justifyContent="space-evenly"
-        marginBottom="20px"
-      >
-        <Box width="100%" display="flex" gap="2px">
-          <Button
-            sx={{
-              flex: 1,
-              backgroundColor: "rgb(77,115,252)",
-              color: "white",
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                backgroundColor: "rgb(77,115,252)",
-                color: "white",
-              },
-            }}
+      <Box bgcolor="#1e90ff" borderRadius="16px">
+        {/* Trip Type */}
+        <FormControl fullWidth sx={{ padding: "20px" }}>
+          <RadioGroup
+            row
+            defaultValue="roundtrip"
+            sx={{ justifyContent: "flex-start", marginLeft: "12px" }}
           >
-            Flight
-          </Button>
-          <Button
-            sx={{
-              flex: 1,
-              backgroundColor: "white",
-              color: "black",
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                backgroundColor: "rgb(77,115,252)",
-                color: "white",
-              },
-            }}
-          >
-            Stopover
-          </Button>
-          <Button
-            sx={{
-              flex: 1,
-              backgroundColor: "white",
-              color: "black",
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                backgroundColor: "rgb(77,115,252)",
-                color: "white",
-              },
-            }}
-          >
-            Manage Booking / Check in
-          </Button>
-          <Button
-            sx={{
-              flex: 1,
-              backgroundColor: "white",
-              color: "black",
-              textTransform: "none",
-              fontSize: "1rem",
-              "&:hover": {
-                backgroundColor: "rgb(77,115,252)",
-                color: "white",
-              },
-            }}
-          >
-            Flight Status
-          </Button>
-        </Box>
-      </Box>
-      <FormControl sx={{ margin: "20px auto 40px" }}>
-        <RadioGroup row defaultValue="oneway" sx={{ gap: "20px" }}>
-          <FormControlLabel
-            value="oneway"
-            control={
-              <Radio
-                sx={{ width: "32px", height: "32px", marginLeft: "5px" }}
-              />
-            }
-            label="One way"
-          />
-          <FormControlLabel
-            value="roundtrip"
-            control={<Radio sx={{ width: "32px", height: "32px" }} />}
-            label="Round-trip"
-          />
-          <FormControlLabel
-            value="multicity"
-            control={<Radio sx={{ width: "32px", height: "32px" }} />}
-            label="Multi-City"
-          />
-        </RadioGroup>
-      </FormControl>
-      <Box
-        alignItems="center"
-        display="flex"
-        gap="10px"
-        marginBottom="20px"
-        sx={{
-          backgroundColor: "white",
-          padding: "10px 20px",
-          borderRadius: "8px",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box display="flex" alignItems="center" gap="10px">
-          {" "}
-          <TextField
-            label="From"
-            variant="outlined"
-            sx={{
-              width: "250px",
-              margin: "10px auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px",
-                "& fieldset": {
-                  borderColor: "#bdbdbd",
-                },
-                "&:hover fieldset": {
-                  borderColor: "black",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "rgb(99,91,255)",
-                },
-              },
-            }}
-          />
-          <FontAwesomeIcon icon={faArrowRightArrowLeft} />
-          <TextField
-            label="To"
-            variant="outlined"
-            sx={{
-              width: "250px",
-              margin: "10px auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px",
-                "& fieldset": {
-                  borderColor: "#bdbdbd",
-                },
-                "&:hover fieldset": {
-                  borderColor: "black",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "rgb(99,91,255)",
-                },
-              },
-            }}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            gap: "20px",
-            padding: "16px",
-            borderRadius: "8px",
-          }}
-        >
-          <FormControl style={{ position: "relative" }}>
-            <InputLabel
-              htmlFor="departing-date-picker"
-              style={{
-                fontSize: "12px",
-                color: "#8a8a8a",
-                position: "absolute",
-                top: "0px",
-                left: "12px",
-                backgroundColor: "white",
-                padding: "0 4px",
-                transform: "translateY(-50%)",
-              }}
-            >
-              Departing
-            </InputLabel>
-            <DatePicker
-              id="departing-date-picker"
-              selected={departing}
-              onChange={(date) => setDeparting(date)}
-              dateFormat="MMM d, yyyy"
-              placeholderText="Select a date"
-              className="custom-date-picker"
-            />
-          </FormControl>
-
-          <FormControl style={{ position: "relative" }}>
-            <InputLabel
-              htmlFor="returning-date-picker"
-              style={{
-                fontSize: "12px",
-                color: "#8a8a8a",
-                position: "absolute",
-                top: "0px",
-                left: "12px",
-                backgroundColor: "white",
-                padding: "0 4px",
-                transform: "translateY(-50%)",
-              }}
-            >
-              Returning
-            </InputLabel>
-            <DatePicker
-              id="returning-date-picker"
-              selected={returning}
-              onChange={(date) => setReturning(date)}
-              dateFormat="MMM d, yyyy"
-              placeholderText="Select a date"
-              className="custom-date-picker"
-            />
-          </FormControl>
-        </Box>
-        <Box position="relative" display="inline-block" width="350px">
-          <TextField
-            fullWidth
-            variant="outlined"
-            value={`${
-              passengerCount.adult +
-              passengerCount.child +
-              passengerCount.infant
-            } Passengers / ${travelClass}`}
-            onClick={toggleDropdown}
-            label="Passengers and Class"
-            InputProps={{
-              readOnly: true,
-            }}
-            sx={{
-              margin: "10px auto",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px",
-                "& fieldset": {
-                  borderColor: "#bdbdbd",
-                },
-                "&:hover fieldset": {
-                  borderColor: "black",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "rgb(99,91,255)",
-                },
-              },
-              "& .MuiInputBase-input": {
-                cursor: "pointer",
-              },
-            }}
-          />
-
-          {isDropdownOpen && (
-            <Box
-              className="dropdown-content"
-              ref={dropdownRef}
-              position="absolute"
-              left="0"
-              bgcolor="rgb(234,234,234)"
-              borderRadius="8px"
-              p="10px"
-              zIndex={1}
-              width="100%"
-              padding="12px"
-            >
-              <Box className="passenger-section">
-                <Typography fontWeight="600" fontSize="1.2rem">
-                  Passenger
-                </Typography>
-                <Box>
-                  {["adult", "child", "infant"].map((type, idx) => (
-                    <Box
-                      key={idx}
-                      className="passenger-type"
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        margin: "8px 0",
-                      }}
-                    >
-                      <Typography fontSize="1rem">
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </Typography>
-                      <Box display="flex" alignItems="center" gap="12px">
-                        <Button
-                          onClick={() => handlePassengerChange(type, -1)}
-                          sx={{
-                            border: "1px solid black",
-                            width: "32px",
-                            height: "32px",
-                            padding: "4px",
-                            minWidth: 0,
-                            fontSize: "1rem",
-                          }}
-                        >
-                          -
-                        </Button>
-                        <Typography>{passengerCount[type]}</Typography>
-                        <Button
-                          onClick={() => handlePassengerChange(type, 1)}
-                          sx={{
-                            border: "1px solid black",
-                            width: "32px",
-                            height: "32px",
-                            padding: "4px",
-                            minWidth: 0,
-                            fontSize: "1rem",
-                          }}
-                        >
-                          +
-                        </Button>
-                      </Box>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
-              <Box className="class-section">
-                <Typography
-                  fontWeight="600"
-                  fontSize="1.2rem"
-                  marginBottom="12px"
-                >
-                  Travel Class
-                </Typography>
+            <FormControlLabel
+              value="oneway"
+              control={<Radio sx={{ display: "none" }} />}
+              label={
                 <Box
+                  onClick={() => {
+                    setTripType("oneway");
+                    setIsRoundTrip(false);
+                  }}
                   sx={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, 1fr)",
-                    gap: "16px",
+                    color: "white",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                    border:
+                      tripType === "oneway"
+                        ? "1px solid white"
+                        : "1px solid transparent",
+                    fontWeight: "bold",
+                    borderRadius: "8px",
+                    marginRight: "10px",
+                    padding: "10px 40px",
+                    "&:hover": { border: "1px solid white" },
                   }}
                 >
-                  {[
-                    "Economy",
-                    "Business",
-                    "First Class",
-                    "Premium Economy",
-                  ].map((cls, idx) => (
-                    <Button
-                      key={idx}
-                      className={`class-btn ${
-                        travelClass === cls ? "selected" : ""
-                      }`}
-                      onClick={() => handleClassChange(cls)}
-                      sx={{
-                        border: "1px solid black",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        height: "52px",
-                        lineHeight: "16px",
-                        textAlign: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      {cls}
-                    </Button>
-                  ))}
+                  One-way
                 </Box>
+              }
+            />
+            <FormControlLabel
+              value="roundtrip"
+              control={<Radio sx={{ display: "none" }} />}
+              label={
+                <Box
+                  onClick={() => {
+                    setTripType("roundtrip");
+                    setIsRoundTrip(true);
+                  }}
+                  sx={{
+                    color: "white",
+                    textTransform: "none",
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                    borderRadius: "8px",
+                    padding: "10px 40px",
+                    border:
+                      tripType === "roundtrip"
+                        ? "1px solid white"
+                        : "1px solid transparent",
+                    "&:hover": { border: "1px solid white", cursor: "pointer" },
+                  }}
+                >
+                  Round-trip
+                </Box>
+              }
+            />
+          </RadioGroup>
+        </FormControl>
+        {/* Input Fields */}
+        <Box
+          gap="10px"
+          bgcolor="white"
+          borderRadius="0 0 12px 12px"
+          sx={{ padding: "20px 40px" }}
+          color="#1e90ff"
+        >
+          <Box display="flex" gap="10px" alignItems="center">
+            <Box
+              flex={1}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              margin="20px 0"
+            >
+              <Box>
+                <Typography
+                  sx={{
+                    color: "rgba(0, 0, 0, 0.6)",
+                    marginBottom: "10px",
+                  }}
+                >
+                  From
+                </Typography>
+                <TextField
+                  fullWidth
+                  defaultValue="Hanoi, Vietnam"
+                  variant="standard"
+                  InputProps={{
+                    disableUnderline: false,
+                    style: {
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                  sx={{
+                    "& .MuiInput-root": {
+                      fontSize: "1.3rem",
+                      borderRadius: "10px",
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                />
+              </Box>
+              <FontAwesomeIcon
+                icon={faArrowRightArrowLeft}
+                style={{
+                  color: "rgba(0, 0, 0, 0.6)",
+                  fontSize: "0.8rem",
+                  border: "1px solid rgba(0, 0, 0, 0.6)",
+                  borderRadius: "50%",
+                  padding: "4px",
+                }}
+              />
+              <Box>
+                <Typography
+                  sx={{
+                    color: "rgba(0, 0, 0, 0.6)",
+                    marginBottom: "10px",
+                  }}
+                >
+                  To
+                </Typography>
+                <TextField
+                  fullWidth
+                  defaultValue="Ho Chi Minh, Vietnam"
+                  variant="standard"
+                  InputProps={{
+                    disableUnderline: false,
+                    style: {
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                  sx={{
+                    "& .MuiInput-root": {
+                      fontSize: "1.3rem",
+                      borderRadius: "10px",
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                />
               </Box>
             </Box>
-          )}
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ mx: 2, backgroundColor: "rgba(0, 0, 0, 0.2)" }}
+            />
+            <Box flex={1} display="flex" justifyContent="space-between">
+              <Box flex={1}>
+                <Typography
+                  sx={{
+                    color: "rgba(0, 0, 0, 0.6)",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Departure Date
+                </Typography>
+                <DatePicker
+                  selected={departing}
+                  onChange={(date) => setDeparting(date)}
+                  dateFormat="MMM d, yyyy"
+                  customInput={
+                    <TextField
+                      variant="standard"
+                      InputProps={{
+                        disableUnderline: false,
+                        style: {
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                      sx={{
+                        "& .MuiInput-root": {
+                          fontSize: "1.3rem",
+                          borderRadius: "10px",
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                    />
+                  }
+                />
+              </Box>
+              <Box flex={1}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={showReturnDate}
+                      onChange={(e) => setShowReturnDate(e.target.checked)}
+                      disableRipple
+                      disabled={isRoundTrip}
+                      sx={{
+                        color: "#1e90ff",
+                        "&.Mui-checked": {
+                          color: "#1e90ff",
+                        },
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 1,
+                          borderRadius: "4px",
+                        },
+                      }}
+                      icon={
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            border: "2px solid rgba(0, 0, 0, 0.4)",
+                            borderRadius: "4px",
+                            backgroundColor: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "start",
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="rgba(0, 0, 0, 0.4)"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            width="16"
+                            height="16"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </Box>
+                      }
+                      checkedIcon={
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            border: "2px solid #1e90ff",
+                            borderRadius: "4px",
+                            backgroundColor: "#1e90ff",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            width="16"
+                            height="16"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        </Box>
+                      }
+                    />
+                  }
+                  label="Return date"
+                  sx={{
+                    position: "relative",
+                    top: "-5px",
+                    color: "rgba(0, 0, 0, 0.6)",
+                  }}
+                />
+
+                {showReturnDate && (
+                  <Box>
+                    <DatePicker
+                      selected={returning}
+                      onChange={(date) => setReturning(date)}
+                      dateFormat="MMM d, yyyy"
+                      customInput={
+                        <TextField
+                          variant="standard"
+                          InputProps={{
+                            disableUnderline: false,
+                            style: {
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                          sx={{
+                            "& .MuiInput-root": {
+                              fontSize: "1.3rem",
+                              borderRadius: "10px",
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                        />
+                      }
+                    />
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          </Box>
+          {/* Search Button */}
+          <Box display="flex" justifyContent="center">
+            <Button
+              sx={{
+                width: "40%",
+                backgroundColor: "#1e90ff",
+                color: "white",
+                textTransform: "none",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                borderRadius: "8px",
+                marginRight: "20px",
+                padding: "10px 20px",
+                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                transform: "translateY(40px)",
+                "&:hover": { backgroundColor: "#2177cb" },
+              }}
+              onClick={() => navigate("/flight-listing")}
+            >
+              Search
+            </Button>
+          </Box>
         </Box>
-      </Box>
-      <Box display="flex" justifyContent="flex-end">
-        <Button
-          variant="contained"
-          onClick={() => navigate("/flight-listing")}
-          sx={{
-            backgroundColor: "rgb(77,115,252)",
-            padding: "10px 20px",
-            borderRadius: "12px",
-          }}
-        >
-          Show Flight
-        </Button>
       </Box>
     </Box>
   );
-}
+};
 
 export default FlightSearch;
