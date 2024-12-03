@@ -1,26 +1,43 @@
-import { Box, Typography, Button, Slider } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Button, Slider, Divider } from "@mui/material";
 
 const buttonStyles = {
-  border: "1px solid #000",
-  padding: "10px 20px",
-  borderRadius: "8px",
-  height: "52px",
+  backgroundColor: "white",
+  border: "1px solid #1e90ff",
+  color: "#1e90ff",
   lineHeight: "16px",
-  textAlign: "center",
-  backgroundColor: "#fff",
-  color: "#000",
-  transition: "background-color 0.3s, color 0.3s",
-  "&:hover": {
-    backgroundColor: "#f0f0f0",
-    color: "#333",
-  },
-  "&:active": {
-    backgroundColor: "#e0e0e0",
-    color: "#111",
-  },
+  textTransform: "none",
+  fontSize: "1rem",
+  borderRadius: "8px",
+  padding: "10px 40px",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  "&:hover": { backgroundColor: "#1e90ff", color: "white" },
 };
 
 const FilterSearch = () => {
+  const [selectedCabin, setSelectedCabin] = useState<string | null>(null);
+  const [selectedPrice, setSelectedPrice] = useState<number>(30);
+  const [selectedDepartureTime, setSelectedDepartureTime] = useState<
+    string | null
+  >(null);
+  const [selectedArrivalTime, setSelectedArrivalTime] = useState<string | null>(
+    null
+  );
+
+  const handleApplyFilters = () => {
+    if (!selectedCabin || !selectedDepartureTime || !selectedArrivalTime) {
+      alert("Please select all required filters before applying!");
+      return;
+    }
+    // Handle filter application logic here
+    console.log("Filters applied:", {
+      selectedCabin,
+      selectedPrice,
+      selectedDepartureTime,
+      selectedArrivalTime,
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -39,7 +56,7 @@ const FilterSearch = () => {
       <Typography variant="h5" sx={{ fontWeight: 600, color: "#333" }}>
         Filter Search
       </Typography>
-
+      <Divider sx={{ height: "1px", backgroundColor: "gray" }} />
       <Box>
         <Typography
           variant="subtitle1"
@@ -57,19 +74,25 @@ const FilterSearch = () => {
             gap: "16px",
           }}
         >
-          {[
-            "Economy Class",
-            "Business Class",
-            "First Class",
-            "Premium Economy",
-          ].map((label) => (
-            <Button key={label} sx={buttonStyles}>
-              {label}
-            </Button>
-          ))}
+          {["Economy Class", "Business Class", "First Class", "Any"].map(
+            (label) => (
+              <Button
+                disableRipple
+                key={label}
+                onClick={() => setSelectedCabin(label)}
+                sx={{
+                  ...buttonStyles,
+                  backgroundColor:
+                    selectedCabin === label ? "#1e90ff" : "white",
+                  color: selectedCabin === label ? "white" : "#1e90ff",
+                }}
+              >
+                {label}
+              </Button>
+            )
+          )}
         </Box>
       </Box>
-
       <Box>
         <Typography
           variant="subtitle1"
@@ -86,42 +109,11 @@ const FilterSearch = () => {
           ]}
           min={0}
           max={100}
+          value={selectedPrice}
+          onChange={(_, value) => setSelectedPrice(value as number)}
           aria-label="Price range slider"
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", color: "#1e90ff" }}
         />
-      </Box>
-      <Box>
-        <Typography
-          variant="subtitle1"
-          sx={{ fontWeight: 500, color: "#555", mb: 1 }}
-        >
-          Stops
-        </Typography>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-            },
-            gap: "16px",
-          }}
-        >
-          {[
-            { label: "Any" },
-            { label: "Non-stop" },
-            { label: "1 Stop" },
-            { label: "2 Stop" },
-          ].map(({ label }) => (
-            <Button key={label} sx={buttonStyles}>
-              <Box display="flex" flexDirection="column" alignItems="center">
-                <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {label}
-                </Typography>
-              </Box>
-            </Button>
-          ))}
-        </Box>
       </Box>
       <Box>
         <Typography
@@ -141,23 +133,94 @@ const FilterSearch = () => {
           }}
         >
           {[
-            { label: "Morning", range: "5 AM - 12 AM" },
-            { label: "Afternoon", range: "12 PM - 5 PM" },
-            { label: "Evening", range: "5 PM - 10 PM" },
-            { label: "Night", range: "10 PM - 5 AM" },
+            { label: "Morning", range: "00:00 - 11:59" },
+            { label: "Afternoon", range: "12:00 - 17:59" },
+            { label: "Evening", range: "18:00 - 23:59" },
+            { label: "Any" },
           ].map(({ label, range }) => (
-            <Button key={label} sx={buttonStyles}>
+            <Button
+              disableRipple
+              key={label}
+              onClick={() => setSelectedDepartureTime(label)}
+              sx={{
+                ...buttonStyles,
+                backgroundColor:
+                  selectedDepartureTime === label ? "#1e90ff" : "white",
+                color: selectedDepartureTime === label ? "white" : "#1e90ff",
+              }}
+            >
               <Box display="flex" flexDirection="column" alignItems="center">
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   {label}
                 </Typography>
-                <Typography variant="caption" sx={{ color: "#777" }}>
-                  {range}
-                </Typography>
+                <Typography variant="caption">{range}</Typography>
               </Box>
             </Button>
           ))}
         </Box>
+      </Box>
+      <Box>
+        <Typography
+          variant="subtitle1"
+          sx={{ fontWeight: 500, color: "#555", mb: 1 }}
+        >
+          Arrival Time
+        </Typography>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+            },
+            gap: "16px",
+          }}
+        >
+          {[
+            { label: "Morning", range: "00:00 - 11:59" },
+            { label: "Afternoon", range: "12:00 - 17:59" },
+            { label: "Evening", range: "18:00 - 23:59" },
+            { label: "Any" },
+          ].map(({ label, range }) => (
+            <Button
+              disableRipple
+              key={label}
+              onClick={() => setSelectedArrivalTime(label)}
+              sx={{
+                ...buttonStyles,
+                backgroundColor:
+                  selectedArrivalTime === label ? "#1e90ff" : "white",
+                color: selectedArrivalTime === label ? "white" : "#1e90ff",
+              }}
+            >
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  {label}
+                </Typography>
+                <Typography variant="caption">{range}</Typography>
+              </Box>
+            </Button>
+          ))}
+        </Box>
+      </Box>
+      <Divider sx={{ backgroundColor: "gray" }} />
+      <Box display="flex" justifyContent="end">
+        <Button
+          disableRipple
+          onClick={handleApplyFilters}
+          sx={{
+            backgroundColor: "#1e90ff",
+            color: "white",
+            textTransform: "none",
+            fontSize: "1rem",
+            borderRadius: "8px",
+            padding: "10px 40px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            "&:hover": { backgroundColor: "#2177cb" },
+          }}
+        >
+          Apply
+        </Button>
       </Box>
     </Box>
   );
