@@ -17,7 +17,7 @@ from datetime import datetime
 from enum import Enum as PyEnum
 
 class User(Base):
-    _tablename_ = "user"
+    __tablename__ = "user"
 
     user_id = Column(Integer, primary_key=True, index=True)
     firstname = Column(String, nullable=False)

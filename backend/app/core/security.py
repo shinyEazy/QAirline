@@ -2,7 +2,8 @@ from datetime import timedelta, datetime
 from fastapi import status, Depends
 from fastapi.exceptions import HTTPException
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer,OAuth2
+from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.crud.admin import get_admin_by_username
@@ -18,10 +19,18 @@ class UserToken(BaseModel):
     access_token: str
     token_type: str
 
-
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_admin_scheme = OAuth2PasswordBearer(tokenUrl="api/admin/auth")
 oauth2_user_scheme = OAuth2PasswordBearer(tokenUrl="api/user/auth")
+
+class OAuth2WithName(OAuth2):
+    def __init__(self, name: str, tokenUrl: str):
+        flows = OAuthFlowsModel(password={"tokenUrl": tokenUrl})
+        super().__init__(flows=flows)
+        self.scheme_name = name
+
+oauth2_admin_scheme = OAuth2WithName(name="Admin Auth", tokenUrl="api/admin/auth")
+oauth2_user_scheme = OAuth2WithName(name="User Auth", tokenUrl="api/user/auth")
 
 class TokenData(BaseModel):
     username: str

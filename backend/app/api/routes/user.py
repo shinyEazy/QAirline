@@ -63,7 +63,7 @@ async def create_user_end_point(user: UserCreate, db: Session = Depends(get_db))
     new_user = create_user(user, db)
     return {
         "user_id": new_user.user_id,
-        "email": new_user.email,
+        "username": new_user.username,
         "message": "User created successfully",
     }
 
