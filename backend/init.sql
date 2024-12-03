@@ -1,3 +1,12 @@
+-- Create User Table
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    role TEXT NOT NULL
+);
 -- Create Airport Table
 CREATE TABLE airport (
     airport_id SERIAL PRIMARY KEY,
@@ -103,14 +112,6 @@ CREATE TABLE admin (
     password TEXT
 );
 
--- Create User Table
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    firstname TEXT NOT NULL,
-    lastname TEXT NOT NULL,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
-);
 
 -- Insert Admin Data
 INSERT INTO admin (username, password) VALUES 
@@ -267,33 +268,4 @@ INSERT INTO flight_seats (
 (1, 'Economy', 250.50, 0.8, 200, 20, 10),
 (1, 'Business', 750.75, 0.9, 50, 10, 4);
 
-INSERT INTO booking (
-    booker_email, 
-    number_of_adults, 
-    number_of_children, 
-    flight_class, 
-    cancelled, 
-    flight_id, 
-    booking_date
-) VALUES 
-('john.doe@example.com', 2, 1, 'Economy', FALSE, 1, '2024-05-20 09:30:00'),
-('jane.smith@example.com', 1, 0, 'Business', FALSE, 2, '2024-05-22 14:45:00'),
-('james.smith@example.com', 1, 0, 'Business', FALSE, 1, '2024-05-22 14:46:00');
 
--- Insert Payment Data
-INSERT INTO payment (
-    payment_id, 
-    transaction_date_time, 
-    amount, 
-    currency, 
-    payment_method, 
-    status, 
-    booking_id
-) VALUES 
-(1, '2024-05-20 10:00:00', 800, 'USD', 'Credit Card', 'completed', 1),
-(2, '2024-05-22 15:00:00', 1200, 'USD', 'PayPal', 'completed', 2);
-
-INSERT INTO passengers (booking_id, citizen_id, passport_number, gender, phone_number, first_name, last_name, nationality, date_of_birth, seat_row, seat_col)
-VALUES
-    (1, 'CIT123456', 'P1234567', TRUE, '+1234567890', 'John', 'Doe', 'USA', '1985-01-15 00:00:00', 12, 'A'),
-    (1, 'CIT789012', 'P7890123', FALSE, '+9876543210', 'Jane', 'Smith', 'CAN', '1990-06-25 00:00:00', 14, 'C');

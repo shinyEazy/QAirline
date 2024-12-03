@@ -1,17 +1,18 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import conint
 from sqlalchemy import Column, Integer
+from app.core.security import get_current_user, role_checker
 from crud.flight import delete_flight, get_all_passenger_in_flight
 from schemas.booking import BookingCreate, BookingBase
 from schemas.passenger import PassengerBase
-import schemas
+import app.schemas
 from sqlalchemy.exc import IntegrityError
 from crud.booking import *
 from crud.passenger import *
 from crud.flight_seat import get_flight_seat_by_flight_id_and_class
 from sqlalchemy.orm import Session
 from core.database import get_db
-from models import FlightClass, FlightSeats
+from app.models import Admin, FlightClass, FlightSeats, User
 from typing import List
 from sqlalchemy import func
 
@@ -46,9 +47,22 @@ def get_passenger_in_booking_end_point(booking_id: int, db: Session = Depends(ge
     return get_passengers_in_booking(db_booking, db)
 
 
+# @router.get("/")
+# def get_current_user_booking_end_point(
+#     user: User = Depends(get_current_user), db: Session = Depends(get_db)
+# ):
+#     """
+#     Get booking of current user
+#     """
+#
+#     return get_users_booking(conint(user.user_id), db)
+
+
 @router.post("/")
 def create_booking_end_point(
-    booking: schemas.BookingCreate, db: Session = Depends(get_db)
+    booking: BookingCreate,
+    user: Admin = Depends(role_checker(["user"])),
+    db: Session = Depends(get_db),
 ):
     """
     Create a booking
@@ -82,11 +96,19 @@ def create_booking_end_point(
 
     total_price = calculate_price(booking, db_booking, db)
 
-    return {"booking": db_booking, "total_price": total_price}
+    return {
+        "booking": db_booking,
+        "total_price": total_price,
+        "admin_id": user.admin_id,
+    }
 
 
 @router.get("/flight/{flight_id}")
-def get_booking_by_flight_id_end_point(flight_id: int, db: Session = Depends(get_db)):
+def get_booking_by_flight_id_end_point(
+    flight_id: int,
+    db: Session = Depends(get_db),
+    admin: Admin = Depends(role_checker(["admin"])),
+):
     """
     Get a specific booking by flight_id
     """
@@ -101,7 +123,7 @@ def get_booking_by_flight_id_end_point(flight_id: int, db: Session = Depends(get
 
 @router.put("/{booking_id}")
 def update_booking_end_point(
-    booking_id: int, booking: schemas.BookingUpdate, db: Session = Depends(get_db)
+    booking_id: int, booking: BookingUpdate, db: Session = Depends(get_db)
 ):
     """
     Update a booking

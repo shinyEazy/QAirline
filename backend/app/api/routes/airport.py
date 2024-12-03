@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from models import Airport
-from schemas import AirportCreate, AirportUpdate
+from app.models import Airport
+from app.schemas import AirportCreate, AirportUpdate
 from crud.airport import *
 from core.database import get_db
 

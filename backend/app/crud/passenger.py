@@ -1,6 +1,7 @@
 from typing import List
-from schemas.passenger import PassengerCreate, PassengerUpdate, PassengerBase
-from models import Passenger, Flight
+from app.schemas.passenger import PassengerCreate, PassengerUpdate, PassengerBase
+
+from app.models import Passenger, Flight
 from sqlalchemy.orm import Session
 from .crud_utils import *
 

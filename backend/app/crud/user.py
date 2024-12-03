@@ -1,7 +1,9 @@
+from app.schemas.user import UserCreateAdmin, UserCreate, UserUpdate
 from .crud_utils import *
-from models import User
+
+from app.models import User
 from sqlalchemy.orm import Session
-from schemas import UserCreate, UserUpdate
+
 
 def get_user(user_id: int, db: Session) -> User:
     """
@@ -14,6 +16,7 @@ def get_user(user_id: int, db: Session) -> User:
     # raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+
 def get_user_by_username(username: str, db: Session) -> User:
     """
     Equivalent to a SQL query that is 'SELECT * FROM table users where users.email = user_email'
@@ -22,6 +25,7 @@ def get_user_by_username(username: str, db: Session) -> User:
     db_user = db.query(User).filter(User.username == username).first()
 
     return db_user
+
 
 def get_all_users(db: Session):
     """
@@ -38,9 +42,17 @@ def create_user(user: UserCreate, db: Session):
 
     return create(User, db, user.model_dump())
 
+
 def update_user(db_user: User, user: UserUpdate, db: Session):
     """
     Equivalent to a SQL query that is 'UPDATE users SET password=user.password WHERE users.id = user_id'
     """
     return update(db_user, db, user.model_dump())
 
+
+def create_admin(user: UserCreateAdmin, db: Session):
+    """
+    Equivalent .. <-> Create an admin
+    """
+
+    return create(User, db, user.model_dump())

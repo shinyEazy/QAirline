@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
-import schemas, models
 from crud.passenger import *
 from sqlalchemy.orm import Session
 from core.database import get_db
+from schemas import PassengerCreate, PassengerUpdate
 
 router = APIRouter(prefix="/passenger", tags=["Passenger"])
 
@@ -22,7 +22,7 @@ def get_passenger_end_point(citizen_id: str, db: Session = Depends(get_db)):
 
 @router.post("/")
 def create_passenger_end_point(
-    passenger: schemas.PassengerCreate, db: Session = Depends(get_db)
+    passenger: PassengerCreate, db: Session = Depends(get_db)
 ):
     """
     Create a passenger
@@ -33,7 +33,7 @@ def create_passenger_end_point(
 
 @router.put("/{citizen_id}")
 def update_passenger_end_point(
-    citizen_id: str, passenger: schemas.PassengerUpdate, db: Session = Depends(get_db)
+    citizen_id: str, passenger: PassengerUpdate, db: Session = Depends(get_db)
 ):
     """
     Update a passenger

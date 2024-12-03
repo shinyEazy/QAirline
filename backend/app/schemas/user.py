@@ -35,3 +35,7 @@ class UserUpdate(SchemaModel):
 class UserToken(BaseModel):
     access_token: str
     token_type: str
+
+
+class UserCreateAdmin(UserCreate):
+    role: str
