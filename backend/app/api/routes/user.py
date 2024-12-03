@@ -11,10 +11,13 @@ from core.security import (
     create_access_token_user,
     get_current_user,
     UserToken,
+    role_checker,
 )
 from datetime import timedelta
 
-router = APIRouter(prefix="/user", tags=["User"])
+router = APIRouter(
+    prefix="/user", tags=["User"], dependencies=[Depends(role_checker(["admin"]))]
+)
 ACCESS_TOKEN_EXPIRES_MINUTES = timedelta(minutes=20)
 
 
@@ -53,7 +56,11 @@ async def get_user_by_username_end_point(username: str, db: Session = Depends(ge
     return db_user
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(role_checker(["user", "admin"]))],
+)
 async def create_user_end_point(user: UserCreate, db: Session = Depends(get_db)):
     """
     Create a new user
@@ -108,7 +115,11 @@ async def get_user_me_end_point(
     return current_user
 
 
-@router.post("/auth", response_model=UserToken)
+@router.post(
+    "/auth",
+    response_model=UserToken,
+    dependencies=[Depends(role_checker(["admin", "user"]))],
+)
 async def authenticate_user_end_point(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),

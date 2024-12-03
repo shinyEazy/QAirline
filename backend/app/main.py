@@ -14,6 +14,7 @@ from app.schemas.user import UserCreateAdmin
 from app.models import Base
 from app.core.database import engine, get_db
 from core.security import bcrypt_context
+import json
 
 
 @asynccontextmanager
@@ -30,13 +31,12 @@ async def lifespan(app: fastapi.FastAPI):
     # Create default admin
     db = next(get_db())
     try:
-        admin_user = UserCreateAdmin(
-            firstname="bill",
-            lastname="joe",
-            username="admin",
-            password=bcrypt_context.hash("abc123"),
-            role="admin",
-        )
+
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        admin_file_path = os.path.join(current_dir, "admin.json")
+        with open(admin_file_path, "r") as admin_file:
+            admin_data = json.load(admin_file)
+        admin_user = UserCreateAdmin(**admin_data)
         create_admin(admin_user, db)
     except Exception as e:
         print(f"Error creating admin user: {e}")

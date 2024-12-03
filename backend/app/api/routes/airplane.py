@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
+from app.core.security import role_checker
 from crud.airport import get_airport
 from crud.airplane import *
 from schemas import (
@@ -10,7 +11,11 @@ from schemas import (
 )
 from core.database import get_db
 
-router = APIRouter(prefix="/airplanes", tags=["Airplane"])
+router = APIRouter(
+    prefix="/airplanes",
+    tags=["Airplane"],
+    dependencies=[Depends(role_checker(["admin"]))],
+)
 
 # Endpoints for AirplaneModel
 
@@ -115,4 +120,3 @@ async def get_airplane_by_city_end_point(city: str, db: Session = Depends(get_db
     if not db_airplanes:
         raise HTTPException(status_code=404, detail="Airplane not found")
     return db_airplanes
-

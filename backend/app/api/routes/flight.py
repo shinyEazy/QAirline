@@ -1,11 +1,14 @@
 from fastapi import APIRouter, HTTPException, Depends
+from app.core.security import role_checker
 from crud.airplane import get_airplane
 from sqlalchemy.orm import Session
 from crud.flight import *
 from schemas.flight import FlightCreate, FlightUpdate, FlightBase
 from core.database import get_db
 
-router = APIRouter(prefix="/flights", tags=["Flight"])
+router = APIRouter(
+    prefix="/flights", tags=["Flight"], dependencies=[Depends(role_checker(["admin"]))]
+)
 
 # Endpoints for Flight
 

@@ -1,3 +1,4 @@
+from app.core.security import role_checker
 from crud.flight_seat import get_flight_seat_by_flight_id_and_class
 from crud.booking import get_booking
 from app.schemas import PaymentCreate
@@ -10,7 +11,7 @@ from crud.payment import create_payment
 router = APIRouter(prefix="/payment", tags=["Payment"])
 
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(role_checker(["user"]))])
 def create_payment_end_point(payment: PaymentCreate, db: Session = Depends(get_db)):
     print(f"Received payment request hello: {payment}")
     print(f"Database session: {db}")
@@ -44,4 +45,3 @@ def calculate_price(db_booking: Booking, db: Session) -> float:
     )
 
     return total_price
-

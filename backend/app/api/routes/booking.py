@@ -16,7 +16,11 @@ from app.models import Admin, FlightClass, FlightSeats, User
 from typing import List
 from sqlalchemy import func
 
-router = APIRouter(prefix="/booking", tags=["Booking"])
+router = APIRouter(
+    prefix="/booking",
+    tags=["Booking"],
+    dependencies=[Depends(role_checker(["admin", "user"]))],
+)
 
 
 @router.get("/{booking_id}")

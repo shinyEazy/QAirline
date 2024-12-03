@@ -84,7 +84,6 @@ def get_passengers_in_booking(db_booking: Booking, db: Session) -> List[Passenge
         if not passengers:
             return []  # Return empty list if no passengers are found
 
-        print(passengers)
         return passengers
 
     except NoResultFound:
