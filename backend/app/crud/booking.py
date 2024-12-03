@@ -1,10 +1,10 @@
 from sqlalchemy.exc import NoResultFound
-import schemas
+from app.schemas import BookingBase, BookingUpdate
 from datetime import datetime
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from .crud_utils import *
-from models import Booking, Passenger
+from app.models import Booking, Passenger
 from typing import List
 
 
@@ -28,7 +28,7 @@ def get_booking(booking_id: int, db: Session) -> Booking:
     return db_booking
 
 
-def create_booking(booking: schemas.BookingBase, db: Session) -> Booking:
+def create_booking(booking: BookingBase, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'INSERT INTO booking values ()'
     When creating the booking, we need to ensure that the passenger_id and flight_id are valid
@@ -40,9 +40,7 @@ def create_booking(booking: schemas.BookingBase, db: Session) -> Booking:
     return create(Booking, db, current_dict)
 
 
-def update_booking(
-    db_booking: Booking, booking: schemas.BookingUpdate, db: Session
-) -> Booking:
+def update_booking(db_booking: Booking, booking: BookingUpdate, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'UPDATE table booking where booking.booking_id = booking_id'
     """
@@ -86,9 +84,14 @@ def get_passengers_in_booking(db_booking: Booking, db: Session) -> List[Passenge
         if not passengers:
             return []  # Return empty list if no passengers are found
 
-        print(passengers)
         return passengers
 
     except NoResultFound:
         # Optionally handle case where no passengers were found
         return []
+
+
+def get_users_booking(user_id: int, db: Session) -> List[Booking]:
+    bookings = db.query(Booking).filter(Booking.user_id == user_id).all()
+
+    return bookings

@@ -12,9 +12,21 @@ from sqlalchemy import (
     CheckConstraint,
 )
 from sqlalchemy.orm import relationship
-from core.database import Base
+from app.core.database import Base
 from datetime import datetime
 from enum import Enum as PyEnum
+
+
+class Role(PyEnum):
+    admin = "admin"
+    user = "user"
+
+
+class FlightClass(PyEnum):
+    Economy = "Economy"
+    Business = "Business"
+    FirstClass = "First Class"
+
 
 class User(Base):
     __tablename__ = "user"
@@ -24,11 +36,7 @@ class User(Base):
     lastname = Column(String, nullable=False)
     username = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=False)
-
-class FlightClass(PyEnum):
-    Economy = "Economy"
-    Business = "Business"
-    FirstClass = "First Class"
+    role = Column(String, default="user", nullable=False)
 
 
 class Admin(Base):

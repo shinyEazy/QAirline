@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy.orm import Session, aliased
-from schemas import FlightCreate, FlightUpdate
+from app.schemas import FlightCreate, FlightUpdate
 from .crud_utils import *
-from models import Flight, Airplane, Passenger, Booking, Airport
+from app.models import Flight, Airplane, Passenger, Booking, Airport
 from typing import List
 
 

@@ -11,11 +11,15 @@ from core.security import (
     create_access_token_user,
     get_current_user,
     UserToken,
+    role_checker,
 )
 from datetime import timedelta
 
-router = APIRouter(prefix="/user", tags=["User"])
+router = APIRouter(
+    prefix="/user", tags=["User"], dependencies=[Depends(role_checker(["admin"]))]
+)
 ACCESS_TOKEN_EXPIRES_MINUTES = timedelta(minutes=20)
+
 
 @router.get("/{user_id}")
 async def get_user_end_point(user_id: int, db: Session = Depends(get_db)):
@@ -29,6 +33,7 @@ async def get_user_end_point(user_id: int, db: Session = Depends(get_db)):
 
     return db_user
 
+
 @router.get("/")
 async def get_all_user_end_point(db: Session = Depends(get_db)):
     """
@@ -36,6 +41,7 @@ async def get_all_user_end_point(db: Session = Depends(get_db)):
     """
     db_users = get_all_users(db)
     return db_users
+
 
 @router.get("/username/{username}")
 async def get_user_by_username_end_point(username: str, db: Session = Depends(get_db)):
@@ -50,7 +56,11 @@ async def get_user_by_username_end_point(username: str, db: Session = Depends(ge
     return db_user
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(role_checker(["user", "admin"]))],
+)
 async def create_user_end_point(user: UserCreate, db: Session = Depends(get_db)):
     """
     Create a new user
@@ -67,8 +77,11 @@ async def create_user_end_point(user: UserCreate, db: Session = Depends(get_db))
         "message": "User created successfully",
     }
 
+
 @router.put("/{user_id}")
-async def update_user_end_point(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
+async def update_user_end_point(
+    user_id: int, user: UserUpdate, db: Session = Depends(get_db)
+):
     """
     Update a user
     """
@@ -79,6 +92,7 @@ async def update_user_end_point(user_id: int, user: UserUpdate, db: Session = De
 
     updated_user = update_user(db_user, user, db)
     return updated_user
+
 
 @router.delete("/{username}")
 async def delete_user_end_point(username: str, db: Session = Depends(get_db)):
@@ -93,14 +107,19 @@ async def delete_user_end_point(username: str, db: Session = Depends(get_db)):
     deleted_user = delete_user(db_user, db)
     return deleted_user
 
-@router.get("/me")
+
+@router.get("/me/")
 async def get_user_me_end_point(
     current_user: User = Depends(get_current_user),
 ):
     return current_user
 
 
-@router.post("/auth", response_model=UserToken)
+@router.post(
+    "/auth",
+    response_model=UserToken,
+    dependencies=[Depends(role_checker(["admin", "user"]))],
+)
 async def authenticate_user_end_point(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),

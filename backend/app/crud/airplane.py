@@ -1,14 +1,15 @@
 from sqlalchemy.orm import Session, joinedload
-from schemas import (
+from app.schemas import (
     AirplaneModelCreate,
     AirplaneModelUpdate,
     AirplaneCreate,
     AirplaneUpdate,
-    AirplaneInfo
+    AirplaneInfo,
 )
 from .crud_utils import *
-from models import AirplaneModel, Airplane, Airport
+from app.models import AirplaneModel, Airplane, Airport
 from typing import List
+
 
 # CRUD for AirplaneModel
 def create_airplane_model(
@@ -64,27 +65,29 @@ def update_airplane_location(
 def delete_airplane(db: Session, db_airplane: Airplane) -> Airplane:
     return delete(db_airplane, db)
 
-def get_airplane_by_city(db: Session, city:str) -> List[AirplaneInfo]:
+
+def get_airplane_by_city(db: Session, city: str) -> List[AirplaneInfo]:
     # Find airport by city
     print(f"Searching for airport in city: '{city}'")
     airport = db.query(Airport).filter(Airport.city == city).first()
     print(f"airport co ket qua: {Airport.city}")
     if not airport:
         return []
-    
+
     # Find airplanes by airport id
-    airplanes = db.query(Airplane).options(
-        joinedload(Airplane.airplane_model)
-    ).filter(
-        Airplane.current_airport_id == airport.airport_id
-    ).all()
-    
-    
+    airplanes = (
+        db.query(Airplane)
+        .options(joinedload(Airplane.airplane_model))
+        .filter(Airplane.current_airport_id == airport.airport_id)
+        .all()
+    )
+
     # Convert to AirplaneInfo
     result = [
         AirplaneInfo(
             registration_number=airplane.registration_number,
-            airplane_model_name=airplane.airplane_model.name
-        ) for airplane in airplanes
+            airplane_model_name=airplane.airplane_model.name,
+        )
+        for airplane in airplanes
     ]
     return result
