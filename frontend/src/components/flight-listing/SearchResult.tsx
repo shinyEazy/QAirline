@@ -5,7 +5,9 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 const SearchResult = () => {
-  const [expandedDetails, setExpandedDetails] = useState({});
+  const [expandedDetails, setExpandedDetails] = useState<
+    Record<number, boolean>
+  >({});
 
   const location = useLocation();
 
@@ -14,7 +16,7 @@ const SearchResult = () => {
   }, [location]);
   const navigate = useNavigate();
 
-  const toggleDetails = (id) => {
+  const toggleDetails = (id: number) => {
     setExpandedDetails((prev) => ({
       ...prev,
       [id]: !prev[id],
@@ -27,51 +29,51 @@ const SearchResult = () => {
       departureTime: "07:00",
       arrivalTime: "09:10",
       from: "HAN",
-      to: "PQC",
+      to: "SGN",
       seatsLeft: 666,
       flightNumber: "VN 7239",
-      price: "$240",
+      price: "$100 - $200",
       flightDate: "Monday, 14 August",
-      flightRoute: "Hà Nội - Đà Nẵng",
-      departureDetailTime: "06:00 Hà Nội",
-      departureAirport: "Sân bay Nội Bài, Việt Nam",
-      arrivalDetailTime: "07:25 Đà Nẵng",
-      arrivalAirport: "Sân bay Đà Nẵng, Việt Nam",
-      duration: "1 giờ 25 phút",
+      flightRoute: "Hanoi - Ho Chi Minh",
+      departureDetailTime: "06:00 Hanoi",
+      departureAirport: "Noi Bai Airport, Vietnam",
+      arrivalDetailTime: "09:10 Ho Chi Minh",
+      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+      duration: "2 hours 10 minutes",
     },
     {
       id: 2,
       departureTime: "07:00",
       arrivalTime: "09:10",
       from: "HAN",
-      to: "PQC",
+      to: "SGN",
       seatsLeft: 666,
       flightNumber: "VN 7239",
-      price: "$240",
+      price: "$100 - $200",
       flightDate: "Monday, 14 August",
-      flightRoute: "Hà Nội - Đà Nẵng",
-      departureDetailTime: "06:00 Hà Nội",
-      departureAirport: "Sân bay Nội Bài, Việt Nam",
-      arrivalDetailTime: "07:25 Đà Nẵng",
-      arrivalAirport: "Sân bay Đà Nẵng, Việt Nam",
-      duration: "1 giờ 25 phút",
+      flightRoute: "Hanoi - Ho Chi Minh",
+      departureDetailTime: "06:00 Hanoi",
+      departureAirport: "Noi Bai Airport, Vietnam",
+      arrivalDetailTime: "09:10 Ho Chi Minh",
+      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+      duration: "2 hours 10 minutes",
     },
     {
       id: 3,
       departureTime: "07:00",
       arrivalTime: "09:10",
       from: "HAN",
-      to: "PQC",
+      to: "SGN",
       seatsLeft: 666,
       flightNumber: "VN 7239",
-      price: "$240",
+      price: "$100 - $200",
       flightDate: "Monday, 14 August",
-      flightRoute: "Hà Nội - Đà Nẵng",
-      departureDetailTime: "06:00 Hà Nội",
-      departureAirport: "Sân bay Nội Bài, Việt Nam",
-      arrivalDetailTime: "07:25 Đà Nẵng",
-      arrivalAirport: "Sân bay Đà Nẵng, Việt Nam",
-      duration: "1 giờ 25 phút",
+      flightRoute: "Hanoi - Ho Chi Minh",
+      departureDetailTime: "06:00 Hanoi",
+      departureAirport: "Noi Bai Airport, Vietnam",
+      arrivalDetailTime: "09:10 Ho Chi Minh",
+      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+      duration: "2 hours 10 minutes",
     },
   ];
 
@@ -90,8 +92,35 @@ const SearchResult = () => {
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Box display="flex" justifyContent="space-between" width="100%">
-            <Box display="flex" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            flexWrap="wrap" // Enable wrapping for children
+            width="100%"
+            sx={{
+              "@media (max-width:1250px)": {
+                justifyContent: "center", // Center align in smaller screens
+              },
+            }}
+          >
+            {/* Box 1 */}
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                "@media (max-width:1250px)": {
+                  order: 1, // Place this first
+                  width: "100%",
+                  justifyContent: "space-evenly",
+                  marginBottom: "10px",
+                },
+                "@media (max-width:600px)": {
+                  order: 1, // Place this first
+                  width: "100%",
+                  alignItems: "center",
+                },
+              }}
+            >
               <Box textAlign="center" sx={{ minWidth: "80px" }}>
                 <Typography fontSize="1.2rem">
                   <strong>{flight.departureTime}</strong>
@@ -103,7 +132,6 @@ const SearchResult = () => {
 
               <Box
                 sx={{
-                  flex: 1,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -122,7 +150,7 @@ const SearchResult = () => {
                     }}
                   />
                   <Typography fontSize="1rem" color="text.secondary">
-                    Bay thẳng
+                    Fly straight
                   </Typography>
                 </Box>
               </Box>
@@ -137,17 +165,48 @@ const SearchResult = () => {
               </Box>
             </Box>
 
+            {/* Box 2 */}
             <Box
               display="flex"
               flexDirection="column"
               justifyContent="center"
-              sx={{ textAlign: "left", minWidth: "100px" }}
+              sx={{
+                textAlign: "left",
+                minWidth: "100px",
+                "@media (max-width:1250px)": {
+                  order: 2,
+                  width: "50%",
+                },
+                "@media (max-width:600px)": {
+                  order: 2, // Place this first
+                  width: "100%",
+                  alignItems: "center",
+                },
+              }}
             >
-              <Typography>Số lượng vé còn lại: {flight.seatsLeft}</Typography>
-              <Typography>Số hiệu: {flight.flightNumber}</Typography>
+              <Typography>Remaining tickets: {flight.seatsLeft}</Typography>
+              <Typography>Flight number: {flight.flightNumber}</Typography>
             </Box>
 
-            <Box sx={{ textAlign: "center" }}>
+            {/* Box 3 */}
+            <Box
+              sx={{
+                textAlign: "center",
+                "@media (max-width:1250px)": {
+                  order: 3, // Place this second
+                  width: "50%",
+                  textAlign: "right",
+                },
+                "@media (max-width:600px)": {
+                  order: 3, // Place this first
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "10px",
+                  textAlign: "center",
+                },
+              }}
+            >
               <Typography fontSize="1rem" sx={{ fontWeight: 500 }}>
                 Price: {flight.price}
               </Typography>
@@ -157,11 +216,16 @@ const SearchResult = () => {
                   window.scrollTo(0, 0);
                 }}
                 variant="contained"
-                color="primary"
                 sx={{
-                  borderRadi: "8px",
+                  marginTop: "10px",
+                  backgroundColor: "#1e90ff",
+                  color: "white",
                   textTransform: "none",
-                  padding: "6px 16px",
+                  fontSize: "1rem",
+                  borderRadius: "8px",
+                  padding: "10px 40px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  "&:hover": { backgroundColor: "#2177cb" },
                 }}
               >
                 Book Now
@@ -179,7 +243,7 @@ const SearchResult = () => {
               onClick={() => toggleDetails(flight.id)}
               sx={{ cursor: "pointer", color: "primary.main" }}
             >
-              {expandedDetails[flight.id] ? "Hide Detail" : "Flight Detail"}
+              {expandedDetails[flight.id] ? "Less Detail" : "More Detail"}
             </Typography>
           </Box>
 
@@ -206,10 +270,7 @@ const SearchResult = () => {
                 <Typography variant="h6" color="primary">
                   {flight.flightRoute}
                 </Typography>
-                <Typography>
-                  Khởi hành vào: Thứ Hai, 11 tháng 11, 2024
-                </Typography>
-                <Typography>Thời gian bay: 2 giờ 10 phút</Typography>
+                <Typography>Departure: Monday, November 11, 2024</Typography>
               </Box>
               <Box>
                 <Box
@@ -231,8 +292,8 @@ const SearchResult = () => {
                     <Box
                       sx={{
                         width: "2px",
-                        backgroundColor: "teal",
-                        height: "150px",
+                        backgroundColor: "#1e90ff",
+                        height: "120px",
                         marginTop: "8px",
                         marginBottom: "8px",
                         marginLeft: "16px",
@@ -246,18 +307,13 @@ const SearchResult = () => {
                     <Typography variant="body2" color="text.secondary">
                       {flight.departureAirport}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Nhà ga 1
-                    </Typography>
+
                     <Box sx={{ my: 2 }} />
                     <Typography variant="h6" color="primary">
                       {flight.arrivalDetailTime}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {flight.arrivalAirport}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      Nhà ga 1
                     </Typography>
                   </Box>
                 </Box>
