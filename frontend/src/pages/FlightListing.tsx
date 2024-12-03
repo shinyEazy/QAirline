@@ -7,18 +7,9 @@ import Footer from "components/home-page/Footer";
 
 const FlightListing = () => {
   return (
-    <Box>
+    <Box bgcolor="rgb(234,234,234)">
       <Header />
-      <Typography
-        display="flex"
-        width="100%"
-        alignItems="center"
-        textAlign="center"
-        justifyContent="center"
-        height="300px"
-      >
-        Flight Listing
-      </Typography>
+
       <FlightSearch />
       <Box
         display="flex"
@@ -43,7 +34,9 @@ const FlightListing = () => {
           <SearchResult />
         </Box>
       </Box>
-      <Footer />
+      <Box bgcolor="white">
+        <Footer />
+      </Box>
     </Box>
   );
 };
