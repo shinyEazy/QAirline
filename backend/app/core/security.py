@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 # from app.crud.admin import get_admin_by_username
+import app
+from app.helper import get_default_admin
 from schemas.user import UserAuth
 from jose import jwt, JWTError
 from core.database import get_db
@@ -15,8 +17,13 @@ from typing import List
 from app.models import User
 from app.crud.user import get_user_by_username  # Import thêm CRUD cho user
 
+import os
+
 SECRET_KEY = "123"
 ALGORITMH = "HS256"
+
+
+API_TEST_MODE = os.getenv("API_TEST_MODE", "false").lower() == "true"
 
 
 class UserToken(BaseModel):
@@ -123,6 +130,7 @@ async def get_current_user(
 
 
 def role_checker(required_roles: List[str]):
+
     def check_role(user: User = Depends(get_current_user)):
         if user.role not in required_roles:
             raise HTTPException(
