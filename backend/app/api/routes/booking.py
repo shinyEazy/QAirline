@@ -65,7 +65,7 @@ def get_passenger_in_booking_end_point(booking_id: int, db: Session = Depends(ge
 @router.post("/")
 def create_booking_end_point(
     booking: BookingCreate,
-    user: Admin = Depends(role_checker(["user"])),
+    user: Admin = Depends(role_checker(["user", "admin"])),
     db: Session = Depends(get_db),
 ):
     """

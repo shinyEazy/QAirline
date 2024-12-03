@@ -11,7 +11,7 @@ from crud.payment import create_payment
 router = APIRouter(prefix="/payment", tags=["Payment"])
 
 
-@router.post("/", dependencies=[Depends(role_checker(["user"]))])
+@router.post("/", dependencies=[Depends(role_checker(["user", "admin"]))])
 def create_payment_end_point(payment: PaymentCreate, db: Session = Depends(get_db)):
     print(f"Received payment request hello: {payment}")
     print(f"Database session: {db}")
