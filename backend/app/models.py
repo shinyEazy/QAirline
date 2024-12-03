@@ -68,7 +68,7 @@ class Booking(Base):
     booking_id = Column(
         Integer, primary_key=True, index=True
     )  # Unique identifier for each booking
-    booker_email = Column(String, nullable=False)
+    user_id = Column(Integer, nullable=False)
     number_of_adults = Column(Integer, nullable=False)
     number_of_children = Column(Integer, nullable=False)
     flight_class = Column(
