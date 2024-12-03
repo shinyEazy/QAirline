@@ -16,12 +16,19 @@ const FlightListing = () => {
         gap="40px"
         sx={{
           margin: "20px 80px 80px",
+          "@media (max-width:900px)": {
+            flexDirection: "column",
+            gap: "10px",
+          },
         }}
       >
         <Box
           sx={{
             flexBasis: "30%",
             minWidth: "250px",
+            "@media (max-width:900px)": {
+              width: "100%",
+            },
           }}
         >
           <FilterSearch />

@@ -5,7 +5,9 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 const SearchResult = () => {
-  const [expandedDetails, setExpandedDetails] = useState({});
+  const [expandedDetails, setExpandedDetails] = useState<
+    Record<number, boolean>
+  >({});
 
   const location = useLocation();
 
@@ -14,7 +16,7 @@ const SearchResult = () => {
   }, [location]);
   const navigate = useNavigate();
 
-  const toggleDetails = (id) => {
+  const toggleDetails = (id: number) => {
     setExpandedDetails((prev) => ({
       ...prev,
       [id]: !prev[id],
@@ -90,8 +92,35 @@ const SearchResult = () => {
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Box display="flex" justifyContent="space-between" width="100%">
-            <Box display="flex" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            flexWrap="wrap" // Enable wrapping for children
+            width="100%"
+            sx={{
+              "@media (max-width:1250px)": {
+                justifyContent: "center", // Center align in smaller screens
+              },
+            }}
+          >
+            {/* Box 1 */}
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={{
+                "@media (max-width:1250px)": {
+                  order: 1, // Place this first
+                  width: "100%",
+                  justifyContent: "space-evenly",
+                  marginBottom: "10px",
+                },
+                "@media (max-width:600px)": {
+                  order: 1, // Place this first
+                  width: "100%",
+                  alignItems: "center",
+                },
+              }}
+            >
               <Box textAlign="center" sx={{ minWidth: "80px" }}>
                 <Typography fontSize="1.2rem">
                   <strong>{flight.departureTime}</strong>
@@ -103,7 +132,6 @@ const SearchResult = () => {
 
               <Box
                 sx={{
-                  flex: 1,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -137,17 +165,48 @@ const SearchResult = () => {
               </Box>
             </Box>
 
+            {/* Box 2 */}
             <Box
               display="flex"
               flexDirection="column"
               justifyContent="center"
-              sx={{ textAlign: "left", minWidth: "100px" }}
+              sx={{
+                textAlign: "left",
+                minWidth: "100px",
+                "@media (max-width:1250px)": {
+                  order: 2,
+                  width: "50%",
+                },
+                "@media (max-width:600px)": {
+                  order: 2, // Place this first
+                  width: "100%",
+                  alignItems: "center",
+                },
+              }}
             >
               <Typography>Remaining tickets: {flight.seatsLeft}</Typography>
               <Typography>Flight number: {flight.flightNumber}</Typography>
             </Box>
 
-            <Box sx={{ textAlign: "center" }}>
+            {/* Box 3 */}
+            <Box
+              sx={{
+                textAlign: "center",
+                "@media (max-width:1250px)": {
+                  order: 3, // Place this second
+                  width: "50%",
+                  textAlign: "right",
+                },
+                "@media (max-width:600px)": {
+                  order: 3, // Place this first
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "10px",
+                  textAlign: "center",
+                },
+              }}
+            >
               <Typography fontSize="1rem" sx={{ fontWeight: 500 }}>
                 Price: {flight.price}
               </Typography>

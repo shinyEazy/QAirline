@@ -9,7 +9,7 @@ const buttonStyles = {
   textTransform: "none",
   fontSize: "1rem",
   borderRadius: "8px",
-  padding: "10px 40px",
+  padding: "10px 20px", // Adjusted for better responsiveness
   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   "&:hover": { backgroundColor: "#1e90ff", color: "white" },
 };
@@ -29,7 +29,6 @@ const FilterSearch = () => {
       alert("Please select all required filters before applying!");
       return;
     }
-    // Handle filter application logic here
     console.log("Filters applied:", {
       selectedCabin,
       selectedPrice,
@@ -44,13 +43,18 @@ const FilterSearch = () => {
         backgroundColor: "white",
         borderRadius: "20px",
         margin: "40px auto",
-        padding: "30px",
-        maxWidth: "500px",
+        padding: {
+          xs: "20px",
+        },
         color: "black",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
         display: "flex",
         flexDirection: "column",
         gap: "24px",
+        "@media (max-width:900px)": {
+          margin: 0,
+          width: "100%",
+        },
       }}
     >
       <Typography variant="h5" sx={{ fontWeight: 600, color: "#333" }}>
