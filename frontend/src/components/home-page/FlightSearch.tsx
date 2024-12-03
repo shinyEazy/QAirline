@@ -31,9 +31,9 @@ const FlightSearch = () => {
   const [isRoundTrip, setIsRoundTrip] = useState(false);
   const location = useLocation();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, [location]);
 
   useEffect(() => {
     if (tripType === "roundtrip") {
@@ -46,10 +46,8 @@ const FlightSearch = () => {
   return (
     <Box
       sx={{
-        maxWidth: "1200px",
-        padding: "20px",
         borderRadius: "20px",
-        margin: "40px auto",
+        margin: "40px 80px",
       }}
     >
       <Box bgcolor="#1e90ff" borderRadius="16px">
@@ -58,11 +56,24 @@ const FlightSearch = () => {
           <RadioGroup
             row
             defaultValue="roundtrip"
-            sx={{ justifyContent: "flex-start", marginLeft: "12px" }}
+            sx={{
+              justifyContent: "flex-start",
+              marginLeft: "12px",
+              "@media (max-width:800px)": {
+                flexDirection: "column",
+                gap: "10px", // Adjust spacing for stacked layout
+              },
+            }}
           >
             <FormControlLabel
               value="oneway"
-              control={<Radio sx={{ display: "none" }} />}
+              control={
+                <Radio
+                  sx={{
+                    display: "none",
+                  }}
+                />
+              }
               label={
                 <Box
                   onClick={() => {
@@ -125,13 +136,40 @@ const FlightSearch = () => {
           sx={{ padding: "20px 40px" }}
           color="#1e90ff"
         >
-          <Box display="flex" gap="10px" alignItems="center">
+          <Box
+            display="flex"
+            gap="10px"
+            alignItems="center"
+            flexWrap="wrap"
+            sx={{
+              flexDirection: {
+                xs: "column", // Extra small screens
+                md: "row", // Medium screens (default row for larger screens)
+              },
+              "@media (max-width:1000px)": {
+                flexDirection: "column",
+                gap: "20px", // Adjust spacing for stacked layout
+              },
+              "@media (max-width:800px)": {
+                flexDirection: "column",
+                gap: "0",
+              },
+            }}
+          >
             <Box
+              width="100%"
               flex={1}
               display="flex"
               alignItems="center"
               justifyContent="space-between"
               margin="20px 0"
+              gap="20px"
+              sx={{
+                "@media (max-width:800px)": {
+                  flexDirection: "column",
+                  gap: "10px",
+                },
+              }}
             >
               <Box>
                 <Typography
@@ -205,8 +243,34 @@ const FlightSearch = () => {
               flexItem
               sx={{ mx: 2, backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             />
-            <Box flex={1} display="flex" justifyContent="space-between">
-              <Box flex={1}>
+            <Box
+              width="100%"
+              flex={1}
+              display="flex"
+              justifyContent="space-between"
+              sx={{
+                "@media (max-width:1350px)": {
+                  gap: "60px",
+                },
+                "@media (max-width:800px)": {
+                  flexDirection: "column",
+                  gap: "20px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  "@media (min-width:1400px)": {
+                    gap: "60px",
+                    flex: "1",
+                  },
+                  "@media (max-width:1350px)": {
+                    gap: "20px",
+                  },
+                }}
+              >
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -239,7 +303,15 @@ const FlightSearch = () => {
                   }
                 />
               </Box>
-              <Box flex={1}>
+
+              <Box
+                sx={{
+                  "@media (min-width:1400px)": {
+                    gap: "60px",
+                    flex: "1",
+                  },
+                }}
+              >
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -364,7 +436,6 @@ const FlightSearch = () => {
                 fontSize: "1rem",
                 fontWeight: "bold",
                 borderRadius: "8px",
-                marginRight: "20px",
                 padding: "10px 20px",
                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                 transform: "translateY(40px)",
