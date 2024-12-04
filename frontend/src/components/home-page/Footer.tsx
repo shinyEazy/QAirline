@@ -10,10 +10,11 @@ const Footer = () => {
   return (
     <Box
       sx={{
+        padding: "20px",
         display: "flex",
         backgroundColor: "white",
         borderRadius: "20px",
-        margin: "20px 80px",
+        margin: "0 60px",
         color: "black",
         gap: "40px",
       }}

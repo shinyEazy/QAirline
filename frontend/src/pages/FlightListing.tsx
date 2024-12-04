@@ -7,30 +7,28 @@ import Footer from "components/home-page/Footer";
 
 const FlightListing = () => {
   return (
-    <Box>
+    <Box bgcolor="rgb(234,234,234)">
       <Header />
-      <Typography
-        display="flex"
-        width="100%"
-        alignItems="center"
-        textAlign="center"
-        justifyContent="center"
-        height="300px"
-      >
-        Flight Listing
-      </Typography>
+
       <FlightSearch />
       <Box
         display="flex"
         gap="40px"
         sx={{
           margin: "20px 80px 80px",
+          "@media (max-width:900px)": {
+            flexDirection: "column",
+            gap: "10px",
+          },
         }}
       >
         <Box
           sx={{
             flexBasis: "30%",
             minWidth: "250px",
+            "@media (max-width:900px)": {
+              width: "100%",
+            },
           }}
         >
           <FilterSearch />
@@ -43,7 +41,9 @@ const FlightListing = () => {
           <SearchResult />
         </Box>
       </Box>
-      <Footer />
+      <Box bgcolor="white">
+        <Footer />
+      </Box>
     </Box>
   );
 };
