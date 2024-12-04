@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlalchemy.orm import Session, aliased
+from sqlalchemy import Date
 from app.schemas import FlightCreate, FlightUpdate
 from .crud_utils import *
 from app.models import Flight, Airplane, Passenger, Booking, Airport
@@ -38,7 +39,7 @@ def get_flights_by_departure_time_and_cities(
             arrival_airport, Flight.destination_airport_id == arrival_airport.airport_id
         )
         .filter(
-            Flight.estimated_departure_time == departure_time,
+            Flight.estimated_departure_time.cast(Date) == departure_time.date(),
             departure_airport.city == departure_city,
             arrival_airport.city == arrival_city,
         )

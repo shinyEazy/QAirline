@@ -4,13 +4,16 @@ import FlightSearch from "components/home-page/FlightSearch";
 import FilterSearch from "components/flight-listing/FilterSearch";
 import SearchResult from "components/flight-listing/SearchResult";
 import Footer from "components/home-page/Footer";
-
+import { useState } from "react";
+import { Flight } from "types/flight";
 const FlightListing = () => {
+  const [flights, setFlights] = useState<Flight[]>([]);
+
   return (
     <Box bgcolor="rgb(234,234,234)">
       <Header />
 
-      <FlightSearch />
+      <FlightSearch setFlights={setFlights} />
       <Box
         display="flex"
         gap="40px"

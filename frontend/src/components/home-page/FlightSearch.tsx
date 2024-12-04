@@ -17,9 +17,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
-
-const FlightSearch = () => {
-  const navigate = useNavigate();
+import { Flight } from "types/flight";
+interface FlightSearchProps {
+  setFlights: React.Dispatch<React.SetStateAction<Flight[]>>;
+}
+const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
+  const [departureCity, setDepartureCity] = useState("");
+  const [arrivalCity, setArrivalCity] = useState("");
   const [departing, setDeparting] = useState(new Date());
   const [returning, setReturning] = useState(() => {
     const today = new Date();
@@ -42,7 +46,27 @@ const FlightSearch = () => {
       setShowReturnDate(false);
     }
   }, [tripType]);
+  const handleSearch = async () => {
+    const searchParams = new URLSearchParams({
+      departure_city: departureCity,
+      arrival_city: arrivalCity,
+      departure_time: departing.toISOString().split("T")[0],
+    });
 
+    if (tripType === "roundtrip") {
+      searchParams.append("return_date", returning.toISOString().split("T")[0]);
+    }
+
+    fetch(`http://localhost:8000/api/flights/search/?${searchParams.toString()}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Data:", data);
+        setFlights(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching flights:", error);
+      });
+  };
   return (
     <Box
       sx={{
@@ -182,7 +206,8 @@ const FlightSearch = () => {
                 </Typography>
                 <TextField
                   fullWidth
-                  defaultValue="Hanoi, Vietnam"
+                  value={departureCity}
+                  onChange={(e) => setDepartureCity(e.target.value)}
                   variant="standard"
                   InputProps={{
                     disableUnderline: false,
@@ -220,7 +245,8 @@ const FlightSearch = () => {
                 </Typography>
                 <TextField
                   fullWidth
-                  defaultValue="Ho Chi Minh, Vietnam"
+                  value={arrivalCity}
+                  onChange={(e) => setArrivalCity(e.target.value)}
                   variant="standard"
                   InputProps={{
                     disableUnderline: false,
@@ -281,7 +307,9 @@ const FlightSearch = () => {
                 </Typography>
                 <DatePicker
                   selected={departing}
-                  onChange={(date) => setDeparting(date)}
+                  onChange={(date) => {
+                    if (date) setDeparting(date); // Chỉ cập nhật nếu `date` không phải null
+                  }}
                   dateFormat="MMM d, yyyy"
                   customInput={
                     <TextField
@@ -399,7 +427,9 @@ const FlightSearch = () => {
                   <Box>
                     <DatePicker
                       selected={returning}
-                      onChange={(date) => setReturning(date)}
+                      onChange={(date) => {
+                        if (date) setReturning(date)
+                      }}
                       dateFormat="MMM d, yyyy"
                       customInput={
                         <TextField
@@ -441,7 +471,7 @@ const FlightSearch = () => {
                 transform: "translateY(40px)",
                 "&:hover": { backgroundColor: "#2177cb" },
               }}
-              onClick={() => navigate("/flight-listing")}
+              onClick={handleSearch}
             >
               Search
             </Button>

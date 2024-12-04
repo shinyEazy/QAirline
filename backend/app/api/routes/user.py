@@ -135,6 +135,6 @@ async def authenticate_user_end_point(
     token = create_access_token_user(db_user, ACCESS_TOKEN_EXPIRES_MINUTES)
     return {
         "access_token": token,
-        "token_type": "user",
+        "token_type": "Bearer",
         "message": "successfully authenticated",
     }

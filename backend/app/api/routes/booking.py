@@ -65,7 +65,7 @@ def get_passenger_in_booking_end_point(booking_id: int, db: Session = Depends(ge
 @router.post("/")
 def create_booking_end_point(
     booking: BookingCreate,
-    user: Admin = Depends(role_checker(["user", "admin"])),
+    user: User = Depends(role_checker(["user", "admin"])),
     db: Session = Depends(get_db),
 ):
     """
@@ -79,7 +79,7 @@ def create_booking_end_point(
         )
 
     booking_data = BookingBase(**booking.model_dump(exclude={"passengers"}))
-
+    booking_data.user_id = user.user_id 
     db_booking = create_booking(booking_data, db)
 
     flight = get_flight_compared_current_time(db_booking, db)
@@ -103,7 +103,7 @@ def create_booking_end_point(
     return {
         "booking": db_booking,
         "total_price": total_price,
-        "admin_id": user.admin_id,
+        "admin_id": user.user_id,
     }
 
 

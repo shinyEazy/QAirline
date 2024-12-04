@@ -5,7 +5,7 @@ from .passenger import PassengerCreate, PassengerBase
 
 
 class BookingBase(SchemaModel):
-    booker_email: str
+    user_id: Optional[int] = None
     number_of_adults: int
     number_of_children: int
     flight_class: str  # Assuming `FlightClass` is an enum
