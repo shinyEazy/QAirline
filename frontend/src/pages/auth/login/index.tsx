@@ -18,12 +18,14 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Link as RouterLink } from "react-router-dom";
 import "../login/login.css";
 import { useEffect } from "react";
+import { handleLoginSubmission } from "hooks/auth-hook";
 
 const Login = () => {
   const [checked, setChecked] = React.useState(false);
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("")
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -39,6 +41,7 @@ const Login = () => {
   const handleLoginClick = () => {
     setIsRightPanelActive(false);
   };
+
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 750);
 
@@ -96,9 +99,9 @@ const Login = () => {
             bgcolor="white"
             justifyContent="center"
             alignItems="center"
-            // sx={{
-            //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
-            // }}
+          // sx={{
+          //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+          // }}
           >
             <Box component="form" noValidate maxWidth="450px">
               <Box display="flex" justifyContent="center" mb={2}>
@@ -317,9 +320,9 @@ const Login = () => {
             bgcolor="white"
             justifyContent="center"
             alignItems="center"
-            // sx={{
-            //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
-            // }}
+          // sx={{
+          //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+          // }}
           >
             <Box component="form" noValidate maxWidth="450px">
               <Box display="flex" justifyContent="center" mb={2}>
@@ -329,8 +332,10 @@ const Login = () => {
               </Box>
               <TextField
                 fullWidth
-                label="Email"
+                label="Username"
                 variant="outlined"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)} //Update state on input change
                 sx={{
                   margin: "10px auto",
                   "& .MuiOutlinedInput-root": {
@@ -348,6 +353,8 @@ const Login = () => {
                 label="Password"
                 variant="outlined"
                 margin="normal"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type={showPassword ? "text" : "password"}
                 sx={{
                   margin: "10px auto 20px",
@@ -400,6 +407,7 @@ const Login = () => {
               <Box display="flex" justifyContent="center" width="100%">
                 <Button
                   variant="contained"
+                  onClick={() => handleLoginSubmission(username, password)}
                   sx={{
                     marginTop: "20px",
                     width: "60%",
