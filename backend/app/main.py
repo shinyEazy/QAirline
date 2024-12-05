@@ -4,6 +4,7 @@ import time
 import fastapi
 from contextlib import asynccontextmanager
 from sqlalchemy.exc import OperationalError
+from fastapi.middleware.cors import CORSMiddleware
 
 # Ensure the app directory is in the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
@@ -37,6 +38,18 @@ async def lifespan(app: fastapi.FastAPI):
 
 # Create FastAPI app with lifespan
 app = fastapi.FastAPI(lifespan=lifespan)
+# Cấu hình CORS
+origins = [
+    "http://localhost:3000",  # Thêm địa chỉ frontend của bạn
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include router
 from api.main import api_router

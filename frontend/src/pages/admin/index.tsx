@@ -1,187 +1,293 @@
+import { useState } from "react";
 import {
   Box,
-  Button,
-  TextField,
   Typography,
-  Grid,
-  Paper,
+  Button,
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogTitle,
-  Tab,
-  Tabs,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from "@mui/material";
-import { useState } from "react";
+import FlightList from "../../components/admin/flight-list";
 
-function AdminPage() {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(0);
+const AdminPage = () => {
+  const [flightModalOpen, setFlightModalOpen] = useState(false);
+  const [airplaneModalOpen, setAirplaneModalOpen] = useState(false);
+  const [newsModalOpen, setNewsModalOpen] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const [newFlight, setNewFlight] = useState({
+    flightId: "",
+    airplaneId: "",
+    departure: "",
+    destination: "",
+    departureTime: "",
+    arrivalTime: "",
+    price: "",
+  });
+
+  const [newAirplane, setNewAirplane] = useState({
+    airplaneId: "",
+  });
+
+  const [newNews, setNewNews] = useState({
+    imageUrl: "",
+    title: "",
+    content: "",
+  });
+
+  const handleFlightModalOpen = () => {
+    setFlightModalOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleFlightModalClose = () => {
+    setFlightModalOpen(false);
+    setNewFlight({
+      flightId: "",
+      airplaneId: "",
+      departure: "",
+      destination: "",
+      departureTime: "",
+      arrivalTime: "",
+      price: "",
+    });
   };
 
-  const handleTabChange = (event, newValue) => {
-    setValue(newValue);
+  const handleAirplaneModalOpen = () => {
+    setAirplaneModalOpen(true);
+  };
+
+  const handleAirplaneModalClose = () => {
+    setAirplaneModalOpen(false);
+    setNewAirplane({
+      airplaneId: "",
+    });
+  };
+
+  const handleNewsModalOpen = () => setNewsModalOpen(true);
+  const handleNewsModalClose = () => {
+    setNewsModalOpen(false);
+    setNewNews({
+      imageUrl: "",
+      title: "",
+      content: "",
+    });
+  };
+
+  const handleFlightChange = (field: string, value: string) => {
+    setNewFlight({ ...newFlight, [field]: value });
+  };
+
+  const handleAirplaneChange = (value: string) => {
+    setNewAirplane({ ...newAirplane, airplaneId: value });
+  };
+
+  const handleNewsChange = (field: string, value: string) => {
+    setNewNews({ ...newNews, [field]: value });
+  };
+
+  const handleSaveFlight = () => {
+    console.log("New Flight Data:", newFlight);
+    // Logic to save the new flight
+    handleFlightModalClose();
+  };
+
+  const handleSaveAirplane = () => {
+    console.log("New Airplane Data:", newAirplane);
+    // Logic to save the new airplane
+    handleAirplaneModalClose();
+  };
+
+  const handleSaveNews = () => {
+    console.log("New News Data:", newNews);
+    handleNewsModalClose();
   };
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Chức năng cho quản trị
-      </Typography>
-
-      {/* Open Modal Button */}
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Mở chức năng quản trị
-      </Button>
-
-      {/* Modal with Tabs */}
-      <Dialog open={open} onClose={handleClose} maxWidth="xl" fullWidth>
-        <DialogTitle>Chức năng cho quản trị</DialogTitle>
+    <Box>
+      <Box padding={2}>
+        <Typography variant="h4">Admin Page</Typography>
+        <Button
+          onClick={handleAirplaneModalOpen}
+          sx={{
+            backgroundColor: "#1e90ff",
+            color: "white",
+            textTransform: "none",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            padding: "10px 20px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            marginRight: "10px",
+            "&:hover": { backgroundColor: "#2177cb" },
+          }}
+        >
+          Add Airplane
+        </Button>
+        <Button
+          onClick={handleFlightModalOpen}
+          sx={{
+            marginRight: "10px",
+            backgroundColor: "#1e90ff",
+            color: "white",
+            textTransform: "none",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            padding: "10px 20px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            "&:hover": { backgroundColor: "#2177cb" },
+          }}
+        >
+          Add Flight
+        </Button>
+        <Button
+          onClick={handleNewsModalOpen}
+          sx={{
+            backgroundColor: "#1e90ff",
+            color: "white",
+            textTransform: "none",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            padding: "10px 20px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            "&:hover": { backgroundColor: "#2177cb" },
+          }}
+        >
+          Add News
+        </Button>
+      </Box>
+      <FlightList />
+      {/* Add Flight Modal */}
+      <Dialog open={flightModalOpen} onClose={handleFlightModalClose} fullWidth>
+        <DialogTitle>Add New Flight</DialogTitle>
         <DialogContent>
-          <Tabs value={value} onChange={handleTabChange} centered>
-            <Tab label="Đăng thông tin" />
-            <Tab label="Nhập dữ liệu về tàu bay" />
-            <Tab label="Nhập dữ liệu về chuyến bay" />
-            <Tab label="Thống kê đặt vé" />
-            <Tab label="Cập nhật giờ khởi hành" />
-          </Tabs>
-
-          <Box sx={{ paddingTop: 2 }}>
-            {value === 0 && (
-              <Box>
-                <Typography variant="h6">
-                  Đăng thông tin (giới thiệu, khuyến mãi, thông báo, tin tức,
-                  ...)
-                </Typography>
-                <TextField
-                  label="Thông tin"
-                  fullWidth
-                  multiline
-                  rows={4}
-                  sx={{ marginTop: 2 }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginTop: 2 }}
-                >
-                  Lưu thông tin
-                </Button>
-              </Box>
-            )}
-
-            {value === 1 && (
-              <Box>
-                <Typography variant="h6">
-                  Nhập dữ liệu về các tàu bay
-                </Typography>
-                <TextField label="Mã tàu bay" fullWidth sx={{ marginTop: 2 }} />
-                <TextField
-                  label="Hãng sản xuất"
-                  fullWidth
-                  sx={{ marginTop: 2 }}
-                />
-                <TextField
-                  label="Thông tin về các ghế"
-                  fullWidth
-                  sx={{ marginTop: 2 }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginTop: 2 }}
-                >
-                  Lưu tàu bay
-                </Button>
-              </Box>
-            )}
-
-            {value === 2 && (
-              <Box>
-                <Typography variant="h6">
-                  Nhập dữ liệu về các chuyến bay
-                </Typography>
-                <TextField
-                  label="Số hiệu chuyến bay"
-                  fullWidth
-                  sx={{ marginTop: 2 }}
-                />
-                <TextField label="Tàu bay" fullWidth sx={{ marginTop: 2 }} />
-                <TextField label="Điểm đi" fullWidth sx={{ marginTop: 2 }} />
-                <TextField label="Điểm đến" fullWidth sx={{ marginTop: 2 }} />
-                <TextField
-                  label="Giờ khởi hành"
-                  fullWidth
-                  type="datetime-local"
-                  sx={{ marginTop: 2 }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginTop: 2 }}
-                >
-                  Lưu chuyến bay
-                </Button>
-              </Box>
-            )}
-
-            {value === 3 && (
-              <Box>
-                <Typography variant="h6">
-                  Xem và thống kê đặt vé của khách hàng
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginTop: 2 }}
-                >
-                  Xem thống kê
-                </Button>
-              </Box>
-            )}
-
-            {value === 4 && (
-              <Box>
-                <Typography variant="h6">
-                  Thay đổi giờ khởi hành cho chuyến bay
-                </Typography>
-                <TextField
-                  label="Số hiệu chuyến bay"
-                  fullWidth
-                  sx={{ marginTop: 2 }}
-                />
-                <TextField
-                  label="Giờ khởi hành mới"
-                  fullWidth
-                  type="datetime-local"
-                  sx={{ marginTop: 2 }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginTop: 2 }}
-                >
-                  Cập nhật giờ khởi hành
-                </Button>
-              </Box>
-            )}
-          </Box>
+          <TextField
+            label="Flight ID"
+            fullWidth
+            margin="dense"
+            value={newFlight.flightId}
+            onChange={(e) => handleFlightChange("flightId", e.target.value)}
+          />
+          <TextField
+            label="Airplane Registration Number"
+            fullWidth
+            margin="dense"
+            value={newFlight.airplaneId}
+            onChange={(e) => handleFlightChange("airplaneId", e.target.value)}
+          />
+          <TextField
+            label="Departure"
+            fullWidth
+            margin="dense"
+            value={newFlight.departure}
+            onChange={(e) => handleFlightChange("departure", e.target.value)}
+          />
+          <TextField
+            label="Destination"
+            fullWidth
+            margin="dense"
+            value={newFlight.destination}
+            onChange={(e) => handleFlightChange("destination", e.target.value)}
+          />
+          <TextField
+            label="Departure Time"
+            fullWidth
+            margin="dense"
+            value={newFlight.departureTime}
+            onChange={(e) =>
+              handleFlightChange("departureTime", e.target.value)
+            }
+          />
+          <TextField
+            label="Arrival Time"
+            fullWidth
+            margin="dense"
+            value={newFlight.arrivalTime}
+            onChange={(e) => handleFlightChange("arrivalTime", e.target.value)}
+          />
+          <TextField
+            label="Price"
+            fullWidth
+            margin="dense"
+            value={newFlight.price}
+            onChange={(e) => handleFlightChange("price", e.target.value)}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Đóng
+          <Button onClick={handleFlightModalClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveFlight} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Add Airplane Modal */}
+      <Dialog
+        open={airplaneModalOpen}
+        onClose={handleAirplaneModalClose}
+        fullWidth
+      >
+        <DialogTitle>Add New Airplane</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Airplane Registration Number"
+            fullWidth
+            margin="dense"
+            value={newAirplane.airplaneId}
+            onChange={(e) => handleAirplaneChange(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAirplaneModalClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveAirplane} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>{" "}
+      {/* Add News Modal */}
+      <Dialog open={newsModalOpen} onClose={handleNewsModalClose} fullWidth>
+        <DialogTitle>Add New News</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Image URL"
+            fullWidth
+            margin="dense"
+            value={newNews.imageUrl}
+            onChange={(e) => handleNewsChange("imageUrl", e.target.value)}
+          />
+          <TextField
+            label="Title"
+            fullWidth
+            margin="dense"
+            value={newNews.title}
+            onChange={(e) => handleNewsChange("title", e.target.value)}
+          />
+          <TextField
+            label="Content"
+            fullWidth
+            margin="dense"
+            multiline
+            rows={4}
+            value={newNews.content}
+            onChange={(e) => handleNewsChange("content", e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleNewsModalClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveNews} color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>
     </Box>
   );
-}
+};
 
 export default AdminPage;
