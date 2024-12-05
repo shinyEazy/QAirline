@@ -202,7 +202,18 @@ INSERT INTO "airport" (airport_code, city, name) VALUES
 ('AKL', 'Auckland', 'Auckland Airport'),
 ('PER', 'Perth', 'Perth Airport'),
 ('DOH', 'Doha', 'Hamad International Airport'),
-('JED', 'Jeddah', 'King Abdulaziz International Airport');
+('JED', 'Jeddah', 'King Abdulaziz International Airport'),
+('HAN', 'Hanoi', 'Noi Bai International Airport'),
+('SGN', 'Ho Chi Minh City', 'Tan Son Nhat International Airport'),
+('DAD', 'Da Nang', 'Da Nang International Airport'),
+('CXR', 'Nha Trang', 'Cam Ranh International Airport'),
+('HUI', 'Hue', 'Phu Bai International Airport'),
+('VCA', 'Can Tho', 'Can Tho International Airport'),
+('PXU', 'Pleiku', 'Pleiku Airport'),
+('VCS', 'Con Dao', 'Con Dao Airport'),
+('VII', 'Vinh', 'Vinh Airport'),
+('THD', 'Thanh Hoa', 'Tho Xuan Airport');
+
 
 
 -- Insert Airplane Data
@@ -254,6 +265,16 @@ INSERT INTO flight (
 ) VALUES 
 (1, '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 'Completed'),
 (2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress');
+(3, '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 'Scheduled'),
+(4, '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 'Scheduled'),
+(5, '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 'Pending'),
+(6, '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 'Pending'),
+(7, '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 'Scheduled'),
+(8, '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 'Scheduled'),
+(9, '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 'Pending'),
+(10, '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 'Pending'),
+(11, '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 'Scheduled'),
+(12, '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 'Scheduled');
 
 -- Insert Flight Seats Data
 INSERT INTO flight_seats (

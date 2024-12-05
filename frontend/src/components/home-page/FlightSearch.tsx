@@ -34,6 +34,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
   const [tripType, setTripType] = useState("oneway");
   const [isRoundTrip, setIsRoundTrip] = useState(false);
   const location = useLocation();
+  const naviagate = useNavigate();
 
   // useEffect(() => {
   //   window.scrollTo(0, 0);
@@ -56,7 +57,6 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
     if (tripType === "roundtrip") {
       searchParams.append("return_date", returning.toISOString().split("T")[0]);
     }
-
     fetch(`http://localhost:8000/api/flights/search/?${searchParams.toString()}`)
       .then((response) => response.json())
       .then((data) => {
@@ -66,6 +66,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
       .catch((error) => {
         console.error("Error fetching flights:", error);
       });
+    naviagate('/flight-listing?${searchParams.toString()}');
   };
   return (
     <Box
