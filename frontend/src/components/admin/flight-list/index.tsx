@@ -28,7 +28,7 @@ interface Flight {
   departureTime: string;
   arrivalTime: string;
   price: string;
-  status: "On time" | "Delayed" | "Canceled" | "Departed";
+  status: "On time" | "Delayed" | "Canceled" | "Departed" | "Landed";
 }
 
 interface Passenger {
@@ -85,6 +85,17 @@ const flights: Flight[] = [
     price: "$100 - $200",
     status: "Departed",
   },
+  {
+    id: 5,
+    flightId: "5",
+    registrationNumber: "MH370",
+    departure: "Hanoi",
+    destination: "Ho Chi Minh",
+    departureTime: "10:00 - Dec 04, 2024",
+    arrivalTime: "12:00 - Dec 04, 2024",
+    price: "$100 - $200",
+    status: "Landed",
+  },
 ];
 
 const passengersByFlightId: Record<string, Passenger[]> = {
@@ -137,6 +148,8 @@ const FlightList = () => {
         return { color: "red", fontWeight: "bold" };
       case "Departed":
         return { color: "blue", fontWeight: "bold" };
+      case "Landed":
+        return { color: "purple", fontWeight: "bold" };
       default:
         return {};
     }
@@ -217,34 +230,143 @@ const FlightList = () => {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Flight ID</TableCell>
-              <TableCell>Airplane Registration Number</TableCell>
-              <TableCell>Departure</TableCell>
-              <TableCell>Destination</TableCell>
-              <TableCell>Departure Time</TableCell>
-              <TableCell>Arrival Time</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
+            <TableRow sx={{ backgroundColor: "#1e90ff" }}>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                ID
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Flight ID
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Airplane Registration Number
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Departure
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Destination
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Departure Time
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Arrival Time
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Price
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                }}
+              >
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedFlights.map((flight) => (
-              <TableRow key={flight.id}>
-                <TableCell>{flight.id}</TableCell>
-                <TableCell>{flight.flightId}</TableCell>
-                <TableCell>{flight.registrationNumber}</TableCell>
-                <TableCell>{flight.departure}</TableCell>
-                <TableCell>{flight.destination}</TableCell>
-                <TableCell>{flight.departureTime}</TableCell>
-                <TableCell>{flight.arrivalTime}</TableCell>
-                <TableCell>{flight.price}</TableCell>
-                <TableCell style={getStatusStyle(flight.status)}>
+            {sortedFlights.map((flight, index) => (
+              <TableRow
+                key={flight.id}
+                sx={{
+                  backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white",
+                  "&:hover": {
+                    backgroundColor: "#e0f7fa", // Light blue hover color
+                  },
+                }}
+              >
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.id}
+                </TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.flightId}
+                </TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.registrationNumber}
+                </TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.departure}
+                </TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.destination}
+                </TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.departureTime}
+                </TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.arrivalTime}
+                </TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
+                  {flight.price}
+                </TableCell>
+                <TableCell
+                  sx={{
+                    border: "1px solid #ddd",
+                    ...getStatusStyle(flight.status),
+                  }}
+                >
                   {flight.status}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ border: "1px solid #ddd" }}>
                   <Button
                     onClick={() => handleView(flight.flightId)}
                     variant="contained"
@@ -258,7 +380,7 @@ const FlightList = () => {
                     variant="contained"
                     size="small"
                     color="secondary"
-                    style={{ marginLeft: "8px" }}
+                    sx={{ marginLeft: "8px" }}
                   >
                     Edit
                   </Button>
