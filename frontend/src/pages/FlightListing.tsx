@@ -41,7 +41,7 @@ const FlightListing = () => {
             flexBasis: "70%",
           }}
         >
-          <SearchResult />
+          <SearchResult flights={flights} />
         </Box>
       </Box>
       <Box bgcolor="white">

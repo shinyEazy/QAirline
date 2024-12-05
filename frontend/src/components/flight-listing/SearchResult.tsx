@@ -3,8 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-
-const SearchResult = () => {
+import { Flight } from "types/flight";
+interface SearchResultProps {
+  flights: Flight[];
+}
+const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
   const [expandedDetails, setExpandedDetails] = useState<
     Record<number, boolean>
   >({});
@@ -23,65 +26,65 @@ const SearchResult = () => {
     }));
   };
 
-  const flights = [
-    {
-      id: 1,
-      departureTime: "07:00",
-      arrivalTime: "09:10",
-      from: "HAN",
-      to: "SGN",
-      seatsLeft: 666,
-      flightNumber: "VN 7239",
-      price: "$100 - $200",
-      flightDate: "Monday, 14 August",
-      flightRoute: "Hanoi - Ho Chi Minh",
-      departureDetailTime: "06:00 Hanoi",
-      departureAirport: "Noi Bai Airport, Vietnam",
-      arrivalDetailTime: "09:10 Ho Chi Minh",
-      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-      duration: "2 hours 10 minutes",
-    },
-    {
-      id: 2,
-      departureTime: "07:00",
-      arrivalTime: "09:10",
-      from: "HAN",
-      to: "SGN",
-      seatsLeft: 666,
-      flightNumber: "VN 7239",
-      price: "$100 - $200",
-      flightDate: "Monday, 14 August",
-      flightRoute: "Hanoi - Ho Chi Minh",
-      departureDetailTime: "06:00 Hanoi",
-      departureAirport: "Noi Bai Airport, Vietnam",
-      arrivalDetailTime: "09:10 Ho Chi Minh",
-      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-      duration: "2 hours 10 minutes",
-    },
-    {
-      id: 3,
-      departureTime: "07:00",
-      arrivalTime: "09:10",
-      from: "HAN",
-      to: "SGN",
-      seatsLeft: 666,
-      flightNumber: "VN 7239",
-      price: "$100 - $200",
-      flightDate: "Monday, 14 August",
-      flightRoute: "Hanoi - Ho Chi Minh",
-      departureDetailTime: "06:00 Hanoi",
-      departureAirport: "Noi Bai Airport, Vietnam",
-      arrivalDetailTime: "09:10 Ho Chi Minh",
-      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-      duration: "2 hours 10 minutes",
-    },
-  ];
+  // const flights = [
+  //   {
+  //     id: 1,
+  //     departureTime: "07:00",
+  //     arrivalTime: "09:10",
+  //     from: "HAN",
+  //     to: "SGN",
+  //     seatsLeft: 666,
+  //     flightNumber: "VN 7239",
+  //     price: "$100 - $200",
+  //     flightDate: "Monday, 14 August",
+  //     flightRoute: "Hanoi - Ho Chi Minh",
+  //     departureDetailTime: "06:00 Hanoi",
+  //     departureAirport: "Noi Bai Airport, Vietnam",
+  //     arrivalDetailTime: "09:10 Ho Chi Minh",
+  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+  //     duration: "2 hours 10 minutes",
+  //   },
+  //   {
+  //     id: 2,
+  //     departureTime: "07:00",
+  //     arrivalTime: "09:10",
+  //     from: "HAN",
+  //     to: "SGN",
+  //     seatsLeft: 666,
+  //     flightNumber: "VN 7239",
+  //     price: "$100 - $200",
+  //     flightDate: "Monday, 14 August",
+  //     flightRoute: "Hanoi - Ho Chi Minh",
+  //     departureDetailTime: "06:00 Hanoi",
+  //     departureAirport: "Noi Bai Airport, Vietnam",
+  //     arrivalDetailTime: "09:10 Ho Chi Minh",
+  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+  //     duration: "2 hours 10 minutes",
+  //   },
+  //   {
+  //     id: 3,
+  //     departureTime: "07:00",
+  //     arrivalTime: "09:10",
+  //     from: "HAN",
+  //     to: "SGN",
+  //     seatsLeft: 666,
+  //     flightNumber: "VN 7239",
+  //     price: "$100 - $200",
+  //     flightDate: "Monday, 14 August",
+  //     flightRoute: "Hanoi - Ho Chi Minh",
+  //     departureDetailTime: "06:00 Hanoi",
+  //     departureAirport: "Noi Bai Airport, Vietnam",
+  //     arrivalDetailTime: "09:10 Ho Chi Minh",
+  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+  //     duration: "2 hours 10 minutes",
+  //   },
+  // ];
 
   return (
     <Box>
       {flights.map((flight) => (
         <Box
-          key={flight.id}
+          key={flight.flight_id}
           sx={{
             backgroundColor: "#f5f7fa",
             borderRadius: "16px",
@@ -123,10 +126,10 @@ const SearchResult = () => {
             >
               <Box textAlign="center" sx={{ minWidth: "80px" }}>
                 <Typography fontSize="1.2rem">
-                  <strong>{flight.departureTime}</strong>
+                  <strong>{flight.estimated_departure_time}</strong>
                 </Typography>
                 <Typography fontSize="1rem" color="text.secondary">
-                  {flight.from}
+                  {flight.departure_airport_id}
                 </Typography>
               </Box>
 
@@ -157,10 +160,10 @@ const SearchResult = () => {
 
               <Box textAlign="center" sx={{ minWidth: "80px" }}>
                 <Typography fontSize="1.2rem">
-                  <strong>{flight.arrivalTime}</strong>
+                  <strong>{flight.estimated_arrival_time}</strong>
                 </Typography>
                 <Typography fontSize="1rem" color="text.secondary">
-                  {flight.to}
+                  {flight.destination_airport_id}
                 </Typography>
               </Box>
             </Box>
@@ -184,8 +187,8 @@ const SearchResult = () => {
                 },
               }}
             >
-              <Typography>Remaining tickets: {flight.seatsLeft}</Typography>
-              <Typography>Flight number: {flight.flightNumber}</Typography>
+              <Typography>Remaining tickets: {50}</Typography>
+              <Typography>Flight number: {1611}</Typography>
             </Box>
 
             {/* Box 3 */}
@@ -208,7 +211,7 @@ const SearchResult = () => {
               }}
             >
               <Typography fontSize="1rem" sx={{ fontWeight: 500 }}>
-                Price: {flight.price}
+                Price: {50}
               </Typography>
               <Button
                 onClick={() => {
@@ -236,19 +239,19 @@ const SearchResult = () => {
           <Divider sx={{ my: 2 }} />
 
           <Box display="flex" justifyContent="space-between" width="100%">
-            <Typography variant="h6">{flight.flightDate}</Typography>
+            <Typography variant="h6">{flight.estimated_departure_time}</Typography>
             <Typography
               fontSize="1.2rem"
               fontWeight="500"
-              onClick={() => toggleDetails(flight.id)}
+              onClick={() => toggleDetails(flight.flight_id)}
               sx={{ cursor: "pointer", color: "primary.main" }}
             >
-              {expandedDetails[flight.id] ? "Less Detail" : "More Detail"}
+              {expandedDetails[flight.flight_id] ? "Less Detail" : "More Detail"}
             </Typography>
           </Box>
 
           <Collapse
-            in={expandedDetails[flight.id]}
+            in={expandedDetails[flight.flight_id]}
             timeout="auto"
             unmountOnExit
           >
@@ -268,7 +271,7 @@ const SearchResult = () => {
                 justifyContent="center"
               >
                 <Typography variant="h6" color="primary">
-                  {flight.flightRoute}
+                  {50}
                 </Typography>
                 <Typography>Departure: Monday, November 11, 2024</Typography>
               </Box>
@@ -288,7 +291,7 @@ const SearchResult = () => {
                       marginRight: "16px",
                     }}
                   >
-                    <Typography>{flight.duration}</Typography>
+                    <Typography>{50}</Typography>
                     <Box
                       sx={{
                         width: "2px",
@@ -302,18 +305,18 @@ const SearchResult = () => {
                   </Box>
                   <Box>
                     <Typography variant="h6" color="primary">
-                      {flight.departureDetailTime}
+                      {flight.estimated_departure_time}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {flight.departureAirport}
+                      {flight.departure_airport_id}
                     </Typography>
 
                     <Box sx={{ my: 2 }} />
                     <Typography variant="h6" color="primary">
-                      {flight.arrivalDetailTime}
+                      {flight.estimated_arrival_time}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {flight.arrivalAirport}
+                      {flight.destination_airport_id}
                     </Typography>
                   </Box>
                 </Box>
