@@ -475,6 +475,7 @@ const FlightList = () => {
             <MenuItem value="Delayed">Delayed</MenuItem>
             <MenuItem value="Canceled">Canceled</MenuItem>
             <MenuItem value="Departed">Departed</MenuItem>
+            <MenuItem value="Landed">Landed</MenuItem>
           </Select>
         </DialogContent>
         <DialogActions>
