@@ -84,7 +84,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
     <Box>
       {flights.map((flight) => (
         <Box
-          key={flight.flight_id}
+          key={flight.id}
           sx={{
             backgroundColor: "#f5f7fa",
             borderRadius: "16px",
@@ -126,10 +126,10 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
             >
               <Box textAlign="center" sx={{ minWidth: "80px" }}>
                 <Typography fontSize="1.2rem">
-                  <strong>{flight.estimated_departure_time}</strong>
+                  <strong>{flight.departureTime}</strong>
                 </Typography>
                 <Typography fontSize="1rem" color="text.secondary">
-                  {flight.departure_airport_id}
+                  {flight.from}
                 </Typography>
               </Box>
 
@@ -160,10 +160,10 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
 
               <Box textAlign="center" sx={{ minWidth: "80px" }}>
                 <Typography fontSize="1.2rem">
-                  <strong>{flight.estimated_arrival_time}</strong>
+                  <strong>{flight.arrivalTime}</strong>
                 </Typography>
                 <Typography fontSize="1rem" color="text.secondary">
-                  {flight.destination_airport_id}
+                  {flight.to}
                 </Typography>
               </Box>
             </Box>
@@ -187,8 +187,8 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
                 },
               }}
             >
-              <Typography>Remaining tickets: {50}</Typography>
-              <Typography>Flight number: {1611}</Typography>
+              <Typography>Remaining tickets: {flight.seatsLeft}</Typography>
+              <Typography>Flight number: {flight.id}</Typography>
             </Box>
 
             {/* Box 3 */}
@@ -211,7 +211,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
               }}
             >
               <Typography fontSize="1rem" sx={{ fontWeight: 500 }}>
-                Price: {50}
+                Price: {flight.price}
               </Typography>
               <Button
                 onClick={() => {
@@ -239,19 +239,19 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
           <Divider sx={{ my: 2 }} />
 
           <Box display="flex" justifyContent="space-between" width="100%">
-            <Typography variant="h6">{flight.estimated_departure_time}</Typography>
+            <Typography variant="h6">{flight.flightDate}</Typography>
             <Typography
               fontSize="1.2rem"
               fontWeight="500"
-              onClick={() => toggleDetails(flight.flight_id)}
+              onClick={() => toggleDetails(flight.id)}
               sx={{ cursor: "pointer", color: "primary.main" }}
             >
-              {expandedDetails[flight.flight_id] ? "Less Detail" : "More Detail"}
+              {expandedDetails[flight.id] ? "Less Detail" : "More Detail"}
             </Typography>
           </Box>
 
           <Collapse
-            in={expandedDetails[flight.flight_id]}
+            in={expandedDetails[flight.id]}
             timeout="auto"
             unmountOnExit
           >
@@ -271,9 +271,9 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
                 justifyContent="center"
               >
                 <Typography variant="h6" color="primary">
-                  {50}
+                  {flight.flightRoute}
                 </Typography>
-                <Typography>Departure: Monday, November 11, 2024</Typography>
+                {/* <Typography>Departure: {flight.flightDate}</Typography> */}
               </Box>
               <Box>
                 <Box
@@ -291,7 +291,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
                       marginRight: "16px",
                     }}
                   >
-                    <Typography>{50}</Typography>
+                    {/* <Typography>{flight.duration}</Typography> */}
                     <Box
                       sx={{
                         width: "2px",
@@ -305,18 +305,18 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
                   </Box>
                   <Box>
                     <Typography variant="h6" color="primary">
-                      {flight.estimated_departure_time}
+                      {flight.departureDetailTime}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {flight.departure_airport_id}
+                      {flight.departureAirport}
                     </Typography>
 
                     <Box sx={{ my: 2 }} />
                     <Typography variant="h6" color="primary">
-                      {flight.estimated_arrival_time}
+                      {flight.arrivalDetailTime}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {flight.destination_airport_id}
+                      {flight.arrivalAirport}
                     </Typography>
                   </Box>
                 </Box>

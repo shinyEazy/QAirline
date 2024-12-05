@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from fastapi import HTTPException
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import Date
 from app.schemas import FlightCreate, FlightUpdate
@@ -26,11 +28,11 @@ def get_flight(db: Session, flight_id: int) -> Flight:
 
 def get_flights_by_departure_time_and_cities(
     db: Session, departure_city: str, arrival_city: str, departure_time: datetime
-) -> List[Flight]:
+) -> List[dict]:
     departure_airport = aliased(Airport)
     arrival_airport = aliased(Airport)
-    return (
-        db.query(Flight)
+    flights = (
+        db.query(Flight, departure_airport, arrival_airport)
         .join(
             departure_airport,
             Flight.departure_airport_id == departure_airport.airport_id,
@@ -45,6 +47,30 @@ def get_flights_by_departure_time_and_cities(
         )
         .all()
     )
+
+    if not flights:
+        raise HTTPException(status_code=404, detail="No flights found")
+    result =[]
+    for flight, dep_airport, arr_airport in flights:
+        result.append({
+            "id": flight.flight_id,
+            "departureTime": flight.estimated_departure_time.strftime("%H:%M"),
+            "arrivalTime": flight.estimated_arrival_time.strftime("%H:%M"),
+            "from": dep_airport.city,
+            "to": arr_airport.city,
+            "seatsLeft": 666,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+            "flightNumber": "VN 7239",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+            "price": "$100 - $200",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+            "flightDate": flight.estimated_departure_time.strftime("%A, %d %B"),
+            "flightRoute": f"{dep_airport.city} - {arr_airport.city}",
+            "departureDetailTime": flight.estimated_departure_time.strftime("%H:%M %p"),
+            "departureAirport": f"{dep_airport.name}, {dep_airport.city}",
+            "arrivalDetailTime": flight.estimated_arrival_time.strftime("%H:%M %p"),
+            "arrivalAirport": f"{arr_airport.name}, {arr_airport.city}",
+            "duration": "2 hours 10 minutes",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+        })
+    return result
+
 
 
 def update_flight(db: Session, db_flight: Flight, flight: FlightUpdate) -> Flight:
