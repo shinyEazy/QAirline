@@ -12,6 +12,7 @@ import AdminLogin from "pages/admin/login";
 import AdminAuthWrapper from "wrappers/admin-auth";
 // import UserAuthWrapper from "wrappers/user-auth";
 import FlightSeat from "pages/flight-seat";
+import UserPage from "pages/user";
 
 const routes = [
   {
@@ -46,6 +47,10 @@ const routes = [
         component: AdminLogin,
       },
     ],
+  },
+  {
+    path: "/user",
+    component: UserPage,
   },
   {
     path: "",
