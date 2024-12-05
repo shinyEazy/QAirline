@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 
 # from app.crud.admin import get_admin_by_username
 import app
-from app.helper import get_default_admin
 from schemas.user import UserAuth
 from jose import jwt, JWTError
 from core.database import get_db
@@ -53,7 +52,7 @@ class TokenData(BaseModel):
 
 def authenticate_user(user, password: str):
     """Authenticate the user"""
-    return bcrypt_context.verify(password,  str(user.password))
+    return bcrypt_context.verify(password, str(user.password))
 
 
 # def create_access_token_admin(admin, expires_delta: timedelta):
@@ -115,7 +114,7 @@ async def get_current_user(
 
     try:
         if token.startswith("Bearer "):
-             token = token[len("Bearer "):]
+            token = token[len("Bearer ") :]
 
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITMH])
         username: str = payload.get("sub")

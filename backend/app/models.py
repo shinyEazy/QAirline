@@ -189,3 +189,11 @@ class FlightSeats(Base):
         CheckConstraint("max_row_seat > 0", name="check_max_row_seat"),
         CheckConstraint("max_col_seat > 0", name="check_max_col_seat"),
     )
+
+
+class Advert(Base):
+    __tablename__ = "advert"
+
+    advert_name = Column(String, nullable=False, primary_key=True)
+    media_link = Column(String)
+    text = Column(String)
