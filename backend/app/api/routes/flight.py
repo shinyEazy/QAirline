@@ -6,14 +6,12 @@ from crud.flight import *
 from schemas.flight import FlightCreate, FlightUpdate, FlightBase
 from core.database import get_db
 
-router = APIRouter(
-    prefix="/flights", tags=["Flight"]
-)
+router = APIRouter(prefix="/flights", tags=["Flight"])
 
 # Endpoints for Flight
 
 
-@router.get("/{flight_id}",dependencies=[Depends(role_checker(["admin"]))])
+@router.get("/{flight_id}", dependencies=[Depends(role_checker(["admin"]))])
 async def get_flight_end_point(flight_id: int, db: Session = Depends(get_db)):
     db_flight = get_flight(db, flight_id=flight_id)
     if not db_flight:
@@ -21,14 +19,14 @@ async def get_flight_end_point(flight_id: int, db: Session = Depends(get_db)):
     return db_flight
 
 
-@router.post("/",dependencies=[Depends(role_checker(["admin"]))])
+@router.post("/", dependencies=[Depends(role_checker(["admin"]))])
 async def create_flight_end_point(flight: FlightCreate, db: Session = Depends(get_db)):
     if not get_airplane(db, flight.airplane_id):
         raise HTTPException(status_code=404, detail="Airplane not found")
     return create_flight(db, flight)
 
 
-@router.put("/{flight_id}",dependencies=[Depends(role_checker(["admin"]))])
+@router.put("/{flight_id}", dependencies=[Depends(role_checker(["admin"]))])
 async def update_flight_end_point(
     flight_id: int, flight: FlightUpdate, db: Session = Depends(get_db)
 ):
@@ -45,7 +43,7 @@ async def update_flight_end_point(
     return update_flight(db, db_flight, flight)
 
 
-@router.delete("/{flight_id}",dependencies=[Depends(role_checker(["admin"]))])
+@router.delete("/{flight_id}", dependencies=[Depends(role_checker(["admin"]))])
 async def delete_flight_end_point(flight_id: int, db: Session = Depends(get_db)):
     db_flight = get_flight(db, flight_id)
     if not db_flight:
@@ -68,7 +66,7 @@ async def search_flights_end_point(
     return db_flights
 
 
-@router.get("/passengers/{flight_id}",dependencies=[Depends(role_checker(["admin"]))])
+@router.get("/passengers/{flight_id}", dependencies=[Depends(role_checker(["admin"]))])
 async def get_passengers_for_flight(flight_id: int, db: Session = Depends(get_db)):
     """
     Post API to get all passengers for a specific flight.
@@ -82,6 +80,17 @@ async def get_passengers_for_flight(flight_id: int, db: Session = Depends(get_db
         )
 
     return passengers
+
+
+@router.get("/")
+async def get_all_flights_end_point(db: Session = Depends(get_db)):
+    """
+    GET API to get all flights
+    """
+
+    flights = get_all_flights(db)
+
+    return flights
 
 
 @router.get("/passengers/citizen/{citizen_id}", response_model=FlightBase)

@@ -8,6 +8,7 @@ from api.routes import (
     flight,
     payment,
     user,
+    advert,
 )
 
 api_router = APIRouter()
@@ -20,3 +21,4 @@ api_router.include_router(airplane.router, prefix="/api", tags=["Airplane"])
 api_router.include_router(airport.router, prefix="/api", tags=["Airport"])
 api_router.include_router(flight.router, prefix="/api", tags=["Flight"])
 api_router.include_router(payment.router, prefix="/api", tags=["Payment"])
+api_router.include_router(advert.router, prefix="/api", tags=["Advertisement"])

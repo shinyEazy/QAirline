@@ -103,3 +103,7 @@ def get_flight_by_citizen_id(citizen_id: str, db: Session) -> Flight:
         .first()  # Get the first result
     )
     return db_flight
+
+
+def get_all_flights(db: Session):
+    return get_all(Flight, db)
