@@ -56,3 +56,11 @@ def create_admin(user: UserCreateAdmin, db: Session):
     """
 
     return create(User, db, user.model_dump())
+
+
+def delete_user(db_user: User, db: Session):
+    """
+    Delete a user
+    """
+
+    return delete(db_user, db)

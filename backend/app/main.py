@@ -6,6 +6,8 @@ from contextlib import asynccontextmanager
 from sqlalchemy.exc import OperationalError
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi.staticfiles import StaticFiles
+
 # Ensure the app directory is in the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
 from app.crud.user import create_admin
@@ -51,6 +53,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # Include router
 from api.main import api_router
 
