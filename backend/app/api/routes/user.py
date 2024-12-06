@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from schemas.user import *
-from crud.user import *
+from service.user import *
 from sqlalchemy.orm import Session
 from core.database import get_db
 from core.security import (
@@ -66,7 +66,7 @@ async def create_user_end_point(user: UserCreate, db: Session = Depends(get_db))
 
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    user.password = bcrypt_context.hash(user.password)
+
     new_user = create_user(user, db)
     return {
         "user_id": new_user.user_id,
