@@ -5,9 +5,6 @@ from .crud_utils import *
 from sqlalchemy.orm import Session
 import os
 
-UPLOAD_DIR = os.path.join("static")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 
 async def create_advert(file: UploadFile, advert_name: str, text: str, db: Session):
     """

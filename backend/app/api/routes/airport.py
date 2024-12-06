@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.core.security import role_checker
 from app.models import Airport
 from app.schemas import AirportCreate, AirportUpdate
-from crud.airport import *
+from service.airport import *
 from core.database import get_db
 
 router = APIRouter(

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.core.security import role_checker
-from crud.passenger import *
+from service.passenger import *
 from sqlalchemy.orm import Session
 from core.database import get_db
 from schemas import PassengerCreate, PassengerUpdate

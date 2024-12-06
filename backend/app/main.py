@@ -5,12 +5,11 @@ import fastapi
 from contextlib import asynccontextmanager
 from sqlalchemy.exc import OperationalError
 from fastapi.middleware.cors import CORSMiddleware
-
 from fastapi.staticfiles import StaticFiles
 
 # Ensure the app directory is in the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "app")))
-from app.crud.user import create_admin
+from app.service.user import create_admin
 from app.models import Base
 from app.core.database import engine, get_db
 from app.helper import get_default_admin
@@ -32,6 +31,7 @@ async def lifespan(app: fastapi.FastAPI):
     try:
         admin_user = get_default_admin()
         create_admin(admin_user, db)
+
     except Exception as e:
         print(f"Error creating admin user: {e}")
 
@@ -52,6 +52,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+UPLOAD_DIR = os.path.join("static")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 # Include router
