@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Grid, Box, Typography, TextField, Button, Link } from "@mui/material";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import { handleUserAuthentication } from "hooks/auth-hook";
+import { handleUserSignup } from "hooks/user-hook";
 
 const SignUp = () => {
   const [checked, setChecked] = React.useState(false);
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("")
   const handleChange = (event: any) => {
     setChecked(event.target.checked);
   };
@@ -78,6 +81,7 @@ const SignUp = () => {
               fullWidth
               label="Last name"
               variant="outlined"
+
               sx={{
                 margin: "10px auto",
                 "& .MuiOutlinedInput-root": {
@@ -90,8 +94,9 @@ const SignUp = () => {
             />
             <TextField
               fullWidth
-              label="Email address"
+              label="Username"
               variant="outlined"
+
               sx={{
                 margin: "10px auto",
                 "& .MuiOutlinedInput-root": {

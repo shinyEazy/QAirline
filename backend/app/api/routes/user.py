@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from starlette.status import HTTP_409_CONFLICT
 from schemas.user import *
 from service.user import *
 from sqlalchemy.orm import Session
@@ -65,9 +66,12 @@ async def create_user_end_point(user: UserCreate, db: Session = Depends(get_db))
     db_user = get_user_by_username(user.username, db)
 
     if db_user:
-        raise HTTPException(status_code=400, detail="Username already registered")
+        raise HTTPException(
+            status_code=HTTP_409_CONFLICT, detail="Username already registered"
+        )
 
     new_user = create_user(user, db)
+
     return {
         "user_id": new_user.user_id,
         "username": new_user.username,

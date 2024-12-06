@@ -18,14 +18,31 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Link as RouterLink } from "react-router-dom";
 import "../login/login.css";
 import { useEffect } from "react";
-import { handleLoginSubmission } from "hooks/auth-hook";
-
+import { handleUserAuthentication } from "hooks/auth-hook";
+import { handleUserSignup } from "hooks/user-hook";
 const Login = () => {
   const [checked, setChecked] = React.useState(false);
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("")
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("")
+  const [error, setError] = useState("");
+
+  const handleSignupSubmission = async () => {
+    setError(''); // Reset error message 
+    try {
+      await handleUserSignup(firstname, lastname, username, password); // Handle successful signup (e.g., show success message or redirect) 
+    } catch (err) { setError(err.message); }
+  };
+
+  const handleLoginSubmission = async () => {
+    setError('');
+    try {
+      await handleUserAuthentication(username, password);
+    } catch (err) { setError(err.message) }
+  }
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -113,6 +130,9 @@ const Login = () => {
                 fullWidth
                 label="First name"
                 variant="outlined"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+
                 sx={{
                   borderRadius: "8px",
                   margin: "10px auto",
@@ -129,6 +149,9 @@ const Login = () => {
                 fullWidth
                 label="Last name"
                 variant="outlined"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+
                 sx={{
                   margin: "10px auto",
                   "& .MuiOutlinedInput-root": {
@@ -142,8 +165,11 @@ const Login = () => {
               />
               <TextField
                 fullWidth
-                label="Email address"
+                label="Username"
                 variant="outlined"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+
                 sx={{
                   borderRadius: "8px",
                   margin: "10px auto",
@@ -161,6 +187,9 @@ const Login = () => {
                 label="Password"
                 variant="outlined"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+
                 sx={{
                   borderRadius: "8px",
                   margin: "10px auto",
@@ -222,6 +251,8 @@ const Login = () => {
                 <Button
                   className="auth-button"
                   variant="contained"
+
+                  onClick={handleSignupSubmission}
                   sx={{
                     marginTop: "20px",
                     width: "60%",
@@ -250,6 +281,9 @@ const Login = () => {
                 </Button>
               </Box>
 
+              <Typography textAlign="center" marginTop={2} fontSize="1rem" sx={{ color: "#ff0000" }}>
+                {error}
+              </Typography>
               <Typography textAlign="center" marginTop={2} fontSize="1rem">
                 or use your account
               </Typography>
@@ -407,7 +441,7 @@ const Login = () => {
               <Box display="flex" justifyContent="center" width="100%">
                 <Button
                   variant="contained"
-                  onClick={() => handleLoginSubmission(username, password)}
+                  onClick={handleLoginSubmission}
                   sx={{
                     marginTop: "20px",
                     width: "60%",
@@ -435,9 +469,14 @@ const Login = () => {
                   Login
                 </Button>
               </Box>
+              <Typography textAlign="center" marginTop={2} fontSize="1rem" sx={{ color: "#ff0000" }}>
+                {error}
+              </Typography>
+
               <Typography textAlign="center" marginTop={2} fontSize="1rem">
                 or use your account
               </Typography>
+
               <Box display="flex" justifyContent="center" gap={2} marginTop={1}>
                 <IconButton
                   sx={{
