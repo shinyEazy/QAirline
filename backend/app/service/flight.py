@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 from sqlalchemy import Date
 from app.schemas import FlightCreate, FlightUpdate, FlightDelay
 from app.service.passenger import get_passenger_by_flight
