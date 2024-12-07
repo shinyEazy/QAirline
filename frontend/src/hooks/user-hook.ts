@@ -1,11 +1,12 @@
 
 import axios from './axios-config'
 
-export async function handleUserSignup(firstname, lastname, username, password) {
+export async function handleUserSignup(firstname, lastname, email, username, password) {
   // Create the payload object
   const payload = {
     firstname,
     lastname,
+    email,
     username,
     password,
   };

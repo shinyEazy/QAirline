@@ -10,23 +10,33 @@ import Achievement from "components/home-page/Achievement";
 import Testimonial from "components/home-page/Testimonial";
 import LatestNews from "components/home-page/LatestNews";
 import Footer from "components/home-page/Footer";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+const theme = createTheme({
+  typography: {
+    fontFamily: "JetBrains Mono, monospace",
+  },
+});
 
 const HomePage = () => {
   return (
-    <Box>
-      <Header />
-      <Box sx={{ bgcolor: "rgb(234, 234, 234)" }}>
-        <Banner />
-        <FlightSearch />
-        <Benefit />
-        <LatestFlight />
-        <GlobalTravel />
-        <Achievement />
-        <Testimonial />
-        <LatestNews />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box>
+        <Header />
+        <Box sx={{ bgcolor: "rgb(234, 234, 234)" }}>
+          <Banner />
+          <FlightSearch />
+          <Benefit />
+          <LatestFlight />
+          <GlobalTravel />
+          <Achievement />
+          <Testimonial />
+          <LatestNews />
+        </Box>
+        <Footer />
       </Box>
-      <Footer />
-    </Box>
+    </ThemeProvider>
   );
 };
 
