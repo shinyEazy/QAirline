@@ -3,16 +3,16 @@ import BookingTable from "components/user/booking-table";
 import Sidebar from "components/user/sidebar";
 import Header from "components/home-page/Header";
 
-const UserPage = () => {
+const BookedTickets = () => {
   return (
     <Box>
       <Header />
       <Box display="flex" height="calc(100vh - 72px)">
         <Sidebar />
-        <Box width="100%" bgcolor="rgb(232,232,232)"></Box>
+        <BookingTable />
       </Box>
     </Box>
   );
 };
 
-export default UserPage;
+export default BookedTickets;
