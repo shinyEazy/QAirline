@@ -74,6 +74,7 @@ const Banner = () => {
         margin: "60px 80px",
         color: "black",
         gap: "40px",
+
       }}
     >
       <div className={`carousel ${animationClass}`}>
@@ -102,7 +103,7 @@ const CarouselItem = ({ image, isActive }) => {
       <img src={image.src} alt={image.title} />
       <div className="content">
         <div className="title">{image.title}</div>
-        <div className="des">{image.description}</div>
+        <div className="des" style={{ fontFamily: "Roboto" }}>{image.description}</div>
         <div className="buttons">
           <button>SEE MORE</button>
           <button>SUBSCRIBE</button>

@@ -27,13 +27,14 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("")
   const [firstname, setFirstname] = useState("");
+  const [email, setEmail] = useState("")
   const [lastname, setLastname] = useState("")
   const [error, setError] = useState("");
 
   const handleSignupSubmission = async () => {
     setError(''); // Reset error message 
     try {
-      await handleUserSignup(firstname, lastname, username, password); // Handle successful signup (e.g., show success message or redirect) 
+      await handleUserSignup(firstname, lastname, email, username, password); // Handle successful signup (e.g., show success message or redirect) 
     } catch (err) { setError(err.message); }
   };
 
@@ -151,6 +152,24 @@ const Login = () => {
                 variant="outlined"
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
+
+                sx={{
+                  margin: "10px auto",
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    backgroundColor: "#f0f8ff",
+                    "& fieldset": { borderColor: "#b0c4de" },
+                    "&:hover fieldset": { borderColor: "#1e90ff" },
+                    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                label="Email"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
 
                 sx={{
                   margin: "10px auto",
