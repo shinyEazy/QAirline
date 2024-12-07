@@ -35,7 +35,9 @@ def get_booking(booking_id: int, db: Session) -> Booking:
     return db_booking
 
 
-def create_booking(user: User, booking: BookingCreate, db: Session) -> (Booking, int):
+from typing import Tuple
+
+def create_booking(user: User, booking: BookingCreate, db: Session) -> Tuple[Booking, int]:
     """
     Equivalent to a SQL query that is 'INSERT INTO booking values ()'
     When creating the booking, we need to ensure that the passenger_id and flight_id are valid
