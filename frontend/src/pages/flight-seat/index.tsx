@@ -5,7 +5,7 @@ import Step from "components/flight-booking/Step";
 import BookingDetail from "components/flight-booking/BookingDetail";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-
+import useBookingPayload from "hooks/booking-hook";
 const SEAT_PRICE = 100;
 
 const FlightSeat = () => {
@@ -41,7 +41,11 @@ const FlightSeat = () => {
     () => selectedSeats.length * SEAT_PRICE,
     [selectedSeats]
   );
-
+  const { setFlightClass } = useBookingPayload();
+  const handleNext = () => {
+    setFlightClass("Economy");
+    navigate("/flight-booking");
+  };
   return (
     <div>
       <Header />
@@ -167,7 +171,7 @@ const FlightSeat = () => {
             </Box>
           </Box>
           <Button
-            onClick={() => navigate("/flight-booking")}
+            onClick={handleNext}
             fullWidth
             disabled={selectedSeats.length === 0}
             sx={{

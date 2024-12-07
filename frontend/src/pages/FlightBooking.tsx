@@ -8,7 +8,8 @@ import Price from "components/flight-booking/Price";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-
+import useBookingPayload from "hooks/booking-hook";
+import axios from '../hooks/axios-config';
 const FlightBooking = () => {
   const navigate = useNavigate();
 
@@ -17,7 +18,23 @@ const FlightBooking = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
+  const { getPayload } = useBookingPayload();
+  const handleNext = async () => {
+    const payload = getPayload();
+    try {
+      const response = await axios.post("/api/booking/", payload);
+      const data = response.data;
+      // if (data) {
+      //   navigate("/payment");
+      // }
+      console.log(data);
+    }
+    catch (error) {
+      console.error("Error create booking", error);
+      throw error;
+    }
 
+  }
   return (
     <div>
       <Header />
@@ -47,7 +64,7 @@ const FlightBooking = () => {
           <Step />
           <UserDetail />
           <Button
-            onClick={() => navigate("/payment")}
+            onClick={handleNext}
             fullWidth
             sx={{
               marginTop: "40px",

@@ -66,7 +66,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
       .catch((error) => {
         console.error("Error fetching flights:", error);
       });
-    naviagate('/flight-listing?${searchParams.toString()}');
+    // naviagate('/flight-listing?${searchParams.toString()}');
   };
   return (
     <Box
