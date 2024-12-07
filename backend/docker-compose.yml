@@ -11,6 +11,8 @@ services:
       - DATABASE_URL=postgresql://postgres:mysecretpassword@db:5432/airline_db
     volumes:
       - ./app:/backend/app
+    env_file:
+      - .env
 
   db:
     image: postgres:15

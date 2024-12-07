@@ -1,7 +1,8 @@
 from typing import Annotated
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from starlette.status import HTTP_409_CONFLICT
+from starlette.status import HTTP_409_CONFLICT, HTTP_500_INTERNAL_SERVER_ERROR
+from app.service.email import send_email
 from schemas.user import *
 from service.user import *
 from sqlalchemy.orm import Session
@@ -142,3 +143,14 @@ async def authenticate_user_end_point(
         "token_type": "Bearer",
         "message": "successfully authenticated",
     }
+
+
+@router.post("/mail")
+async def send_mail_end_point(background_tasks: BackgroundTasks):
+    try:
+        # Add the send_email task to background
+        await send_email(["buiducanh567@gmail.com"], "hi", "123")
+        return {"message": "Email sent in the background!"}
+
+    except Exception as e:
+        raise HTTPException(status_code=HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

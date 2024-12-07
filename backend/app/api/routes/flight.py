@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
+from starlette.status import HTTP_404_NOT_FOUND
 from app.core.security import role_checker
+from app.models import FlightStatus
 from service.airplane import get_airplane
 from sqlalchemy.orm import Session
 from service.flight import *
@@ -21,6 +23,11 @@ async def get_flight_end_point(flight_id: int, db: Session = Depends(get_db)):
 
 @router.post("/", dependencies=[Depends(role_checker(["admin"]))])
 async def create_flight_end_point(flight: FlightCreate, db: Session = Depends(get_db)):
+    if flight.status not in FlightStatus.__members__:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail=f"Invalid flight status. Please use one of the valid options: 'Delayed', 'On Time', 'Cancelled'",
+        )
     if not get_airplane(db, flight.airplane_id):
         raise HTTPException(status_code=404, detail="Airplane not found")
     return create_flight(db, flight)
@@ -101,3 +108,18 @@ def get_flight_by_citizen_id(citizen_id: str, db: Session = Depends(get_db)):
             status_code=404, detail="Flight not found for this citizen_id."
         )
     return flight
+
+
+@router.post("/delay")
+async def delay_flight_end_point(
+    flight: FlightDelay,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    db_flight = get_flight(db, flight.flight_id)
+    if not db_flight:
+        raise HTTPException(status_code=404, detail="Flight not found")
+
+    await delay_flight(flight, db_flight, db)
+
+    return {"message": "Flight delayed"}

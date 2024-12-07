@@ -3,6 +3,7 @@ CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     firstname TEXT NOT NULL,
     lastname TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     role TEXT NOT NULL
@@ -264,7 +265,7 @@ INSERT INTO flight (
     status
 ) VALUES 
 (1, '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 'Completed'),
-(2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress');
+(2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress'),
 (3, '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 'Scheduled'),
 (4, '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 'Scheduled'),
 (5, '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 'Pending'),

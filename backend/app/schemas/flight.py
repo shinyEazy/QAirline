@@ -33,3 +33,10 @@ class FlightUpdate(SchemaModel):
     estimated_arrival_time: datetime
     actual_arrival_time: Optional[datetime]
     status: str
+
+
+class FlightDelay(SchemaModel):
+    flight_id: int
+    actual_departure_time: Optional[datetime]
+    actual_arrival_time: Optional[datetime]
+    status: str
