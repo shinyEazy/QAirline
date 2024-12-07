@@ -6,16 +6,10 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-
-# from app.crud.admin import get_admin_by_username
-import app
-from app.helper import get_default_admin
-from schemas.user import UserAuth
 from jose import jwt, JWTError
 from core.database import get_db
 from typing import List
 from app.models import User
-from app.crud.user import get_user_by_username  # Import thêm CRUD cho user
 
 import os
 
@@ -53,7 +47,7 @@ class TokenData(BaseModel):
 
 def authenticate_user(user, password: str):
     """Authenticate the user"""
-    return bcrypt_context.verify(password,  str(user.password))
+    return bcrypt_context.verify(password, str(user.password))
 
 
 # def create_access_token_admin(admin, expires_delta: timedelta):
@@ -115,7 +109,7 @@ async def get_current_user(
 
     try:
         if token.startswith("Bearer "):
-             token = token[len("Bearer "):]
+            token = token[len("Bearer ") :]
 
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITMH])
         username: str = payload.get("sub")
@@ -126,7 +120,8 @@ async def get_current_user(
     except JWTError:
         raise credential_exception
 
-    user = get_user_by_username(username, db=db)
+    user = db.query(User).filter(User.username == username).first()
+
     if not user:
         raise credential_exception
 

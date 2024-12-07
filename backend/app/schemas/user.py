@@ -8,6 +8,7 @@ from .base import SchemaModel
 class UserCreate(SchemaModel):
     firstname: str
     lastname: str
+    email: str
     username: str
     password: str
 

@@ -1,12 +1,12 @@
 from app.core.security import role_checker
-from crud.flight_seat import get_flight_seat_by_flight_id_and_class
-from crud.booking import get_booking
+from service.flight_seat import get_flight_seat_by_flight_id_and_class
+from service.booking import get_booking
 from app.schemas import PaymentCreate
 from app.models import Booking
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, HTTPException, Depends
 from core.database import get_db
-from crud.payment import create_payment
+from service.payment import create_payment
 
 router = APIRouter(prefix="/payment", tags=["Payment"])
 

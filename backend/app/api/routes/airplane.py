@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.core.security import role_checker
-from crud.airport import get_airport
-from crud.airplane import *
+from service.airport import get_airport
+from service.airplane import *
 from schemas import (
     AirplaneModelCreate,
     AirplaneModelUpdate,

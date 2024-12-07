@@ -28,12 +28,19 @@ class FlightClass(PyEnum):
     FirstClass = "First Class"
 
 
+class FlightStatus(PyEnum):
+    OnTime = "On Time"
+    Delayed = "Delayed"
+    Cancelled = "Cancelled"
+
+
 class User(Base):
     __tablename__ = "users"
 
     user_id = Column(Integer, primary_key=True, index=True)
     firstname = Column(String, nullable=False)
     lastname = Column(String, nullable=False)
+    email = Column(String, nullable=False)
     username = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=False)
     role = Column(String, default="user", nullable=False)
@@ -189,3 +196,11 @@ class FlightSeats(Base):
         CheckConstraint("max_row_seat > 0", name="check_max_row_seat"),
         CheckConstraint("max_col_seat > 0", name="check_max_col_seat"),
     )
+
+
+class Advert(Base):
+    __tablename__ = "advert"
+
+    advert_name = Column(String, nullable=False, primary_key=True)
+    media_link = Column(String)
+    text = Column(String)

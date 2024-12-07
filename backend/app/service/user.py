@@ -1,8 +1,14 @@
+from starlette.status import HTTP_400_BAD_REQUEST
 from app.schemas.user import UserCreateAdmin, UserCreate, UserUpdate
 from .crud_utils import *
-
 from app.models import User
 from sqlalchemy.orm import Session
+from core.security import bcrypt_context
+from fastapi import HTTPException
+
+MINIMUM_USER_PASSWORD = 8
+
+REQUIRED_FIELDS = ["username", "password", "firstname", "lastname"]
 
 
 def get_user(user_id: int, db: Session) -> User:
@@ -40,7 +46,24 @@ def create_user(user: UserCreate, db: Session):
     Equivalent to a SQL query that is 'INSERT INTO users values (user.email, user.password, datetime.now)'
     """
 
-    return create(User, db, user.model_dump())
+    user_model = user.model_dump()
+
+    user_password = user_model["password"]
+
+    for field in REQUIRED_FIELDS:
+        if not user_model.get(field):
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST, detail=f"'{field}' is required."
+            )
+    if len(user_password) < MINIMUM_USER_PASSWORD:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="User's password should contain atleast 8 characters",
+        )
+
+    user_model["password"] = bcrypt_context.hash(user_model["password"])
+
+    return create(User, db, user_model)
 
 
 def update_user(db_user: User, user: UserUpdate, db: Session):
@@ -56,3 +79,11 @@ def create_admin(user: UserCreateAdmin, db: Session):
     """
 
     return create(User, db, user.model_dump())
+
+
+def delete_user(db_user: User, db: Session):
+    """
+    Delete a user
+    """
+
+    return delete(db_user, db)

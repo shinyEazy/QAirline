@@ -1,11 +1,17 @@
-export type Flight = {
-    flight_id: number;
-    airplane_id: number;
-    actual_departure_time: string; // ISO 8601 format
-    estimated_arrival_time: string; // ISO 8601 format
-    departure_airport_id: number;
-    status: string;
-    estimated_departure_time: string; // ISO 8601 format
-    actual_arrival_time: string; // ISO 8601 format
-    destination_airport_id: number;
-};
+export interface Flight {
+    id: number;
+    departureTime: string;
+    arrivalTime: string;
+    from: string;
+    to: string;
+    seatsLeft: number;
+    flightNumber: string;
+    price: string;
+    flightDate: string;
+    flightRoute: string;
+    departureDetailTime: string;
+    departureAirport: string;
+    arrivalDetailTime: string;
+    arrivalAirport: string;
+    duration: string;
+}

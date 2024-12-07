@@ -1,6 +1,7 @@
 {
     "firstname": "bill",
     "lastname": "joe",
+    "email" : "buiducanh567@gmail.com",
     "username": "admin",
     "password": "abc123",
     "role": "admin"

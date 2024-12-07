@@ -3,8 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-
-const SearchResult = () => {
+import { Flight } from "types/flight";
+interface SearchResultProps {
+  flights: Flight[];
+}
+const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
   const [expandedDetails, setExpandedDetails] = useState<
     Record<number, boolean>
   >({});
@@ -23,59 +26,59 @@ const SearchResult = () => {
     }));
   };
 
-  const flights = [
-    {
-      id: 1,
-      departureTime: "07:00",
-      arrivalTime: "09:10",
-      from: "HAN",
-      to: "SGN",
-      seatsLeft: 666,
-      flightNumber: "VN 7239",
-      price: "$100 - $200",
-      flightDate: "Monday, 14 August",
-      flightRoute: "Hanoi - Ho Chi Minh",
-      departureDetailTime: "06:00 Hanoi",
-      departureAirport: "Noi Bai Airport, Vietnam",
-      arrivalDetailTime: "09:10 Ho Chi Minh",
-      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-      duration: "2 hours 10 minutes",
-    },
-    {
-      id: 2,
-      departureTime: "07:00",
-      arrivalTime: "09:10",
-      from: "HAN",
-      to: "SGN",
-      seatsLeft: 666,
-      flightNumber: "VN 7239",
-      price: "$100 - $200",
-      flightDate: "Monday, 14 August",
-      flightRoute: "Hanoi - Ho Chi Minh",
-      departureDetailTime: "06:00 Hanoi",
-      departureAirport: "Noi Bai Airport, Vietnam",
-      arrivalDetailTime: "09:10 Ho Chi Minh",
-      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-      duration: "2 hours 10 minutes",
-    },
-    {
-      id: 3,
-      departureTime: "07:00",
-      arrivalTime: "09:10",
-      from: "HAN",
-      to: "SGN",
-      seatsLeft: 666,
-      flightNumber: "VN 7239",
-      price: "$100 - $200",
-      flightDate: "Monday, 14 August",
-      flightRoute: "Hanoi - Ho Chi Minh",
-      departureDetailTime: "06:00 Hanoi",
-      departureAirport: "Noi Bai Airport, Vietnam",
-      arrivalDetailTime: "09:10 Ho Chi Minh",
-      arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-      duration: "2 hours 10 minutes",
-    },
-  ];
+  // const flights = [
+  //   {
+  //     id: 1,
+  //     departureTime: "07:00",
+  //     arrivalTime: "09:10",
+  //     from: "HAN",
+  //     to: "SGN",
+  //     seatsLeft: 666,
+  //     flightNumber: "VN 7239",
+  //     price: "$100 - $200",
+  //     flightDate: "Monday, 14 August",
+  //     flightRoute: "Hanoi - Ho Chi Minh",
+  //     departureDetailTime: "06:00 Hanoi",
+  //     departureAirport: "Noi Bai Airport, Vietnam",
+  //     arrivalDetailTime: "09:10 Ho Chi Minh",
+  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+  //     duration: "2 hours 10 minutes",
+  //   },
+  //   {
+  //     id: 2,
+  //     departureTime: "07:00",
+  //     arrivalTime: "09:10",
+  //     from: "HAN",
+  //     to: "SGN",
+  //     seatsLeft: 666,
+  //     flightNumber: "VN 7239",
+  //     price: "$100 - $200",
+  //     flightDate: "Monday, 14 August",
+  //     flightRoute: "Hanoi - Ho Chi Minh",
+  //     departureDetailTime: "06:00 Hanoi",
+  //     departureAirport: "Noi Bai Airport, Vietnam",
+  //     arrivalDetailTime: "09:10 Ho Chi Minh",
+  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+  //     duration: "2 hours 10 minutes",
+  //   },
+  //   {
+  //     id: 3,
+  //     departureTime: "07:00",
+  //     arrivalTime: "09:10",
+  //     from: "HAN",
+  //     to: "SGN",
+  //     seatsLeft: 666,
+  //     flightNumber: "VN 7239",
+  //     price: "$100 - $200",
+  //     flightDate: "Monday, 14 August",
+  //     flightRoute: "Hanoi - Ho Chi Minh",
+  //     departureDetailTime: "06:00 Hanoi",
+  //     departureAirport: "Noi Bai Airport, Vietnam",
+  //     arrivalDetailTime: "09:10 Ho Chi Minh",
+  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
+  //     duration: "2 hours 10 minutes",
+  //   },
+  // ];
 
   return (
     <Box>
@@ -185,7 +188,7 @@ const SearchResult = () => {
               }}
             >
               <Typography>Remaining tickets: {flight.seatsLeft}</Typography>
-              <Typography>Flight number: {flight.flightNumber}</Typography>
+              <Typography>Flight number: {flight.id}</Typography>
             </Box>
 
             {/* Box 3 */}
@@ -270,7 +273,7 @@ const SearchResult = () => {
                 <Typography variant="h6" color="primary">
                   {flight.flightRoute}
                 </Typography>
-                <Typography>Departure: Monday, November 11, 2024</Typography>
+                {/* <Typography>Departure: {flight.flightDate}</Typography> */}
               </Box>
               <Box>
                 <Box
@@ -288,7 +291,7 @@ const SearchResult = () => {
                       marginRight: "16px",
                     }}
                   >
-                    <Typography>{flight.duration}</Typography>
+                    {/* <Typography>{flight.duration}</Typography> */}
                     <Box
                       sx={{
                         width: "2px",

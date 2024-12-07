@@ -7,3 +7,5 @@ pydantic[email]  # Add pydantic with email validation
 python-jose
 passlib
 python-multipart
+fastapi-mail
+python-dotenv
