@@ -14,7 +14,7 @@ from app.crud.user import create_admin
 from app.models import Base
 from app.core.database import engine, get_db
 from app.helper import get_default_admin
-
+import os
 
 @asynccontextmanager
 async def lifespan(app: fastapi.FastAPI):
@@ -53,6 +53,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+static_dir = "static"
+if not os.path.exists(static_dir):
+    os.makedirs(static_dir)
+    
 app.mount("/static", StaticFiles(directory="static"), name="static")
 # Include router
 from api.main import api_router
