@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from app.core.database import get_db
 from app.core.security import role_checker
-from app.crud.advert import (
+from app.service.advert import (
     create_advert,
     delete_advert,
     get_adverts,

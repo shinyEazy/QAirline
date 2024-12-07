@@ -1,8 +1,8 @@
 from app.schemas.user import UserCreateAdmin, UserCreate, UserUpdate
 from .crud_utils import *
-
 from app.models import User
 from sqlalchemy.orm import Session
+from core.security import bcrypt_context
 
 
 def get_user(user_id: int, db: Session) -> User:
@@ -40,7 +40,10 @@ def create_user(user: UserCreate, db: Session):
     Equivalent to a SQL query that is 'INSERT INTO users values (user.email, user.password, datetime.now)'
     """
 
-    return create(User, db, user.model_dump())
+    user_model = user.model_dump()
+    user_model["password"] = bcrypt_context.hash(user_model["password"])
+
+    return create(User, db, user_model)
 
 
 def update_user(db_user: User, user: UserUpdate, db: Session):
