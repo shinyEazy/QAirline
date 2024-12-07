@@ -1,23 +1,7 @@
 import { toast } from "react-toastify";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from 'axios'
-
-
-// config
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
-// Log requests
-axios.interceptors.request.use(request => {
-  console.log('Starting Request:', request);
-  return request;
-});
-
-// Log responses
-axios.interceptors.response.use(response => {
-  console.log('Response:', response);
-  return response;
-});
-
+import axios from './axios-config'
 
 export const useAuth = () => {
   const [isLogin, setIsLogin] = useState<boolean | null>(null);
@@ -40,7 +24,7 @@ export const useAdminAuth = () => {
 };
 
 
-export const handleLoginSubmission = async (username, password) => {
+export const handleUserAuthentication = async (username, password) => {
   try {
     // Form data payload
     const formData = new URLSearchParams();
@@ -65,7 +49,9 @@ export const handleLoginSubmission = async (username, password) => {
 
     console.log('Response:', response.data);
   } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error.message);
+    console.error('Error:', error.response ? error.response.data.detail : error.detail);
+    throw new Error(error.response.data.detail)
   }
 };
+
 

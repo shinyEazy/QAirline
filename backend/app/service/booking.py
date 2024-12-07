@@ -8,7 +8,7 @@ from app.models import Booking, Passenger
 from typing import List
 from schemas.passenger import PassengerBase, PassengerCreate
 from service.flight import delete_flight, get_all_passenger_in_flight
-from service.passenger import create_passenger, delete_passengers
+from service.passenger import create_passenger, delete_passenger
 from sqlalchemy import Column
 from service.flight_seat import get_flight_seat_by_flight_id_and_class
 from typing import List
