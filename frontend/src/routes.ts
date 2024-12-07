@@ -12,6 +12,9 @@ import AdminLogin from "pages/admin/login";
 import AdminAuthWrapper from "wrappers/admin-auth";
 // import UserAuthWrapper from "wrappers/user-auth";
 import FlightSeat from "pages/flight-seat";
+import UserPage from "pages/user";
+import BookedTickets from "pages/user/booked-tickets";
+import PaymentHistory from "pages/user/payment-history";
 
 const routes = [
   {
@@ -46,6 +49,18 @@ const routes = [
         component: AdminLogin,
       },
     ],
+  },
+  {
+    path: "/user/:id",
+    component: UserPage,
+  },
+  {
+    path: "/user/:id/booked-tickets",
+    component: BookedTickets,
+  },
+  {
+    path: "/user/:id/payment-history",
+    component: PaymentHistory,
   },
   {
     path: "",
