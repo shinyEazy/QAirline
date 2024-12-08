@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from app.schemas.passenger import PassengerCreate, PassengerUpdate, PassengerBase
 
 from app.models import Booking, Passenger, Flight
@@ -10,8 +12,7 @@ def create_passenger(passenger: PassengerCreate, db: Session) -> Passenger:
     """
     Equivalent to a SQL query that is 'INSERT INTO passengers values ()'
     """
-
-    return create(Passenger, db, passenger.dict())
+    return create(Passenger, db, passenger.model_dump())
 
 
 def get_passenger(citizen_id: str, db: Session) -> Passenger:

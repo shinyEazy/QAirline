@@ -57,9 +57,8 @@ CREATE TABLE flight_seats (
     flight_class TEXT NOT NULL,
     flight_price REAL,
     child_multiplier REAL,
-    available_seats INTEGER,
     max_row_seat INTEGER NOT NULL CHECK (max_row_seat > 0),
-    max_col_seat INTEGER NOT NULL CHECK (max_col_seat > 0),
+    max_col_seat TEXT NOT NULL,
     FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE
 );
 
@@ -283,11 +282,10 @@ INSERT INTO flight_seats (
     flight_class, 
     flight_price, 
     child_multiplier, 
-    available_seats, 
     max_row_seat, 
     max_col_seat
 ) VALUES 
-(1, 'Economy', 250.50, 0.8, 200, 20, 10),
-(1, 'Business', 750.75, 0.9, 50, 10, 4);
+(1, 'Economy', 0.8, 200, 5, 'D'),
+(1, 'Business', 0.9, 50, 5, 'D');
 
 

@@ -7,7 +7,6 @@ class FlightSeatsBase(SchemaModel):
     flight_class: str
     flight_price: float
     child_multiplier: float
-    available_seats: int
 
 
 class FlightSeatsCreate(SchemaModel):
@@ -15,11 +14,13 @@ class FlightSeatsCreate(SchemaModel):
     flight_class: str
     flight_price: float
     child_multiplier: float
-    available_seats: int
+    max_row_seat: int
+    max_col_seat: str
 
 
 class FlightSeatsUpdate(SchemaModel):
     flight_class: str
     flight_price: float
     child_multiplier: float
-    available_seats: int
+    max_row_seat: int
+    max_col_seat: str
