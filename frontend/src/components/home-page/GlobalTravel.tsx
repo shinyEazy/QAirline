@@ -25,6 +25,7 @@ const GlobalTravel = () => {
           <Button
             sx={{
               backgroundColor: "#4D73FC",
+
               borderRadius: "8px",
               color: "white",
               display: "flex",

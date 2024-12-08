@@ -37,7 +37,8 @@ CREATE TABLE airplane (
 -- Create Flight Table
 CREATE TABLE flight (
     flight_id SERIAL PRIMARY KEY,
-    airplane_id INTEGER,
+    flight_number TEXT UNIQUE,
+    registration_number TEXT,
     estimated_departure_time TIMESTAMP,
     actual_departure_time TIMESTAMP,
     estimated_arrival_time TIMESTAMP,
@@ -45,10 +46,11 @@ CREATE TABLE flight (
     departure_airport_id INTEGER,
     destination_airport_id INTEGER,
     status TEXT,
-    FOREIGN KEY (airplane_id) REFERENCES airplane(airplane_id),
+    FOREIGN KEY (registration_number) REFERENCES airplane(registration_number) ON DELETE CASCADE,
     FOREIGN KEY (departure_airport_id) REFERENCES airport(airport_id) ON DELETE CASCADE,
     FOREIGN KEY (destination_airport_id) REFERENCES airport(airport_id) ON DELETE CASCADE
 );
+
 
 -- Create Flight Seats Table
 CREATE TABLE flight_seats (
@@ -57,9 +59,8 @@ CREATE TABLE flight_seats (
     flight_class TEXT NOT NULL,
     flight_price REAL,
     child_multiplier REAL,
-    available_seats INTEGER,
     max_row_seat INTEGER NOT NULL CHECK (max_row_seat > 0),
-    max_col_seat INTEGER NOT NULL CHECK (max_col_seat > 0),
+    max_col_seat TEXT NOT NULL,
     FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE
 );
 
@@ -255,7 +256,8 @@ VALUES
 
 -- Insert Flight Data
 INSERT INTO flight (
-    airplane_id, 
+    flight_number,
+    registration_number, 
     estimated_departure_time, 
     actual_departure_time, 
     estimated_arrival_time, 
@@ -264,18 +266,19 @@ INSERT INTO flight (
     destination_airport_id, 
     status
 ) VALUES 
-(1, '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 'Completed'),
-(2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress'),
-(3, '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 'Scheduled'),
-(4, '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 'Scheduled'),
-(5, '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 'Pending'),
-(6, '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 'Pending'),
-(7, '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 'Scheduled'),
-(8, '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 'Scheduled'),
-(9, '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 'Pending'),
-(10, '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 'Pending'),
-(11, '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 'Scheduled'),
-(12, '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 'Scheduled');
+('QA001', 'N789BA', '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 'Completed'),
+('QA002', 'G-XWBA', '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress'),
+('QA003', 'F-HZBA', '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 'Scheduled'),
+('QA004', 'D-ABYC', '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 'Scheduled'),
+('QA005', 'C-FZBA', '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 'Pending'),
+('QA006', 'JA123A', '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 'Pending'),
+('QA007', 'VH-ZNA', '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 'Scheduled'),
+('QA008', '9V-SKA', '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 'Scheduled'),
+('QA009', 'HS-TKA', '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 'Pending'),
+('QA010', 'B-2088', '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 'Pending'),
+('QA011', 'CC-BGA', '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 'Scheduled'),
+('QA012', 'XA-ZAA', '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 'Scheduled');
+
 
 -- Insert Flight Seats Data
 INSERT INTO flight_seats (
@@ -283,11 +286,55 @@ INSERT INTO flight_seats (
     flight_class, 
     flight_price, 
     child_multiplier, 
-    available_seats, 
     max_row_seat, 
     max_col_seat
 ) VALUES 
 (1, 'Economy', 250.50, 0.8, 200, 20, 10),
-(1, 'Business', 750.75, 0.9, 50, 10, 4);
+(1, 'Business', 750.75, 0.9, 40, 10, 4),
+(1, 'First Class', 1500.00, 1.0, 20, 5, 2),
+
+(2, 'Economy', 300.00, 0.8, 162, 18, 9),
+(2, 'Business', 850.00, 0.9, 32, 8, 4),
+(2, 'First Class', 1600.00, 1.0, 8, 4, 2),
+
+(3, 'Economy', 220.75, 0.8, 210, 21, 10),
+(3, 'Business', 700.50, 0.9, 36, 9, 4),
+(3, 'First Class', 1450.00, 1.0, 10, 5, 2),
+
+(4, 'Economy', 275.25, 0.8, 190, 19, 10),
+(4, 'Business', 800.00, 0.9, 40, 10, 4),
+(4, 'First Class', 1550.00, 1.0, 8, 4, 2),
+
+(5, 'Economy', 240.00, 0.8, 220, 22, 10),
+(5, 'Business', 725.50, 0.9, 32, 8, 4),
+(5, 'First Class', 1500.00, 1.0, 10, 5, 2),
+
+(6, 'Economy', 260.75, 0.8, 180, 20, 9),
+(6, 'Business', 775.25, 0.9, 36, 9, 4),
+(6, 'First Class', 1575.00, 1.0, 8, 4, 2),
+
+(7, 'Economy', 235.50, 0.8, 210, 21, 10),
+(7, 'Business', 690.00, 0.9, 32, 8, 4),
+(7, 'First Class', 1425.00, 1.0, 10, 5, 2),
+
+(8, 'Economy', 290.25, 0.8, 180, 18, 10),
+(8, 'Business', 825.50, 0.9, 36, 9, 4),
+(8, 'First Class', 1600.00, 1.0, 8, 4, 2),
+
+(9, 'Economy', 265.00, 0.8, 200, 20, 10),
+(9, 'Business', 755.75, 0.9, 40, 10, 4),
+(9, 'First Class', 1525.00, 1.0, 10, 5, 2),
+
+(10, 'Economy', 280.50, 0.8, 162, 18, 9),
+(10, 'Business', 875.00, 0.9, 32, 8, 4),
+(10, 'First Class', 1650.00, 1.0, 8, 4, 2),
+
+(11, 'Economy', 245.75, 0.8, 220, 22, 10),
+(11, 'Business', 710.25, 0.9, 36, 9, 4),
+(11, 'First Class', 1475.00, 1.0, 10, 5, 2),
+
+(12, 'Economy', 270.00, 0.8, 180, 20, 9),
+(12, 'Business', 790.50, 0.9, 36, 9, 4),
+(12, 'First Class', 1550.00, 1.0, 8, 4, 2);
 
 

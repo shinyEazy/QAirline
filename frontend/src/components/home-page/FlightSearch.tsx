@@ -66,7 +66,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
       .catch((error) => {
         console.error("Error fetching flights:", error);
       });
-    naviagate('/flight-listing?${searchParams.toString()}');
+    // naviagate('/flight-listing?${searchParams.toString()}');
   };
   return (
     <Box
@@ -75,7 +75,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
         margin: "40px 80px",
       }}
     >
-      <Box bgcolor="#1e90ff" borderRadius="16px">
+      <Box bgcolor="#1e9faf" borderRadius="16px">
         {/* Trip Type */}
         <FormControl fullWidth sx={{ padding: "20px" }}>
           <RadioGroup

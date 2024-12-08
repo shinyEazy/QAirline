@@ -24,9 +24,9 @@ const AdminLogin = () => {
         bgcolor="white"
         justifyContent="center"
         alignItems="center"
-        // sx={{
-        //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
-        // }}
+      // sx={{
+      //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+      // }}
       >
         <Box component="form" noValidate maxWidth="450px">
           <Box display="flex" justifyContent="center" mb={2}>

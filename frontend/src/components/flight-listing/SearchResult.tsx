@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Flight } from "types/flight";
+import userBookingPayload from "hooks/booking-hook";
 interface SearchResultProps {
   flights: Flight[];
 }
@@ -11,7 +12,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
   const [expandedDetails, setExpandedDetails] = useState<
     Record<number, boolean>
   >({});
-
+  const { setFlightId } = userBookingPayload();
   const location = useLocation();
 
   useEffect(() => {
@@ -25,7 +26,10 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
       [id]: !prev[id],
     }));
   };
-
+  const handleBookNow = (flightId: number) => {
+    setFlightId(flightId);
+    navigate("/flight-seat");
+  };
   // const flights = [
   //   {
   //     id: 1,
@@ -215,7 +219,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
               </Typography>
               <Button
                 onClick={() => {
-                  navigate("/flight-seat");
+                  handleBookNow(flight.id);
                   window.scrollTo(0, 0);
                 }}
                 variant="contained"
