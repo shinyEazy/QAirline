@@ -9,10 +9,10 @@ from typing import List
 from schemas.passenger import PassengerBase, PassengerCreate
 from service.flight import delete_flight, get_all_passenger_in_flight
 from service.passenger import create_passenger, delete_passenger
-from sqlalchemy import Column
 from service.flight_seat import get_flight_seat_by_flight_id_and_class
 from typing import List
 from app.models import FlightSeats, Flight, User
+from app.service.service_utils import conint, seat_col_to_int
 
 
 def get_bookings_by_flight_id(flight_id: int, db: Session) -> List[Booking]:
@@ -219,13 +219,6 @@ def check_valid_passenger_seats(
             )
 
 
-def seat_col_to_int(seat_col: str) -> int:
-    """Convert seat column letter (e.g., 'A', 'B') to a number."""
-    if len(seat_col) > 1:
-        raise HTTPException(status_code=400, detail="Invalid length of seat column")
-    return ord(seat_col.upper()) - ord("A") + 1
-
-
 def get_flight_compared_current_time(db_booking: Booking, db: Session) -> Flight:
     current_time = datetime.now()
 
@@ -239,7 +232,3 @@ def get_flight_compared_current_time(db_booking: Booking, db: Session) -> Flight
     )
 
     return flight
-
-
-def conint(x: Column[int]):
-    return int(str(x))

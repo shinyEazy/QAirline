@@ -123,3 +123,21 @@ async def delay_flight_end_point(
     await delay_flight(flight, db_flight, db)
 
     return {"message": "Flight delayed"}
+
+
+@router.get("/{flight_id}/{flight_class}")
+def get_flight_seats_matrix_end_point(
+    flight_id: int, flight_class: FlightClass, db: Session = Depends(get_db)
+):
+    """
+    End point to get the flight's seat matrix based on the flight class
+    """
+    if flight_class not in FlightClass:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid flight class value: {flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
+        )
+
+    return get_flight_seats_matrix(
+        flight_id=flight_id, flight_class=flight_class, db=db
+    )
