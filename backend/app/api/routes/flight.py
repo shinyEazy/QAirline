@@ -28,8 +28,10 @@ async def create_flight_end_point(flight: FlightCreate, db: Session = Depends(ge
             status_code=HTTP_404_NOT_FOUND,
             detail=f"Invalid flight status. Please use one of the valid options: 'Delayed', 'On Time', 'Cancelled'",
         )
+
     if not get_airplane(db, flight.airplane_id):
         raise HTTPException(status_code=404, detail="Airplane not found")
+
     return create_flight(db, flight)
 
 
@@ -37,6 +39,9 @@ async def create_flight_end_point(flight: FlightCreate, db: Session = Depends(ge
 async def update_flight_end_point(
     flight_id: int, flight: FlightUpdate, db: Session = Depends(get_db)
 ):
+    """
+    API Router: Update Flight
+    """
     db_flight = get_flight(db, flight_id)
     if not db_flight:
         raise HTTPException(status_code=404, detail="Flight not found")

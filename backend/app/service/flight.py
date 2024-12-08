@@ -3,8 +3,12 @@ from sqlalchemy.orm import joinedload
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import Date
-from app.schemas import FlightCreate, FlightUpdate, FlightDelay
-from app.service.flight_seat import get_flight_seat_by_flight_id_and_class
+from app.schemas import FlightCreate, FlightUpdate, FlightDelay, flight
+from app.schemas.flight_seat import FlightSeatsCreate
+from app.service.flight_seat import (
+    create_flight_seat,
+    get_flight_seat_by_flight_id_and_class,
+)
 from app.service.passenger import get_passenger_by_flight
 from .crud_utils import *
 from app.models import (
@@ -29,9 +33,13 @@ def create_flight(db: Session, flight: FlightCreate) -> Flight:
         db.query(Airplane).filter(Airplane.airplane_id == flight.airplane_id).first()
     )
 
-    flight_data = flight.model_dump()
+    flight_data = flight.model_dump(exclude={"flight_seats"})
     flight_data["departure_airport_id"] = airplane.current_airport_id
-    return create(Flight, db, flight_data)
+    db_flight = create(Flight, db, flight_data)
+
+    create_flight_seats_for_flight(flight, db_flight, db)
+
+    return db_flight
 
 
 def get_flight(db: Session, flight_id: int) -> Flight:
@@ -195,7 +203,7 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
     )
 
     max_seat_row: int = conint(flight_seat.max_row_seat)
-    max_seat_col: int = conint(flight_seat.max_col_seat)
+    max_seat_col: int = seat_col_to_int(str(flight_seat.max_col_seat))
     # seat_row and seat_col are 1-based
     passengers_seats_in_flight_class = [
         (conint(passenger.seat_row), seat_col_to_int(str(passenger.seat_col)))
@@ -211,3 +219,15 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
         seat_matrix[seat_row][seat_col] = True
 
     return seat_matrix
+
+
+def create_flight_seats_for_flight(
+    flight: FlightCreate, db_flight: Flight, db: Session
+):
+    flight_seats: List[FlightSeatsCreate] = flight.flight_seats
+
+    for flight_seat in flight_seats:
+        flight_seat.flight_id = conint(db_flight.flight_id)
+        create_flight_seat(db, flight_seat)
+
+    return {"message": "flight successfully created"}

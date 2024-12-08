@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 from .base import SchemaModel
 from .airplane import AirplaneBase as Airplane
-from .flight_seat import FlightSeatsBase as FlightSeats
+from .flight_seat import FlightSeatsBase as FlightSeats, FlightSeatsCreate
 
 
 class FlightBase(SchemaModel):
@@ -14,7 +14,6 @@ class FlightBase(SchemaModel):
     destination_airport_id: int
     status: str
     airplane: Airplane
-    flight_seats: List[FlightSeats]
 
 
 class FlightCreate(SchemaModel):
@@ -25,6 +24,8 @@ class FlightCreate(SchemaModel):
     status: str = (
         "Scheduled"  # Trạng thái chuyến bay, ví dụ: "Scheduled", "In-Flight", "Landed".
     )
+
+    flight_seats: List[FlightSeatsCreate]
 
 
 class FlightUpdate(SchemaModel):

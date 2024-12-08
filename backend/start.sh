@@ -1,5 +1,5 @@
 #!/bin/bash 
 
 systemctl stop postgresql
-docker-compose down 
-docker-compose up 
+docker-compose down -v 
+docker-compose up --build

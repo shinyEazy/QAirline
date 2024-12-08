@@ -29,6 +29,7 @@ class FlightClass(PyEnum):
 
 
 class FlightStatus(PyEnum):
+    Scheduled = "Scheduled"
     OnTime = "On Time"
     Delayed = "Delayed"
     Cancelled = "Cancelled"
@@ -188,14 +189,8 @@ class FlightSeats(Base):
     flight_class = Column(String, nullable=False)
     flight_price = Column(Float, nullable=True)
     child_multiplier = Column(Float, nullable=True)
-    available_seats = Column(Integer, nullable=True)
     max_row_seat = Column(Integer, nullable=False)
-    max_col_seat = Column(Integer, nullable=False)
-
-    __table_args__ = (
-        CheckConstraint("max_row_seat > 0", name="check_max_row_seat"),
-        CheckConstraint("max_col_seat > 0", name="check_max_col_seat"),
-    )
+    max_col_seat = Column(String, nullable=False)
 
 
 class Advert(Base):
