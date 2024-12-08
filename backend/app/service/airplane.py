@@ -44,10 +44,13 @@ def create_airplane(db: Session, airplane: AirplaneCreate) -> Airplane:
     return create(Airplane, db, airplane.model_dump())
 
 
-def get_airplane(db: Session, airplane_id: int) -> Airplane:
-    db_airplane = db.query(Airplane).filter(Airplane.airplane_id == airplane_id).first()
+def get_airplane_by_registration_number(db: Session, registration_number:str) -> Airplane:
+    db_airplane = db.query(Airplane).filter(Airplane.registration_number == registration_number).first()
     return db_airplane
 
+def get_airplane_by_id(db: Session, airplane_id: int) ->Airplane:
+    db_airplane = db.query(Airplane).filter(Airplane.airplane_id == airplane_id).first()
+    return db_airplane
 
 def update_airplane(
     db: Session, db_airplane: Airplane, airplane: AirplaneUpdate

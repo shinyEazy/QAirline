@@ -80,8 +80,8 @@ async def create_airplane_end_point(
 
 
 @router.get("/{airplane_id}")
-async def get_airplane_end_point(airplane_id: int, db: Session = Depends(get_db)):
-    db_airplane = get_airplane(db, airplane_id=airplane_id)
+async def get_airplane_by_id_end_point(airplane_id: int, db: Session = Depends(get_db)):
+    db_airplane = get_airplane_by_id(db, airplane_id=airplane_id)
     if not db_airplane:
         raise HTTPException(status_code=404, detail="Airplane not found")
     return db_airplane
@@ -94,18 +94,24 @@ async def update_airplane_end_point(
     """
     Update an airplane
     """
-    db_airplane = get_airplane(db, airplane_id)
+    db_airplane = get_airplane_by_id(db, airplane_id)
     if not db_airplane:
         raise HTTPException(status_code=404, detail="Airplane not found")
     return update_airplane(db, db_airplane, airplane)
 
-
+@router.get("/by-regis/{registration_number}")
+async def get_airplane_by_registration_number_end_point(registration_number: str, db: Session = Depends(get_db)):
+    db_airplane = get_airplane_by_registration_number(db, registration_number=registration_number)
+    if not db_airplane:
+        raise HTTPException(status_code=404, detail="Airplane not found")
+    return db_airplane
+ 
 @router.delete("/{airplane_id}")
 async def delete_airplane_end_point(airplane_id: int, db: Session = Depends(get_db)):
     """
     Delete an airplane
     """
-    db_airplane = get_airplane(db, airplane_id)
+    db_airplane = get_airplane_by_id(db, airplane_id)
     if not db_airplane:
         raise HTTPException(status_code=404, detail="Airplane not found")
     return delete_airplane(db, db_airplane)

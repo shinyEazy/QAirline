@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from starlette.status import HTTP_404_NOT_FOUND
 from app.core.security import role_checker
 from app.models import FlightStatus
-from service.airplane import get_airplane
+from service.airplane import get_airplane_by_registration_number
 from sqlalchemy.orm import Session
 from service.flight import *
 from schemas.flight import FlightCreate, FlightUpdate, FlightBase
@@ -26,9 +26,9 @@ async def create_flight_end_point(flight: FlightCreate, db: Session = Depends(ge
     if flight.status not in FlightStatus.__members__:
         raise HTTPException(
             status_code=HTTP_404_NOT_FOUND,
-            detail=f"Invalid flight status. Please use one of the valid options: 'Delayed', 'On Time', 'Cancelled'",
+            detail=f"Invalid flight status. Please use one of the valid options: 'Delayed', 'On Time', 'Cancelled','Scheduled'",
         )
-    if not get_airplane(db, flight.airplane_id):
+    if not get_airplane_by_registration_number(db, flight.registration_number):
         raise HTTPException(status_code=404, detail="Airplane not found")
     return create_flight(db, flight)
 

@@ -37,7 +37,8 @@ CREATE TABLE airplane (
 -- Create Flight Table
 CREATE TABLE flight (
     flight_id SERIAL PRIMARY KEY,
-    airplane_id INTEGER,
+    flight_number TEXT UNIQUE,
+    registration_number TEXT,
     estimated_departure_time TIMESTAMP,
     actual_departure_time TIMESTAMP,
     estimated_arrival_time TIMESTAMP,
@@ -45,10 +46,11 @@ CREATE TABLE flight (
     departure_airport_id INTEGER,
     destination_airport_id INTEGER,
     status TEXT,
-    FOREIGN KEY (airplane_id) REFERENCES airplane(airplane_id),
+    FOREIGN KEY (registration_number) REFERENCES airplane(registration_number) ON DELETE CASCADE,
     FOREIGN KEY (departure_airport_id) REFERENCES airport(airport_id) ON DELETE CASCADE,
     FOREIGN KEY (destination_airport_id) REFERENCES airport(airport_id) ON DELETE CASCADE
 );
+
 
 -- Create Flight Seats Table
 CREATE TABLE flight_seats (
@@ -255,7 +257,8 @@ VALUES
 
 -- Insert Flight Data
 INSERT INTO flight (
-    airplane_id, 
+    flight_number,
+    registration_number, 
     estimated_departure_time, 
     actual_departure_time, 
     estimated_arrival_time, 
@@ -264,18 +267,19 @@ INSERT INTO flight (
     destination_airport_id, 
     status
 ) VALUES 
-(1, '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 'Completed'),
-(2, '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress'),
-(3, '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 'Scheduled'),
-(4, '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 'Scheduled'),
-(5, '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 'Pending'),
-(6, '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 'Pending'),
-(7, '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 'Scheduled'),
-(8, '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 'Scheduled'),
-(9, '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 'Pending'),
-(10, '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 'Pending'),
-(11, '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 'Scheduled'),
-(12, '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 'Scheduled');
+('QA001', 'N789BA', '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 'Completed'),
+('QA002', 'G-XWBA', '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress'),
+('QA003', 'F-HZBA', '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 'Scheduled'),
+('QA004', 'D-ABYC', '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 'Scheduled'),
+('QA005', 'C-FZBA', '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 'Pending'),
+('QA006', 'JA123A', '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 'Pending'),
+('QA007', 'VH-ZNA', '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 'Scheduled'),
+('QA008', '9V-SKA', '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 'Scheduled'),
+('QA009', 'HS-TKA', '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 'Pending'),
+('QA010', 'B-2088', '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 'Pending'),
+('QA011', 'CC-BGA', '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 'Scheduled'),
+('QA012', 'XA-ZAA', '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 'Scheduled');
+
 
 -- Insert Flight Seats Data
 INSERT INTO flight_seats (

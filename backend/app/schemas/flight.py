@@ -7,6 +7,7 @@ from .flight_seat import FlightSeatsBase as FlightSeats
 
 class FlightBase(SchemaModel):
     flight_id: int
+    flight_number: str
     estimated_departure_time: datetime
     actual_departure_time: Optional[datetime]
     estimated_arrival_time: datetime
@@ -18,7 +19,8 @@ class FlightBase(SchemaModel):
 
 
 class FlightCreate(SchemaModel):
-    airplane_id: int
+    flight_number: str
+    registration_number: str
     estimated_departure_time: datetime
     estimated_arrival_time: datetime
     destination_airport_id: int

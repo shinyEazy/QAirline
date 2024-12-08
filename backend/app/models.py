@@ -32,6 +32,7 @@ class FlightStatus(PyEnum):
     OnTime = "On Time"
     Delayed = "Delayed"
     Cancelled = "Cancelled"
+    Scheduled = "Scheduled"
 
 
 class User(Base):
@@ -124,7 +125,8 @@ class Flight(Base):
     __tablename__ = "flight"
 
     flight_id = Column(Integer, primary_key=True, index=True)
-    airplane_id = Column(Integer, ForeignKey("airplane.airplane_id"))
+    flight_number = Column(String, unique=True, nullable=False)
+    registration_number = Column(String, ForeignKey("airplane.registration_number", ondelete="CASCADE"))
     estimated_departure_time = Column(DateTime)
     actual_departure_time = Column(DateTime)
     estimated_arrival_time = Column(DateTime)

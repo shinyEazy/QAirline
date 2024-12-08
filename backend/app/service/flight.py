@@ -15,7 +15,7 @@ from app.service.email import send_email
 def create_flight(db: Session, flight: FlightCreate) -> Flight:
     # Lấy máy bay từ database
     airplane = (
-        db.query(Airplane).filter(Airplane.airplane_id == flight.airplane_id).first()
+        db.query(Airplane).filter(Airplane.registration_number == flight.registration_number).first()
     )
 
     flight_data = flight.model_dump()
