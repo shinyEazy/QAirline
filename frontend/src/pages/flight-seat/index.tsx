@@ -114,7 +114,7 @@ const FlightSeat = () => {
           <Box
             sx={{
               marginTop: "40px",
-              flexBasis: "60%",
+              flexBasis: "70%",
             }}
           >
             <Step />
