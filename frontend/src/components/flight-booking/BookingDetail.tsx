@@ -43,7 +43,7 @@ const BookingDetail = () => {
               }}
             />
             <Typography fontSize="1rem" color="text.secondary">
-              Bay thẳng
+              One-way
             </Typography>
           </Box>
         </Box>
@@ -68,10 +68,6 @@ const BookingDetail = () => {
           <Typography>11 November, 2024</Typography>
         </Box>
       </Box>
-      <Divider sx={{ margin: "20px 0" }} />
-      <Typography fontSize="0.9rem" color="text.secondary">
-        Economy | Flight FK234 | Aircraft BOEING 777-90 <br />
-      </Typography>
     </Box>
   );
 };

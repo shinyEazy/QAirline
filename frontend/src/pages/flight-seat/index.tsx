@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Divider } from "@mui/material";
+import { Box, Typography, Button, Divider, Grid } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import Step from "components/flight-booking/Step";
@@ -108,7 +108,7 @@ const FlightSeat = () => {
           display="flex"
           gap="40px"
           sx={{
-            margin: "0px 80px 80px",
+            margin: "0px 80px 0px",
           }}
         >
           <Box
@@ -164,119 +164,231 @@ const FlightSeat = () => {
             </Box>
             <Box
               display="flex"
-              justifyContent="space-evenly"
+              justifyContent="center"
+              flexDirection="column"
               marginTop="40px"
-              bgcolor="pink"
-              padding="20px"
+              bgcolor="white"
+              padding="40px"
+              borderRadius="20px"
+              boxShadow="0px 4px 20px rgba(0, 0, 0, 0.1)"
             >
               {/* Seat Matrix */}
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Box display="flex" flexDirection="column" gap={2}>
+                <Grid container spacing={2} justifyContent="center">
+                  <Grid item xs={1} />
+                  {["A", "B", "C"].map((label) => (
+                    <Grid
+                      item
+                      key={label}
+                      xs={1}
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      <Typography fontWeight="bold" fontSize="1.5rem">
+                        {label}
+                      </Typography>
+                    </Grid>
+                  ))}
+                  <Grid item xs={1} />
+                  {["D", "E", "F"].map((label) => (
+                    <Grid
+                      item
+                      key={label}
+                      xs={1}
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      <Typography fontWeight="bold" fontSize="1.5rem">
+                        {label}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Grid>
                 {seatRows.map((row, rowIndex) => (
-                  <Box key={rowIndex} sx={{ display: "flex", gap: 1 }}>
-                    {row.map((seat) => (
-                      <Button
+                  <Grid
+                    container
+                    spacing={1}
+                    key={rowIndex}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Grid item xs={1} display="flex" justifyContent="center">
+                      <Typography fontWeight="bold" fontSize="1.5rem">
+                        {rowIndex + 1}
+                      </Typography>
+                    </Grid>
+                    {row.slice(0, 3).map((seat) => (
+                      <Grid
+                        item
                         key={seat.id}
-                        onClick={() =>
-                          seat.available && toggleSeatSelection(seat.id)
-                        }
-                        disableRipple
-                        disabled={!seat.available}
-                        sx={{
-                          width: 50,
-                          height: 50,
-                          "&:hover": { backgroundColor: "transparent" },
-                        }}
+                        xs={1}
+                        display="flex"
+                        justifyContent="center"
                       >
-                        <i
-                          className="fa-solid fa-loveseat"
-                          style={{
-                            color: seat.available
-                              ? seat.selected
-                                ? "#1e90ff"
-                                : "#ebeded"
-                              : "gray",
-                            fontSize: "2rem",
+                        <Button
+                          disableRipple
+                          disabled={!seat.available}
+                          sx={{
+                            width: 50,
+                            height: 50,
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                              cursor: "default",
+                            },
                           }}
-                        ></i>
-                      </Button>
+                        >
+                          <i
+                            onClick={() =>
+                              seat.available && toggleSeatSelection(seat.id)
+                            }
+                            className="fa-solid fa-loveseat"
+                            style={{
+                              color: seat.available
+                                ? seat.selected
+                                  ? "#1e90ff"
+                                  : "#d3d3d3"
+                                : "#808080",
+                              fontSize: "2rem",
+                              cursor: "pointer",
+                            }}
+                          ></i>
+                        </Button>
+                      </Grid>
                     ))}
-                  </Box>
+                    <Grid item xs={1} />
+                    {row.slice(3, 6).map((seat) => (
+                      <Grid
+                        item
+                        key={seat.id}
+                        xs={1}
+                        display="flex"
+                        justifyContent="center"
+                      >
+                        <Button
+                          disableRipple
+                          disabled={!seat.available}
+                          sx={{
+                            width: 50,
+                            height: 50,
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                              cursor: "default",
+                            },
+                          }}
+                        >
+                          <i
+                            onClick={() =>
+                              seat.available && toggleSeatSelection(seat.id)
+                            }
+                            className="fa-solid fa-loveseat"
+                            style={{
+                              color: seat.available
+                                ? seat.selected
+                                  ? "#1e90ff"
+                                  : "#d3d3d3"
+                                : "#808080",
+                              fontSize: "2rem",
+                              cursor: "pointer",
+                            }}
+                          ></i>
+                        </Button>
+                      </Grid>
+                    ))}
+                  </Grid>
                 ))}
+              </Box>
+              <Box marginTop="40px">
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap="10px"
+                  justifyContent="center"
+                >
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap="10px"
+                    justifyContent="center"
+                  >
+                    <i
+                      className="fa-solid fa-loveseat"
+                      style={{
+                        color: "#1e90ff",
+                        fontSize: "2rem",
+                      }}
+                    ></i>
+                    <Typography fontSize="1.2rem">
+                      Seats you've selected
+                    </Typography>
+                  </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap="10px"
+                    justifyContent="center"
+                  >
+                    <i
+                      className="fa-solid fa-loveseat"
+                      style={{
+                        color: "#d3d3d3",
+                        fontSize: "2rem",
+                      }}
+                    ></i>
+                    <Typography fontSize="1.2rem">
+                      Seats have not been booked
+                    </Typography>
+                  </Box>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    gap="10px"
+                    justifyContent="center"
+                  >
+                    <i
+                      className="fa-solid fa-loveseat"
+                      style={{
+                        color: "gray",
+                        fontSize: "2rem",
+                      }}
+                    ></i>
+                    <Typography fontSize="1.2rem">
+                      Seats have been booked
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
             </Box>
             <Box
-              padding="20px"
-              display="flex"
-              flexDirection="column"
-              gap="10px"
-              justifyContent="center"
-            >
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="10px"
-                justifyContent="center"
-              >
-                <i
-                  className="fa-solid fa-loveseat"
-                  style={{
-                    color: "#1e90ff",
-                    fontSize: "2rem",
-                  }}
-                ></i>
-                <Typography fontSize="1.2rem">Seats you've selected</Typography>
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="10px"
-                justifyContent="center"
-              >
-                <i
-                  className="fa-solid fa-loveseat"
-                  style={{
-                    color: "white",
-                    fontSize: "2rem",
-                  }}
-                ></i>
-                <Typography fontSize="1.2rem">
-                  Seats have not been booked
-                </Typography>
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="10px"
-                justifyContent="center"
-              >
-                <i
-                  className="fa-solid fa-loveseat"
-                  style={{
-                    color: "gray",
-                    fontSize: "2rem",
-                  }}
-                ></i>
-                <Typography fontSize="1.2rem">
-                  Seats have been booked
-                </Typography>
-              </Box>
-            </Box>
-            <Button
-              onClick={handleNext}
-              fullWidth
-              disabled={selectedSeats.length === 0}
               sx={{
-                marginTop: "40px",
-                backgroundColor: selectedSeats.length > 0 ? "blue" : "gray",
-                borderRadius: "8px",
-                color: "white",
-                "&:disabled": {
-                  color: "lightgray",
-                },
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
               }}
             >
-              Next
-            </Button>
+              <Button
+                onClick={handleNext}
+                fullWidth
+                disabled={selectedSeats.length === 0}
+                sx={{
+                  marginTop: "40px",
+                  marginBottom: "40px",
+                  backgroundColor:
+                    selectedSeats.length > 0 ? "#1e90ff" : "#d3d3d3",
+                  borderRadius: "8px",
+                  color: selectedSeats.length > 0 ? "white" : "black",
+                  width: "150px",
+                  fontSize: "1rem",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "all 0.3s ease",
+                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
+                }}
+              >
+                Next
+              </Button>
+            </Box>
           </Box>
 
           <Box
