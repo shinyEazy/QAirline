@@ -1,11 +1,4 @@
-import {
-  Box,
-  Typography,
-  Button,
-  Divider,
-  ToggleButtonGroup,
-  ToggleButton,
-} from "@mui/material";
+import { Box, Typography, Button, Divider } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import Step from "components/flight-booking/Step";
@@ -14,32 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import useBookingPayload from "hooks/booking-hook";
 
+interface PriceSummary {
+  [className: string]: {
+    count: number;
+    total: number;
+  };
+}
+
 const SEAT_PRICE = 100;
 const totalSeatsPerClass = 36;
-
-const toggleButtonStyles = {
-  width: "150px",
-  backgroundColor: "white",
-  color: "black",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  borderRadius: "8px",
-  padding: "10px 20px",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  "&:hover": { backgroundColor: "#1e90ff", color: "white" },
-  "&:focus": {
-    color: "white",
-    outline: "none",
-    backgroundColor: "#1e90ff",
-  },
-  "&:focus:hover": {
-    backgroundColor: "#1e90ff",
-  },
-  "&:blur": {
-    backgroundColor: "white", // Return to original color when blurred
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Optional: Reset shadow on blur
-  },
-};
 
 const FlightSeat = () => {
   const navigate = useNavigate();
@@ -69,7 +45,7 @@ const FlightSeat = () => {
     return rows;
   }, [seats, selectedClass]);
 
-  const toggleSeatSelection = (id) => {
+  const toggleSeatSelection = (id: number) => {
     setSeats((prevSeats) =>
       prevSeats.map((seat) =>
         seat.id === id ? { ...seat, selected: !seat.selected } : seat
@@ -78,25 +54,33 @@ const FlightSeat = () => {
   };
 
   const selectedSeats = useMemo(
-    () => seats.filter((seat) => seat.selected && seat.class === selectedClass),
-    [seats, selectedClass]
+    () => seats.filter((seat) => seat.selected),
+    [seats]
   );
 
-  const totalPrice = useMemo(
-    () => selectedSeats.length * SEAT_PRICE,
-    [selectedSeats]
-  );
+  const priceSummary = useMemo<PriceSummary>(() => {
+    const classPrices = {
+      Economy: SEAT_PRICE,
+      Business: SEAT_PRICE * 1.5,
+      "First Class": SEAT_PRICE * 2,
+    };
+
+    return seats.reduce((acc, seat) => {
+      if (seat.selected) {
+        if (!acc[seat.class]) acc[seat.class] = { count: 0, total: 0 };
+        acc[seat.class].count += 1;
+        acc[seat.class].total +=
+          classPrices[seat.class as keyof typeof classPrices];
+      }
+      return acc;
+    }, {} as PriceSummary);
+  }, [seats]);
 
   const handleNext = () => {
     setFlightClass(selectedClass);
     navigate("/flight-booking");
   };
 
-  const handleClassChange = (event, newClass) => {
-    if (newClass !== null) {
-      setSelectedClass(newClass);
-    }
-  };
   const [focusedButton, setFocusedButton] = useState<string | null>(null);
 
   const handleClassFocus = (value: string) => setFocusedButton(value);
@@ -240,7 +224,7 @@ const FlightSeat = () => {
                     fontSize: "2rem",
                   }}
                 ></i>
-                <Typography fontSize="1.2rem">Seat you selected</Typography>
+                <Typography fontSize="1.2rem">Seats you've selected</Typography>
               </Box>
               <Box
                 display="flex"
@@ -256,7 +240,7 @@ const FlightSeat = () => {
                   }}
                 ></i>
                 <Typography fontSize="1.2rem">
-                  Seat have not been booked
+                  Seats have not been booked
                 </Typography>
               </Box>
               <Box
@@ -272,7 +256,9 @@ const FlightSeat = () => {
                     fontSize: "2rem",
                   }}
                 ></i>
-                <Typography fontSize="1.2rem">Seat have been booked</Typography>
+                <Typography fontSize="1.2rem">
+                  Seats have been booked
+                </Typography>
               </Box>
             </Box>
             <Button
@@ -312,20 +298,34 @@ const FlightSeat = () => {
               }}
             >
               <Typography variant="h6">Price Summary</Typography>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                marginTop="20px"
-              >
-                <Typography>Seat x {selectedSeats.length}</Typography>
-                <Typography>{totalPrice}$</Typography>
+              <Box marginTop="20px">
+                {Object.entries(priceSummary).map(
+                  ([className, { count, total }]) => (
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      marginBottom="10px"
+                      key={className}
+                    >
+                      <Typography>
+                        {className} x {count}
+                      </Typography>
+                      <Typography>{total}$</Typography>
+                    </Box>
+                  )
+                )}
               </Box>
+
               <Divider sx={{ margin: "20px 0" }} />
-              <Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography>Total</Typography>
-                  <Typography>{totalPrice}$</Typography>
-                </Box>
+              <Box display="flex" justifyContent="space-between">
+                <Typography>Total</Typography>
+                <Typography>
+                  {Object.values(priceSummary).reduce(
+                    (acc, { total }) => acc + total,
+                    0
+                  )}
+                  $
+                </Typography>
               </Box>
             </Box>
           </Box>
