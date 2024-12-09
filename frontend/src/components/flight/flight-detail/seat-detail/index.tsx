@@ -12,7 +12,7 @@ interface SeatOwner {
   gender: boolean;
 }
 
-const UserDetail = () => {
+const SeatDetail = () => {
   const [seatOwners, setSeatOwners] = useState<SeatOwner[]>([
     {
       id: "A1",
@@ -282,4 +282,4 @@ const textFieldStyles = {
   },
 };
 
-export default UserDetail;
+export default SeatDetail;

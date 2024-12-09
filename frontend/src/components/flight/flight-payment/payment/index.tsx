@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-const Pay = () => {
+const Payment = () => {
   const [paymentOption, setPaymentOption] = useState("payLater");
 
   const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +56,7 @@ const Pay = () => {
               borderRadius: "12px",
             }}
           >
-            <img src="qr.png" />
+            <img src="/qr.png" />
           </Box>
         </Collapse>
       </RadioGroup>
@@ -64,4 +64,4 @@ const Pay = () => {
   );
 };
 
-export default Pay;
+export default Payment;

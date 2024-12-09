@@ -57,7 +57,9 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
     if (tripType === "roundtrip") {
       searchParams.append("return_date", returning.toISOString().split("T")[0]);
     }
-    fetch(`http://localhost:8000/api/flights/search/?${searchParams.toString()}`)
+    fetch(
+      `http://localhost:8000/api/flights/search/?${searchParams.toString()}`
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log("Data:", data);
@@ -66,7 +68,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
       .catch((error) => {
         console.error("Error fetching flights:", error);
       });
-    // naviagate('/flight-listing?${searchParams.toString()}');
+    // naviagate('/flight/list?${searchParams.toString()}');
   };
   return (
     <Box
@@ -429,7 +431,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
                     <DatePicker
                       selected={returning}
                       onChange={(date) => {
-                        if (date) setReturning(date)
+                        if (date) setReturning(date);
                       }}
                       dateFormat="MMM d, yyyy"
                       customInput={
