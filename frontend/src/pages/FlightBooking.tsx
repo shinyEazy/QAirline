@@ -1,7 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
-import Step from "components/flight-booking/Step";
+import StepFlightBooking from "components/flight-booking/step-flight-booking";
 import UserDetail from "components/flight-booking/UserDetail";
 import BookingDetail from "components/flight-booking/BookingDetail";
 import Price from "components/flight-booking/Price";
@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import useBookingPayload from "hooks/booking-hook";
-import axios from '../hooks/axios-config';
+import axios from "../hooks/axios-config";
+
 const FlightBooking = () => {
   const navigate = useNavigate();
 
@@ -28,62 +29,70 @@ const FlightBooking = () => {
       //   navigate("/payment");
       // }
       console.log(data);
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error create booking", error);
       throw error;
     }
-
-  }
+  };
   return (
     <div>
       <Header />
-      <Typography
-        display="flex"
-        width="100%"
-        alignItems="center"
-        textAlign="center"
-        justifyContent="center"
-        height="300px"
-      >
-        Flight Booking
-      </Typography>
-
-      <Box
-        display="flex"
-        gap="40px"
-        sx={{
-          margin: "20px 80px 80px",
-        }}
-      >
+      <Box bgcolor="rgb(234,234,234)">
         <Box
+          display="flex"
+          gap="40px"
           sx={{
-            flexBasis: "60%",
+            margin: "0px 80px 0px",
           }}
         >
-          <Step />
-          <UserDetail />
-          <Button
-            onClick={handleNext}
-            fullWidth
+          <Box
             sx={{
               marginTop: "40px",
-              backgroundColor: "blue",
-              borderRadius: "8px",
-              color: "white",
+              flexBasis: "70%",
             }}
           >
-            Next
-          </Button>
-        </Box>
-        <Box
-          sx={{
-            flexBasis: "40%",
-            minWidth: "250px",
-          }}
-        >
-          <BookingDetail />
-          <Price />
+            <StepFlightBooking />
+            <UserDetail />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
+              }}
+            >
+              <Button
+                onClick={handleNext}
+                fullWidth
+                sx={{
+                  marginTop: "40px",
+                  marginBottom: "40px",
+                  backgroundColor: "#1e90ff",
+                  borderRadius: "8px",
+                  color: "white",
+                  width: "150px",
+                  fontSize: "1rem",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "all 0.3s ease",
+                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
+                }}
+              >
+                Next
+              </Button>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              marginTop: "40px",
+              flexBasis: "40%",
+              minWidth: "250px",
+            }}
+          >
+            <BookingDetail />
+            <Price />
+          </Box>
         </Box>
       </Box>
       <Footer />

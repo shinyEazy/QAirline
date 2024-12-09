@@ -129,7 +129,7 @@ const UserDetail = () => {
             }
             variant="outlined"
             sx={textFieldStyles}
-          />{" "}
+          />
           <TextField
             fullWidth
             label="Gender*"
@@ -202,8 +202,32 @@ const UserDetail = () => {
         >
           <Button
             variant="outlined"
+            disableRipple
             disabled={currentSeatIndex === 0}
             onClick={() => handleNavigation("prev")}
+            sx={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              color: "#1e90ff",
+              width: "150px",
+              fontSize: "1rem",
+              textTransform: "none",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              border: "1px solid #1e90ff",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#1e90ff",
+                color: "white ",
+                border: "1px solid #1e90ff",
+              },
+              "&:disabled": {
+                backgroundColor: "white",
+                color: "white",
+                border: "1px solid white",
+                boxShadow: "none",
+              },
+            }}
           >
             Previous
           </Button>
@@ -211,6 +235,29 @@ const UserDetail = () => {
             variant="outlined"
             disabled={currentSeatIndex === seatOwners.length - 1}
             onClick={() => handleNavigation("next")}
+            sx={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              color: "#1e90ff",
+              width: "150px",
+              fontSize: "1rem",
+              textTransform: "none",
+              border: "1px solid #1e90ff",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#1e90ff",
+                color: "white ",
+                border: "1px solid #1e90ff",
+              },
+              "&:disabled": {
+                backgroundColor: "white",
+                color: "white",
+                border: "1px solid white",
+                boxShadow: "none",
+              },
+            }}
           >
             Next
           </Button>
@@ -224,15 +271,14 @@ const textFieldStyles = {
   margin: "auto",
   "& .MuiOutlinedInput-root": {
     borderRadius: "8px",
-    "& fieldset": {
-      borderColor: "#bdbdbd",
-    },
-    "&:hover fieldset": {
-      borderColor: "black",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "rgb(99,91,255)",
-    },
+    "& fieldset": { borderColor: "#b0c4de" },
+    "&:hover fieldset": { borderColor: "#1e90ff" },
+    "&.Mui-focused fieldset": { borderColor: "#1e90ff" },
+  },
+
+  "& .MuiInputLabel-shrink": {
+    backgroundColor: "white",
+    padding: "0 4px",
   },
 };
 
