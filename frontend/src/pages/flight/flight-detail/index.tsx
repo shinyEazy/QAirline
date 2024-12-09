@@ -1,25 +1,43 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
-import Step from "components/payment/Step";
-import BookingDetail from "components/flight-booking/BookingDetail";
-import Price from "components/flight-booking/Price";
-import Pay from "components/payment/Pay";
+import StepFlightDetail from "components/flight/flight-detail/step-flight-detaill";
+import SeatDetail from "components/flight/flight-detail/seat-detail";
+import FlightRoute from "components/flight/flight-detail/flight-route";
+import Price from "components/flight/flight-detail/price";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import StepFlightPayment from "components/flight-payment/step-fight-payment";
+import useBookingPayload from "hooks/booking-hook";
+import axios from "../../../hooks/axios-config";
 
-const Payment = () => {
+const FlightDetail = () => {
   const navigate = useNavigate();
+
   const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
+  const { getPayload } = useBookingPayload();
+  const handleNext = async () => {
+    navigate("/flight/payment");
+    // const payload = getPayload();
+    // try {
+    //   const response = await axios.post("/api/booking/", payload);
+    //   const data = response.data;
+    //   // if (data) {
+    //   //   navigate("/flight/payment");
+    //   // }
+    //   console.log(data);
+    // } catch (error) {
+    //   console.error("Error create booking", error);
+    //   throw error;
+    // }
+  };
 
   return (
-    <Box>
+    <div>
       <Header />
       <Box bgcolor="rgb(234,234,234)">
         <Box
@@ -35,8 +53,8 @@ const Payment = () => {
               flexBasis: "70%",
             }}
           >
-            <StepFlightPayment />
-            <Pay />
+            <StepFlightDetail />
+            <SeatDetail />
             <Box
               sx={{
                 display: "flex",
@@ -45,7 +63,7 @@ const Payment = () => {
               }}
             >
               <Button
-                onClick={() => navigate("/flight-booking")}
+                onClick={() => navigate("/flight/seat")}
                 fullWidth
                 sx={{
                   marginTop: "40px",
@@ -66,7 +84,7 @@ const Payment = () => {
                 Back
               </Button>
               <Button
-                onClick={() => navigate("/")}
+                onClick={handleNext}
                 fullWidth
                 sx={{
                   marginTop: "40px",
@@ -84,7 +102,7 @@ const Payment = () => {
                   "&:hover": { backgroundColor: "#2177cb", color: "white" },
                 }}
               >
-                Submit
+                Next
               </Button>
             </Box>
           </Box>
@@ -93,17 +111,16 @@ const Payment = () => {
               marginTop: "40px",
               flexBasis: "40%",
               minWidth: "250px",
-              marginBottom: "80px",
             }}
           >
-            <BookingDetail />
+            <FlightRoute />
             <Price />
           </Box>
         </Box>
       </Box>
       <Footer />
-    </Box>
+    </div>
   );
 };
 
-export default Payment;
+export default FlightDetail;

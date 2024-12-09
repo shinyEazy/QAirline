@@ -1,8 +1,8 @@
 import { Box, Typography, Button, Divider, Grid } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
-import StepFlightSeat from "components/flight-seat/step-flight-seat.tsx";
-import BookingDetail from "components/flight-booking/BookingDetail";
+import StepFlightSeat from "components/flight/flight-seat/step-flight-seat";
+import FlightRoute from "components/flight/flight-detail/flight-route";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import useBookingPayload from "hooks/booking-hook";
@@ -27,10 +27,10 @@ const FlightSeat = () => {
       id: i + 1,
       class:
         i < totalSeatsPerClass
-          ? "Business"
+          ? "Economy"
           : i < totalSeatsPerClass * 2
-          ? "First Class"
-          : "Economy",
+          ? "Business"
+          : "First Class",
       available: i % 4 !== 0,
       selected: false,
     }))
@@ -78,7 +78,7 @@ const FlightSeat = () => {
 
   const handleNext = () => {
     setFlightClass(selectedClass);
-    navigate("/flight-booking");
+    navigate("/flight/detail");
   };
 
   const [focusedButton, setFocusedButton] = useState<string | null>(null);
@@ -366,7 +366,7 @@ const FlightSeat = () => {
               }}
             >
               <Button
-                onClick={() => navigate("/flight-listing")}
+                onClick={() => navigate("/flight/list")}
                 fullWidth
                 sx={{
                   marginTop: "40px",
@@ -419,7 +419,7 @@ const FlightSeat = () => {
               minWidth: "250px",
             }}
           >
-            <BookingDetail />
+            <FlightRoute />
             <Box
               sx={{
                 backgroundColor: "white",

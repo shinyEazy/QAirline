@@ -4,17 +4,18 @@ import Login from "pages/auth/login";
 import Auth from "pages/auth";
 import SignUp from "pages/auth/signup";
 import Recovery from "pages/auth/recovery";
-import FlightListing from "pages/FlightListing";
-import FlightBooking from "pages/FlightBooking";
-import Payment from "pages/Payment";
 import AdminPage from "pages/admin";
 import AdminLogin from "pages/admin/login";
 import AdminAuthWrapper from "wrappers/admin-auth";
 // import UserAuthWrapper from "wrappers/user-auth";
-import FlightSeat from "pages/flight-seat";
+import FlightSeat from "pages/flight/flight-seat";
 import UserPage from "pages/user";
 import BookedTickets from "pages/user/booked-tickets";
 import PaymentHistory from "pages/user/payment-history";
+import Flight from "pages/flight";
+import FlightList from "pages/flight/flight-list";
+import FlightDetail from "pages/flight/flight-detail";
+import FlightPayment from "pages/flight/flight-payment";
 
 const routes = [
   {
@@ -70,21 +71,28 @@ const routes = [
     path: "*",
     component: NoFoundPage,
   },
+
   {
-    path: "/flight-listing",
-    component: FlightListing,
-  },
-  {
-    path: "/flight-seat",
-    component: FlightSeat,
-  },
-  {
-    path: "/flight-booking",
-    component: FlightBooking,
-  },
-  {
-    path: "/payment",
-    component: Payment,
+    path: "/flight",
+    component: Flight,
+    routes: [
+      {
+        path: "list",
+        component: FlightList,
+      },
+      {
+        path: "seat",
+        component: FlightSeat,
+      },
+      {
+        path: "detail",
+        component: FlightDetail,
+      },
+      {
+        path: "payment",
+        component: FlightPayment,
+      },
+    ],
   },
 ];
 

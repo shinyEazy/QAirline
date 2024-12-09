@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from "@mui/material";
 
-const BookingDetail = () => {
+const FlightRoute = () => {
   return (
     <Box
       sx={{
@@ -72,4 +72,4 @@ const BookingDetail = () => {
   );
 };
 
-export default BookingDetail;
+export default FlightRoute;
