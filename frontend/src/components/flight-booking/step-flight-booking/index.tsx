@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const Step = () => {
+const StepFlightBooking = () => {
   const navigate = useNavigate();
   return (
     <Box
@@ -32,6 +32,20 @@ const Step = () => {
         </Typography>
       </Box>
       <Box display="flex" alignItems="center">
+        <FontAwesomeIcon
+          onClick={() => navigate("/flight-seat")}
+          icon={faCircleCheck}
+          style={{
+            color: "rgb(77,115,252)",
+            fontSize: "40px",
+            cursor: "pointer",
+          }}
+        />
+        <Typography variant="h6" sx={{ marginLeft: 1 }}>
+          Choose Seat
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center">
         <Button
           disableRipple
           sx={{
@@ -48,35 +62,8 @@ const Step = () => {
             },
           }}
         >
-          2
-        </Button>
-        <Typography variant="h6" sx={{ marginLeft: 1 }}>
-          Choose Seat
-        </Typography>
-      </Box>
-      <Box display="flex" alignItems="center">
-        <Button
-          disabled
-          sx={{
-            fontSize: "1.3rem",
-            color: "black",
-            borderRadius: "50%",
-            border: "2px solid black",
-            minWidth: "40px",
-            height: "40px",
-            padding: 0,
-            "&:hover": {
-              boxShadow: "none",
-            },
-            cursor: "not-allowed",
-            "&.Mui-disabled": {
-              color: "black",
-            },
-          }}
-        >
           3
         </Button>
-
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
           Enter Details
         </Typography>
@@ -111,4 +98,4 @@ const Step = () => {
   );
 };
 
-export default Step;
+export default StepFlightBooking;

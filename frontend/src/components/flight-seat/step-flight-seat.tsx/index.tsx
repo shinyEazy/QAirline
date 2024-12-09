@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const Step = () => {
+const StepFlightSeat = () => {
   const navigate = useNavigate();
   return (
     <Box
@@ -111,4 +111,4 @@ const Step = () => {
   );
 };
 
-export default Step;
+export default StepFlightSeat;
