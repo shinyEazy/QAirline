@@ -1,7 +1,7 @@
 import { Box, Typography, Button, Divider, Grid } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
-import Step from "components/flight-booking/Step";
+import StepFlightSeat from "components/flight-seat/step-flight-seat.tsx";
 import BookingDetail from "components/flight-booking/BookingDetail";
 import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
@@ -117,7 +117,7 @@ const FlightSeat = () => {
               flexBasis: "70%",
             }}
           >
-            <Step />
+            <StepFlightSeat />
             <Box
               sx={{
                 display: "flex",
