@@ -8,6 +8,7 @@ import Pay from "components/payment/Pay";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import StepFlightPayment from "components/flight-payment/step-fight-payment";
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -20,64 +21,84 @@ const Payment = () => {
   return (
     <Box>
       <Header />
-      <Typography
-        display="flex"
-        width="100%"
-        alignItems="center"
-        textAlign="center"
-        justifyContent="center"
-        height="300px"
-      >
-        Flight Booking
-      </Typography>
-
-      <Box
-        display="flex"
-        gap="40px"
-        sx={{
-          margin: "20px 80px 80px",
-        }}
-      >
+      <Box bgcolor="rgb(234,234,234)">
         <Box
+          display="flex"
+          gap="40px"
           sx={{
-            flexBasis: "60%",
+            margin: "0px 80px 0px",
           }}
         >
-          <Step />
-          <Pay />
-          <Box display="flex" gap="40px" marginTop="40px">
-            <Button
-              onClick={() => navigate("/flight-booking")}
-              fullWidth
+          <Box
+            sx={{
+              marginTop: "40px",
+              flexBasis: "70%",
+            }}
+          >
+            <StepFlightPayment />
+            <Pay />
+            <Box
               sx={{
-                backgroundColor: "blue",
-                borderRadius: "8px",
-                color: "white",
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
-              Back
-            </Button>
-            <Button
-              onClick={() => navigate("/")}
-              fullWidth
-              sx={{
-                backgroundColor: "blue",
-                borderRadius: "8px",
-                color: "white",
-              }}
-            >
-              Submit
-            </Button>
+              <Button
+                onClick={() => navigate("/flight-booking")}
+                fullWidth
+                sx={{
+                  marginTop: "40px",
+                  marginBottom: "40px",
+                  backgroundColor: "#1e90ff",
+                  borderRadius: "8px",
+                  color: "white",
+                  width: "150px",
+                  fontSize: "1rem",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "all 0.3s ease",
+                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
+                }}
+              >
+                Back
+              </Button>
+              <Button
+                onClick={() => navigate("/")}
+                fullWidth
+                sx={{
+                  marginTop: "40px",
+                  marginBottom: "40px",
+                  backgroundColor: "#1e90ff",
+                  borderRadius: "8px",
+                  color: "white",
+                  width: "150px",
+                  fontSize: "1rem",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "all 0.3s ease",
+                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
+                }}
+              >
+                Submit
+              </Button>
+            </Box>
           </Box>
-        </Box>
-        <Box
-          sx={{
-            flexBasis: "40%",
-            minWidth: "250px",
-          }}
-        >
-          <BookingDetail />
-          <Price />
+          <Box
+            sx={{
+              marginTop: "40px",
+              flexBasis: "40%",
+              minWidth: "250px",
+              marginBottom: "80px",
+            }}
+          >
+            <BookingDetail />
+            <Price />
+          </Box>
         </Box>
       </Box>
       <Footer />
