@@ -21,19 +21,21 @@ const FlightBooking = () => {
   }, [location]);
   const { getPayload } = useBookingPayload();
   const handleNext = async () => {
-    const payload = getPayload();
-    try {
-      const response = await axios.post("/api/booking/", payload);
-      const data = response.data;
-      // if (data) {
-      //   navigate("/payment");
-      // }
-      console.log(data);
-    } catch (error) {
-      console.error("Error create booking", error);
-      throw error;
-    }
+    navigate("/payment");
+    // const payload = getPayload();
+    // try {
+    //   const response = await axios.post("/api/booking/", payload);
+    //   const data = response.data;
+    //   // if (data) {
+    //   //   navigate("/payment");
+    //   // }
+    //   console.log(data);
+    // } catch (error) {
+    //   console.error("Error create booking", error);
+    //   throw error;
+    // }
   };
+
   return (
     <div>
       <Header />
@@ -56,10 +58,31 @@ const FlightBooking = () => {
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
                 width: "100%",
               }}
             >
+              <Button
+                onClick={() => navigate("/flight-seat")}
+                fullWidth
+                sx={{
+                  marginTop: "40px",
+                  marginBottom: "40px",
+                  backgroundColor: "#1e90ff",
+                  borderRadius: "8px",
+                  color: "white",
+                  width: "150px",
+                  fontSize: "1rem",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "all 0.3s ease",
+                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
+                }}
+              >
+                Back
+              </Button>
               <Button
                 onClick={handleNext}
                 fullWidth

@@ -361,10 +361,31 @@ const FlightSeat = () => {
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
                 width: "100%",
               }}
             >
+              <Button
+                onClick={() => navigate("/flight-listing")}
+                fullWidth
+                sx={{
+                  marginTop: "40px",
+                  marginBottom: "40px",
+                  backgroundColor: "#1e90ff",
+                  borderRadius: "8px",
+                  color: "white",
+                  width: "150px",
+                  fontSize: "1rem",
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  transition: "all 0.3s ease",
+                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
+                }}
+              >
+                Back
+              </Button>
               <Button
                 onClick={handleNext}
                 fullWidth
