@@ -12,4 +12,22 @@ export async function fetchFlights() {
     console.error("Error fetching flights", error);
     throw error;
   }
-} 
+}
+
+export async function createFlight(flightData: {
+  flight_number: string;
+  registration_number: string;
+  estimated_departure_time: string;
+  estimated_arrival_time: string;
+  destination_airport_id: number;
+  flight_price: number;
+  status: string;
+}) {
+  try {
+    const response = await axios.post("/api/flights/", flightData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating flight", error);
+    throw error;
+  }
+}

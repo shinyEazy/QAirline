@@ -10,20 +10,20 @@ import {
   TextField,
 } from "@mui/material";
 import FlightList from "../../components/admin/flight-list";
-
+import { createFlight } from "../../hooks/flight-hook";
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
   const [airplaneModalOpen, setAirplaneModalOpen] = useState(false);
   const [newsModalOpen, setNewsModalOpen] = useState(false);
 
   const [newFlight, setNewFlight] = useState({
-    flightId: "",
-    airplaneId: "",
+    flightNumber: "",
+    airplaneRegistrationNumber: "",
     departure: "",
     destination: "",
     departureTime: "",
     arrivalTime: "",
-    price: "",
+    price: 0.0,
   });
 
   const [newAirplane, setNewAirplane] = useState({
@@ -43,13 +43,13 @@ const AdminPage = () => {
   const handleFlightModalClose = () => {
     setFlightModalOpen(false);
     setNewFlight({
-      flightId: "",
-      airplaneId: "",
+      flightNumber: "",
+      airplaneRegistrationNumber: "",
       departure: "",
       destination: "",
       departureTime: "",
       arrivalTime: "",
-      price: "",
+      price: 0.0,
     });
   };
 
@@ -86,11 +86,26 @@ const AdminPage = () => {
     setNewNews({ ...newNews, [field]: value });
   };
 
-  const handleSaveFlight = () => {
-    console.log("New Flight Data:", newFlight);
-    // Logic to save the new flight
-    handleFlightModalClose();
+  const handleSaveFlight = async () => {
+    try {
+      const payload = {
+        flight_number: newFlight.flightNumber,
+        registration_number: newFlight.airplaneRegistrationNumber,
+        estimated_departure_time: newFlight.departureTime,
+        estimated_arrival_time: newFlight.arrivalTime,
+        destination_airport_id: 30, // Assuming it's a number
+        flight_price: newFlight.price,
+        status: "Scheduled", // Default status or you can add a field in the UI to select this
+      };
+
+      const createdFlight = await createFlight(payload);
+      console.log("Flight created successfully:", createdFlight);
+      handleFlightModalClose();
+    } catch (error) {
+      console.error("Failed to save flight:", error);
+    }
   };
+
 
   const handleSaveAirplane = () => {
     console.log("New Airplane Data:", newAirplane);
@@ -164,18 +179,18 @@ const AdminPage = () => {
         <DialogTitle>Add New Flight</DialogTitle>
         <DialogContent>
           <TextField
-            label="Flight ID"
+            label="Flight Number"
             fullWidth
             margin="dense"
-            value={newFlight.flightId}
-            onChange={(e) => handleFlightChange("flightId", e.target.value)}
+            value={newFlight.flightNumber}
+            onChange={(e) => handleFlightChange("flightNumber", e.target.value)}
           />
           <TextField
             label="Airplane Registration Number"
             fullWidth
             margin="dense"
-            value={newFlight.airplaneId}
-            onChange={(e) => handleFlightChange("airplaneId", e.target.value)}
+            value={newFlight.airplaneRegistrationNumber}
+            onChange={(e) => handleFlightChange("airplaneRegistrationNumber", e.target.value)}
           />
           <TextField
             label="Departure"
