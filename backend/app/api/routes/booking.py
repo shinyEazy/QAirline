@@ -70,11 +70,12 @@ def create_booking_end_point(
             detail=f"Invalid flight class value: {booking.flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
         )
 
-    db_booking, total_price = create_booking(user, booking, db)
-
+    db_booking = create_booking(user, booking, db)
+    
+    print("Type of db_booking:", type(db_booking))
+    print("db_booking:", db_booking)
     return {
         "booking": db_booking,
-        "total_price": total_price,
         "user_id": user.user_id,
     }
 

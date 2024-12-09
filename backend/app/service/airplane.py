@@ -1,3 +1,7 @@
+from schemas.flight import FlightCreate
+from schemas.flight_seat import FlightSeatsCreate
+from service.flight_seat import create_flight_seat
+from service.service_utils import conint
 from sqlalchemy.orm import Session, joinedload
 from app.schemas import (
     AirplaneModelCreate,
@@ -7,7 +11,7 @@ from app.schemas import (
     AirplaneInfo,
 )
 from .crud_utils import *
-from app.models import AirplaneModel, Airplane, Airport
+from app.models import AirplaneModel, Airplane, Airport, Flight
 from typing import List
 
 
@@ -41,7 +45,9 @@ def delete_airplane_model(
 
 # CRUD for Airplane
 def create_airplane(db: Session, airplane: AirplaneCreate) -> Airplane:
-    return create(Airplane, db, airplane.model_dump())
+    db_airplane = create(Airplane, db, airplane.model_dump())
+    create_flight_seats_for_airplane(airplane, db_airplane,db)
+    return db_airplane
 
 
 def get_airplane_by_registration_number(db: Session, registration_number:str) -> Airplane:
@@ -94,3 +100,15 @@ def get_airplane_by_city(db: Session, city: str) -> List[AirplaneInfo]:
         for airplane in airplanes
     ]
     return result
+
+
+def create_flight_seats_for_airplane(
+    airplane: AirplaneCreate, db_airplane: Airplane, db: Session
+):
+    flight_seats: List[FlightSeatsCreate] = airplane.flight_seats
+
+    for flight_seat in flight_seats:
+        flight_seat.registration_number = conint(db_airplane.registration_number)
+        create_flight_seat(db, flight_seat)
+
+    return {"message": "flight successfully created"}

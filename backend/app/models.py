@@ -33,7 +33,7 @@ class FlightStatus(PyEnum):
     OnTime = "On Time"
     Delayed = "Delayed"
     Cancelled = "Cancelled"
-    Scheduled = "Scheduled"
+    Landed = "Landed"
 
 
 class User(Base):
@@ -138,6 +138,7 @@ class Flight(Base):
     destination_airport_id = Column(
         Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
     )
+    flight_price = Column(Float, nullable=True)
     status = Column(String)
 
 
@@ -185,11 +186,11 @@ class FlightSeats(Base):
     __tablename__ = "flight_seats"
 
     flight_seats_id = Column(Integer, primary_key=True, index=True)
-    flight_id = Column(
-        Integer, ForeignKey("flight.flight_id", ondelete="CASCADE"), nullable=False
+    registration_number = Column(
+        String, ForeignKey("airplane.registration_number", ondelete="CASCADE"), nullable=False
     )
     flight_class = Column(String, nullable=False)
-    flight_price = Column(Float, nullable=True)
+    class_multiplier = Column(Float, nullable=False)
     child_multiplier = Column(Float, nullable=True)
     max_row_seat = Column(Integer, nullable=False)
     max_col_seat = Column(String, nullable=False)

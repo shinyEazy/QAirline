@@ -1,5 +1,6 @@
 from .base import SchemaModel
-
+from .flight_seat import FlightSeatsBase as FlightSeats, FlightSeatsCreate
+from typing import List
 
 class AirplaneModelBase(SchemaModel):
     airplane_model_id: int
@@ -31,6 +32,7 @@ class AirplaneCreate(SchemaModel):
     airplane_model_id: int
     registration_number: str
     current_airport_id: int
+    flight_seats: List[FlightSeatsCreate]
 
 
 class AirplaneUpdate(SchemaModel):

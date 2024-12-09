@@ -37,7 +37,7 @@ def create_flight(db: Session, flight: FlightCreate) -> Flight:
     flight_data["departure_airport_id"] = airplane.current_airport_id
     db_flight = create(Flight, db, flight_data)
 
-    create_flight_seats_for_flight(flight, db_flight, db)
+    # create_flight_seats_for_flight(flight, db_flight, db)
 
     return db_flight
 
@@ -221,13 +221,11 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
     return seat_matrix
 
 
-def create_flight_seats_for_flight(
-    flight: FlightCreate, db_flight: Flight, db: Session
-):
-    flight_seats: List[FlightSeatsCreate] = flight.flight_seats
+def get_flight_price(flight_id: int, flight_class: str, db: Session) -> float:
+    """
+    Get the price of a flight in a given class
+    """
+    flight = get_flight(db, flight_id)
+    flight_seats = get_flight_seat_by_flight_id_and_class(db, flight_id, flight_class)
 
-    for flight_seat in flight_seats:
-        flight_seat.flight_id = conint(db_flight.flight_id)
-        create_flight_seat(db, flight_seat)
-
-    return {"message": "flight successfully created"}
+    return flight_seats.class_multiplier * flight.flight_price

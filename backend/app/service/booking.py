@@ -35,9 +35,8 @@ def get_booking(booking_id: int, db: Session) -> Booking:
     return db_booking
 
 
-from typing import Tuple
 
-def create_booking(user: User, booking: BookingCreate, db: Session) -> Tuple[Booking, int]:
+def create_booking(user: User, booking: BookingCreate, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'INSERT INTO booking values ()'
     When creating the booking, we need to ensure that the passenger_id and flight_id are valid
@@ -67,10 +66,7 @@ def create_booking(user: User, booking: BookingCreate, db: Session) -> Tuple[Boo
         )
 
     create_booking_passengers(booking, db_booking, db)
-
-    total_price = calculate_price(booking, db_booking, db)
-
-    return (db_booking, total_price)
+    return db_booking
 
 
 def update_booking(db_booking: Booking, booking: BookingUpdate, db: Session) -> Booking:
@@ -173,12 +169,21 @@ def create_booking_passengers(booking: BookingCreate, db_booking: Booking, db: S
 def check_valid_passenger_seats(
     booking: BookingCreate, passenger: PassengerBase, db: Session
 ):
+    # First, get the registration number of the flight
+    flight = db.query(Flight).filter(Flight.flight_id == booking.flight_id).first()
+    if not flight:
+        raise HTTPException(status_code=404, detail="Flight not found.")
+    
+    # Query FlightSeats using the registration_number and flight class
     seating_info = (
         db.query(FlightSeats.max_col_seat, FlightSeats.max_row_seat)
-        .join(Booking, FlightSeats.flight_id == Booking.flight_id)
-        .filter(Booking.flight_class == FlightSeats.flight_class)
-        .first()  # Retrieve the first row of results
+        .filter(
+            FlightSeats.registration_number == flight.registration_number,
+            FlightSeats.flight_class == booking.flight_class
+        )
+        .first()
     )
+
 
     # Check if seating information was found
     if seating_info is None:
@@ -198,7 +203,7 @@ def check_valid_passenger_seats(
         raise HTTPException(status_code=400, detail="Invalid seat column.")
 
     # Validate the passenger seat column
-    if seat_col_int < 1 or seat_col_int > max_col_seat:
+    if seat_col_int < 1 or seat_col_int > seat_col_to_int(max_col_seat):
         raise HTTPException(status_code=400, detail="Invalid seat column.")
 
     passengers_in_flight = get_all_passenger_in_flight(booking.flight_id, db)

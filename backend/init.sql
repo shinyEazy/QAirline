@@ -45,6 +45,7 @@ CREATE TABLE flight (
     actual_arrival_time TIMESTAMP,
     departure_airport_id INTEGER,
     destination_airport_id INTEGER,
+    flight_price FLOAT,
     status TEXT,
     FOREIGN KEY (registration_number) REFERENCES airplane(registration_number) ON DELETE CASCADE,
     FOREIGN KEY (departure_airport_id) REFERENCES airport(airport_id) ON DELETE CASCADE,
@@ -55,13 +56,13 @@ CREATE TABLE flight (
 -- Create Flight Seats Table
 CREATE TABLE flight_seats (
     flight_seats_id SERIAL PRIMARY KEY,
-    flight_id INTEGER NOT NULL,
+    registration_number TEXT NOT NULL,
     flight_class TEXT NOT NULL,
-    flight_price REAL,
+    class_multiplier REAL,
     child_multiplier REAL,
     max_row_seat INTEGER NOT NULL CHECK (max_row_seat > 0),
     max_col_seat TEXT NOT NULL,
-    FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE
+    FOREIGN KEY (registration_number) REFERENCES airplane(registration_number) ON DELETE CASCADE
 );
 
 -- Create Booking Table
@@ -172,6 +173,7 @@ INSERT INTO "airplane_model" (name, manufacturer, total_seats) VALUES
 ('De Havilland Canada Dash 8-100', 'De Havilland Canada', 37),
 ('ATR 72-600', 'ATR', 78),
 ('Saab 2000', 'Saab', 50);
+
 INSERT INTO "airport" (airport_code, city, name) VALUES
 ('SFO', 'San Francisco', 'San Francisco International Airport'),
 ('MIA', 'Miami', 'Miami International Airport'),
@@ -264,77 +266,79 @@ INSERT INTO flight (
     actual_arrival_time, 
     departure_airport_id, 
     destination_airport_id, 
+    flight_price,
     status
 ) VALUES 
-('QA001', 'N789BA', '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 'Completed'),
-('QA002', 'G-XWBA', '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 'In Progress'),
-('QA003', 'F-HZBA', '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 'Scheduled'),
-('QA004', 'D-ABYC', '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 'Scheduled'),
-('QA005', 'C-FZBA', '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 'Pending'),
-('QA006', 'JA123A', '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 'Pending'),
-('QA007', 'VH-ZNA', '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 'Scheduled'),
-('QA008', '9V-SKA', '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 'Scheduled'),
-('QA009', 'HS-TKA', '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 'Pending'),
-('QA010', 'B-2088', '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 'Pending'),
-('QA011', 'CC-BGA', '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 'Scheduled'),
-('QA012', 'XA-ZAA', '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 'Scheduled');
+('QA001', 'N789BA', '2024-12-15 10:00:00', '2024-12-15 10:15:00', '2024-12-15 13:00:00', '2024-12-15 13:10:00', 1, 2, 350.00, 'Landed'),
+('QA002', 'G-XWBA', '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 400.00, 'Delayed'),
+('QA003', 'F-HZBA', '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 250.50, 'On Time'),
+('QA004', 'D-ABYC', '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 260.00, 'On Time'),
+('QA005', 'C-FZBA', '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 280.75, 'Scheduled'),
+('QA006', 'JA123A', '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 300.00, 'Scheduled'),
+('QA007', 'VH-ZNA', '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 275.25, 'On Time'),
+('QA008', '9V-SKA', '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 290.50, 'On Time'),
+('QA009', 'HS-TKA', '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 305.75, 'Scheduled'),
+('QA010', 'B-2088', '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 320.00, 'Scheduled'),
+('QA011', 'CC-BGA', '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 275.00, 'Landed'),
+('QA012', 'XA-ZAA', '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 350.50, 'On Time');
+
 
 
 -- Insert Flight Seats Data
 INSERT INTO flight_seats (
-    flight_id, 
-    flight_class, 
-    flight_price, 
-    child_multiplier, 
-    max_row_seat, 
+    registration_number,
+    flight_class,
+    class_multiplier,
+    child_multiplier,
+    max_row_seat,
     max_col_seat
 ) VALUES 
-(1, 'Economy', 250.50, 0.8, 200, 20, 10),
-(1, 'Business', 750.75, 0.9, 40, 10, 4),
-(1, 'First Class', 1500.00, 1.0, 20, 5, 2),
+('N789BA', 'Economy', 1.0, 0.8, 200, 'T'), -- 20 (chẵn)
+('N789BA', 'Business', 1.5, 0.9, 40, 'J'), -- 10 (chia hết cho 5)
+('N789BA', 'First Class', 2.0, 1.0, 20, 'F'), -- 6 (chia hết cho 3)
 
-(2, 'Economy', 300.00, 0.8, 162, 18, 9),
-(2, 'Business', 850.00, 0.9, 32, 8, 4),
-(2, 'First Class', 1600.00, 1.0, 8, 4, 2),
+('G-XWBA', 'Economy', 1.0, 0.8, 162, 'R'), -- 18 (chia hết cho 3)
+('G-XWBA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
+('G-XWBA', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-(3, 'Economy', 220.75, 0.8, 210, 21, 10),
-(3, 'Business', 700.50, 0.9, 36, 9, 4),
-(3, 'First Class', 1450.00, 1.0, 10, 5, 2),
+('F-HZBA', 'Economy', 1.0, 0.8, 210, 'U'), -- 30 (chia hết cho 5)
+('F-HZBA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('F-HZBA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-(4, 'Economy', 275.25, 0.8, 190, 19, 10),
-(4, 'Business', 800.00, 0.9, 40, 10, 4),
-(4, 'First Class', 1550.00, 1.0, 8, 4, 2),
+('D-ABYC', 'Economy', 1.0, 0.8, 190, 'R'), -- 18 (chia hết cho 3)
+('D-ABYC', 'Business', 1.5, 0.9, 40, 'J'), -- 10 (chia hết cho 5)
+('D-ABYC', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-(5, 'Economy', 240.00, 0.8, 220, 22, 10),
-(5, 'Business', 725.50, 0.9, 32, 8, 4),
-(5, 'First Class', 1500.00, 1.0, 10, 5, 2),
+('C-FZBA', 'Economy', 1.0, 0.8, 220, 'V'), -- 22 (chẵn)
+('C-FZBA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
+('C-FZBA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-(6, 'Economy', 260.75, 0.8, 180, 20, 9),
-(6, 'Business', 775.25, 0.9, 36, 9, 4),
-(6, 'First Class', 1575.00, 1.0, 8, 4, 2),
+('JA123A', 'Economy', 1.0, 0.8, 180, 'R'), -- 18 (chia hết cho 3)
+('JA123A', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('JA123A', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-(7, 'Economy', 235.50, 0.8, 210, 21, 10),
-(7, 'Business', 690.00, 0.9, 32, 8, 4),
-(7, 'First Class', 1425.00, 1.0, 10, 5, 2),
+('VH-ZNA', 'Economy', 1.0, 0.8, 210, 'U'), -- 30 (chia hết cho 5)
+('VH-ZNA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
+('VH-ZNA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-(8, 'Economy', 290.25, 0.8, 180, 18, 10),
-(8, 'Business', 825.50, 0.9, 36, 9, 4),
-(8, 'First Class', 1600.00, 1.0, 8, 4, 2),
+('9V-SKA', 'Economy', 1.0, 0.8, 180, 'R'), -- 18 (chia hết cho 3)
+('9V-SKA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('9V-SKA', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-(9, 'Economy', 265.00, 0.8, 200, 20, 10),
-(9, 'Business', 755.75, 0.9, 40, 10, 4),
-(9, 'First Class', 1525.00, 1.0, 10, 5, 2),
+('HS-TKA', 'Economy', 1.0, 0.8, 200, 'T'), -- 20 (chẵn)
+('HS-TKA', 'Business', 1.5, 0.9, 40, 'J'), -- 10 (chia hết cho 5)
+('HS-TKA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-(10, 'Economy', 280.50, 0.8, 162, 18, 9),
-(10, 'Business', 875.00, 0.9, 32, 8, 4),
-(10, 'First Class', 1650.00, 1.0, 8, 4, 2),
+('B-2088', 'Economy', 1.0, 0.8, 162, 'R'), -- 18 (chia hết cho 3)
+('B-2088', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
+('B-2088', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-(11, 'Economy', 245.75, 0.8, 220, 22, 10),
-(11, 'Business', 710.25, 0.9, 36, 9, 4),
-(11, 'First Class', 1475.00, 1.0, 10, 5, 2),
+('CC-BGA', 'Economy', 1.0, 0.8, 220, 'V'), -- 22 (chẵn)
+('CC-BGA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('CC-BGA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-(12, 'Economy', 270.00, 0.8, 180, 20, 9),
-(12, 'Business', 790.50, 0.9, 36, 9, 4),
-(12, 'First Class', 1550.00, 1.0, 8, 4, 2);
+('XA-ZAA', 'Economy', 1.0, 0.8, 180, 'R'), -- 18 (chia hết cho 3)
+('XA-ZAA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('XA-ZAA', 'First Class', 2.0, 1.0, 8, 'F'); -- 6 (chia hết cho 3)
 
 

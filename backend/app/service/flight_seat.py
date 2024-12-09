@@ -1,24 +1,25 @@
 from sqlalchemy.orm import Session
 from app.schemas import FlightSeatsCreate, FlightSeatsUpdate
 from .crud_utils import *
-from app.models import FlightSeats
+from app.models import FlightSeats, Flight, Airplane
 
 
 def create_flight_seat(db: Session, flight_seat: FlightSeatsCreate) -> FlightSeats:
     return create(FlightSeats, db, flight_seat.model_dump())
 
 
-def get_flight_seat_by_flight_id(db: Session, flight_id: int) -> FlightSeats:
-    return db.query(FlightSeats).filter(FlightSeats.flight_id == flight_id).first()
+def get_flight_seat_by_registration_number(db: Session, registration_number: str) -> FlightSeats:
+    return db.query(FlightSeats).filter(FlightSeats.registration_number == registration_number).all()
 
 
 def get_flight_seat_by_flight_id_and_class(
     db: Session, flight_id: int, flight_class: str
 ) -> FlightSeats:
+    airplane = db.query(Flight).filter(Flight.flight_id == flight_id).first()
     return (
         db.query(FlightSeats)
         .filter(
-            FlightSeats.flight_id == flight_id, FlightSeats.flight_class == flight_class
+            FlightSeats.registration_number == airplane.registration_number, FlightSeats.flight_class == flight_class
         )
         .first()
     )

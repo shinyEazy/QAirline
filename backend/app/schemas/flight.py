@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import List, Optional
 from .base import SchemaModel
 from .airplane import AirplaneBase as Airplane
-from .flight_seat import FlightSeatsBase as FlightSeats, FlightSeatsCreate
 
 
 class FlightBase(SchemaModel):
@@ -13,6 +12,7 @@ class FlightBase(SchemaModel):
     estimated_arrival_time: datetime
     actual_arrival_time: Optional[datetime]
     destination_airport_id: int
+    flight_price: float
     status: str
     airplane: Airplane
 
@@ -23,11 +23,11 @@ class FlightCreate(SchemaModel):
     estimated_departure_time: datetime
     estimated_arrival_time: datetime
     destination_airport_id: int
+    flight_price: float
     status: str = (
         "Scheduled"  # Trạng thái chuyến bay, ví dụ: "Scheduled", "In-Flight", "Landed".
     )
 
-    flight_seats: List[FlightSeatsCreate]
 
 
 class FlightUpdate(SchemaModel):

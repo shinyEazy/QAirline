@@ -1,8 +1,9 @@
 from app.core.security import role_checker
+from service.flight import get_flight_price
 from service.flight_seat import get_flight_seat_by_flight_id_and_class
 from service.booking import get_booking
 from app.schemas import PaymentCreate
-from app.models import Booking
+from app.models import Booking, FlightClass
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, HTTPException, Depends
 from core.database import get_db
@@ -13,9 +14,7 @@ router = APIRouter(prefix="/payment", tags=["Payment"])
 
 @router.post("/", dependencies=[Depends(role_checker(["user", "admin"]))])
 def create_payment_end_point(payment: PaymentCreate, db: Session = Depends(get_db)):
-    print(f"Received payment request hello: {payment}")
-    print(f"Database session: {db}")
-
+    # Get booking information
     db_booking = get_booking(payment.booking_id, db)
     print(f"Booking found: {db_booking}")
     if not db_booking:
@@ -37,8 +36,8 @@ def calculate_price(db_booking: Booking, db: Session) -> float:
     flight_seat = get_flight_seat_by_flight_id_and_class(
         db, db_booking.flight_id, db_booking.flight_class
     )
-
-    price_per_adult = flight_seat.flight_price
+    flight_price = get_flight_price(db_booking.flight_id,db_booking.flight_class, db)
+    price_per_adult = flight_price
     price_per_child = price_per_adult * flight_seat.child_multiplier
     total_price = (db_booking.number_of_adults * price_per_adult) + (
         db_booking.number_of_children * price_per_child
