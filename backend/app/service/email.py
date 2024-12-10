@@ -3,6 +3,7 @@ from fastapi import BackgroundTasks, HTTPException
 from dotenv import load_dotenv
 import os
 from typing import List
+from email_validator import validate_email, EmailNotValidError
 
 # Load the environment variables from .env file
 load_dotenv()
@@ -43,3 +44,12 @@ async def send_email(recipients: List[str], subject: str, body: str):
         raise HTTPException(
             status_code=500, detail=f"Failed to send email: {str(e)}, {str(conf)}"
         )
+
+
+def is_valid_email(email):
+    try:
+        # Validate and parse email
+        validate_email(email)
+        return True
+    except EmailNotValidError:
+        return False

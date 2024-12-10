@@ -34,8 +34,8 @@ const Header = () => {
     {
       label: "Flight",
       subItems: [
-        { label: "Flight Listing", path: "/flight-listing" },
-        { label: "Flight Booking", path: "/flight-booking" },
+        { label: "Flight Listing", path: "/flight/list" },
+        // { label: "Flight Booking", path: "/flight/seat" },
       ],
     },
     {

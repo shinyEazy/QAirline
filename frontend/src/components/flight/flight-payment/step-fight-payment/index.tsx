@@ -3,42 +3,65 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const Step = () => {
+const StepFlightPayment = () => {
   const navigate = useNavigate();
   return (
     <Box
       sx={{
         backgroundColor: "white",
         borderRadius: "20px",
-        padding: "20px",
+        padding: "20px 40px",
         color: "black",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
         display: "flex",
-        gap: "24px",
+        justifyContent: "space-between",
       }}
     >
-      <Box width="100%" display="flex" alignItems="center">
+      <Box display="flex" alignItems="center">
         <FontAwesomeIcon
-          onClick={() => navigate("/flight-listing")}
+          onClick={() => navigate("/flight/list")}
           icon={faCircleCheck}
-          style={{ color: "rgb(77,115,252)", fontSize: "40px" }}
+          style={{
+            color: "rgb(77,115,252)",
+            fontSize: "40px",
+            cursor: "pointer",
+          }}
         />
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
-          Your Selection
+          Select Flight
         </Typography>
       </Box>
-      <Box width="100%" display="flex" alignItems="center">
+      <Box display="flex" alignItems="center">
         <FontAwesomeIcon
-          onClick={() => navigate("/flight-booking")}
+          onClick={() => navigate("/flight/seat")}
           icon={faCircleCheck}
-          style={{ color: "rgb(77,115,252)", fontSize: "40px" }}
+          style={{
+            color: "rgb(77,115,252)",
+            fontSize: "40px",
+            cursor: "pointer",
+          }}
         />
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
-          Your Details
+          Choose Seat
         </Typography>
       </Box>
-      <Box width="100%" display="flex" alignItems="center">
+      <Box display="flex" alignItems="center">
+        <FontAwesomeIcon
+          onClick={() => navigate("/flight/detail")}
+          icon={faCircleCheck}
+          style={{
+            color: "rgb(77,115,252)",
+            fontSize: "40px",
+            cursor: "pointer",
+          }}
+        />
+        <Typography variant="h6" sx={{ marginLeft: 1 }}>
+          Enter Details
+        </Typography>
+      </Box>
+      <Box display="flex" alignItems="center">
         <Button
+          disableRipple
           sx={{
             fontSize: "1.3rem",
             backgroundColor: "rgb(77,115,252)",
@@ -53,7 +76,7 @@ const Step = () => {
             },
           }}
         >
-          3
+          4
         </Button>
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
           Payment
@@ -63,4 +86,4 @@ const Step = () => {
   );
 };
 
-export default Step;
+export default StepFlightPayment;
