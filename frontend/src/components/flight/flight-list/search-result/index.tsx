@@ -30,59 +30,6 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
     setFlightId(flightId);
     navigate("/flight-seat");
   };
-  // const flights = [
-  //   {
-  //     id: 1,
-  //     departureTime: "07:00",
-  //     arrivalTime: "09:10",
-  //     from: "HAN",
-  //     to: "SGN",
-  //     seatsLeft: 666,
-  //     flightNumber: "VN 7239",
-  //     price: "$100 - $200",
-  //     flightDate: "Monday, 14 August",
-  //     flightRoute: "Hanoi - Ho Chi Minh",
-  //     departureDetailTime: "06:00 Hanoi",
-  //     departureAirport: "Noi Bai Airport, Vietnam",
-  //     arrivalDetailTime: "09:10 Ho Chi Minh",
-  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-  //     duration: "2 hours 10 minutes",
-  //   },
-  //   {
-  //     id: 2,
-  //     departureTime: "07:00",
-  //     arrivalTime: "09:10",
-  //     from: "HAN",
-  //     to: "SGN",
-  //     seatsLeft: 666,
-  //     flightNumber: "VN 7239",
-  //     price: "$100 - $200",
-  //     flightDate: "Monday, 14 August",
-  //     flightRoute: "Hanoi - Ho Chi Minh",
-  //     departureDetailTime: "06:00 Hanoi",
-  //     departureAirport: "Noi Bai Airport, Vietnam",
-  //     arrivalDetailTime: "09:10 Ho Chi Minh",
-  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-  //     duration: "2 hours 10 minutes",
-  //   },
-  //   {
-  //     id: 3,
-  //     departureTime: "07:00",
-  //     arrivalTime: "09:10",
-  //     from: "HAN",
-  //     to: "SGN",
-  //     seatsLeft: 666,
-  //     flightNumber: "VN 7239",
-  //     price: "$100 - $200",
-  //     flightDate: "Monday, 14 August",
-  //     flightRoute: "Hanoi - Ho Chi Minh",
-  //     departureDetailTime: "06:00 Hanoi",
-  //     departureAirport: "Noi Bai Airport, Vietnam",
-  //     arrivalDetailTime: "09:10 Ho Chi Minh",
-  //     arrivalAirport: "Tan Son Nhat Airport, Vietnam",
-  //     duration: "2 hours 10 minutes",
-  //   },
-  // ];
 
   return (
     <Box>

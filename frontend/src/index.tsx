@@ -10,17 +10,17 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const theme = createTheme({
-  typography: {
-    fontFamily: "JetBrains Mono, monospace",
-  },
-});
+// const theme = createTheme({
+//   typography: {
+//     fontFamily: "JetBrains Mono, monospace",
+//   },
+// });
 
 root.render(
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </ThemeProvider>
+  // <ThemeProvider theme={theme}>
+  //   <CssBaseline />
+  <Provider store={store}>
+    <App />
+  </Provider>
+  // </ThemeProvider>
 );

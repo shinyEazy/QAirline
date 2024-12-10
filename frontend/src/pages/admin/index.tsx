@@ -27,7 +27,32 @@ const AdminPage = () => {
   });
 
   const [newAirplane, setNewAirplane] = useState({
-    airplaneId: "",
+    airplane_model_id: 0,
+    registration_number: "",
+    current_airport_id: 0,
+    flight_seats: [
+      {
+        flight_class: "Economy",
+        class_multiplier: 1,
+        child_multiplier: 0.5,
+        max_row_seat: 20,
+        max_col_seat: "6"
+      },
+      {
+        flight_class: "Business",
+        class_multiplier: 3,
+        child_multiplier: 0.7,
+        max_row_seat: 5,
+        max_col_seat: "4"
+      },
+      {
+        flight_class: "FirstClass",
+        class_multiplier: 5,
+        child_multiplier: 0.8,
+        max_row_seat: 2,
+        max_col_seat: "3"
+      }
+    ]
   });
 
   const [newNews, setNewNews] = useState({
@@ -60,7 +85,18 @@ const AdminPage = () => {
   const handleAirplaneModalClose = () => {
     setAirplaneModalOpen(false);
     setNewAirplane({
-      airplaneId: "",
+      airplane_model_id: 0,
+      registration_number: "",
+      current_airport_id: 0,
+      flight_seats: [
+        {
+          flight_class: "",
+          class_multiplier: 1,
+          child_multiplier: 1,
+          max_row_seat: 1,
+          max_col_seat: "A"
+        }
+      ]
     });
   };
 
@@ -78,8 +114,19 @@ const AdminPage = () => {
     setNewFlight({ ...newFlight, [field]: value });
   };
 
-  const handleAirplaneChange = (value: string) => {
-    setNewAirplane({ ...newAirplane, airplaneId: value });
+  const handleAirplaneChange = (field: string, value: string | number, seatIndex?: number) => {
+    const updatedAirplane = { ...newAirplane };
+
+    if (seatIndex !== undefined) {
+      updatedAirplane.flight_seats[seatIndex] = {
+        ...updatedAirplane.flight_seats[seatIndex],
+        [field]: value
+      };
+    } else {
+      updatedAirplane[field] = value;
+    }
+
+    setNewAirplane({ ...newAirplane, [field]: value });
   };
 
   const handleNewsChange = (field: string, value: string) => {
@@ -239,6 +286,7 @@ const AdminPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
       {/* Add Airplane Modal */}
       <Dialog
         open={airplaneModalOpen}
@@ -248,12 +296,64 @@ const AdminPage = () => {
         <DialogTitle>Add New Airplane</DialogTitle>
         <DialogContent>
           <TextField
+            label="Airplane Model ID"
+            type="number"
+            fullWidth
+            margin="dense"
+            value={newAirplane.airplane_model_id}
+            onChange={(e) => handleAirplaneChange("airplane_model_id", Number(e.target.value))}
+          />
+          <TextField
             label="Airplane Registration Number"
             fullWidth
             margin="dense"
-            value={newAirplane.airplaneId}
-            onChange={(e) => handleAirplaneChange(e.target.value)}
+            value={newAirplane.registration_number}
+            onChange={(e) => handleAirplaneChange("registration_number", e.target.value)}
           />
+          <TextField
+            label="Current Airport ID"
+            type="number"
+            fullWidth
+            margin="dense"
+            value={newAirplane.current_airport_id}
+            onChange={(e) => handleAirplaneChange("current_airport_id", Number(e.target.value))}
+          />
+          {newAirplane.flight_seats.map((seat, index) => (
+            <Box key={seat.flight_class} sx={{ border: '1px solid #ccc', padding: 2, marginTop: 2 }}>
+              <Typography variant="subtitle1">{seat.flight_class} Seats Configuration</Typography>
+              <TextField
+                label="Class Multiplier"
+                type="number"
+                fullWidth
+                margin="dense"
+                value={seat.class_multiplier}
+                onChange={(e) => handleAirplaneChange("class_multiplier", Number(e.target.value), index)}
+              />
+              <TextField
+                label="Child Multiplier"
+                type="number"
+                fullWidth
+                margin="dense"
+                value={seat.child_multiplier}
+                onChange={(e) => handleAirplaneChange("child_multiplier", Number(e.target.value), index)}
+              />
+              <TextField
+                label="Max Row Seat"
+                type="number"
+                fullWidth
+                margin="dense"
+                value={seat.max_row_seat}
+                onChange={(e) => handleAirplaneChange("max_row_seat", Number(e.target.value), index)}
+              />
+              <TextField
+                label="Max Column Seat"
+                fullWidth
+                margin="dense"
+                value={seat.max_col_seat}
+                onChange={(e) => handleAirplaneChange("max_col_seat", e.target.value, index)}
+              />
+            </Box>
+          ))}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAirplaneModalClose} color="secondary">

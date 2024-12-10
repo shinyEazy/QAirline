@@ -6,15 +6,14 @@ import SearchResult from "components/flight/flight-list/search-result";
 import Footer from "components/home-page/Footer";
 import { useState } from "react";
 import { Flight } from "types/flight";
-
+import { useFlightSearchStore } from "hooks/flight-search-hook";
 const FlightList = () => {
-  const [flights, setFlights] = useState<Flight[]>([]);
-
+  const { flights } = useFlightSearchStore();
   return (
     <Box bgcolor="rgb(234,234,234)">
       <Header />
 
-      <FlightSearch setFlights={setFlights} />
+      <FlightSearch />
       <Box
         display="flex"
         gap="40px"

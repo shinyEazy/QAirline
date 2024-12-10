@@ -33,6 +33,7 @@ const HomePage = () => {
           <Achievement />
           <Testimonial />
           <LatestNews />
+
         </Box>
         <Footer />
       </Box>

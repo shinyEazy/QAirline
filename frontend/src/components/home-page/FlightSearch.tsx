@@ -18,27 +18,46 @@ import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
 import { Flight } from "types/flight";
-interface FlightSearchProps {
-  setFlights: React.Dispatch<React.SetStateAction<Flight[]>>;
-}
-const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
-  const [departureCity, setDepartureCity] = useState("");
-  const [arrivalCity, setArrivalCity] = useState("");
-  const [departing, setDeparting] = useState(new Date());
-  const [returning, setReturning] = useState(() => {
-    const today = new Date();
-    today.setDate(today.getDate() + 2);
-    return today;
-  });
-  const [showReturnDate, setShowReturnDate] = useState(false);
-  const [tripType, setTripType] = useState("oneway");
-  const [isRoundTrip, setIsRoundTrip] = useState(false);
-  const location = useLocation();
-  const naviagate = useNavigate();
+// interface FlightSearchProps {
+//   setFlights: React.Dispatch<React.SetStateAction<Flight[]>>;
+// }
+import { useFlightSearchStore } from "hooks/flight-search-hook";
+const FlightSearch: React.FC = () => {
+  // const [departureCity, setDepartureCity] = useState("");
+  // const [arrivalCity, setArrivalCity] = useState("");
+  // const [departing, setDeparting] = useState(new Date());
+  // const [returning, setReturning] = useState(() => {
+  //   const today = new Date();
+  //   today.setDate(today.getDate() + 2);
+  //   return today;
+  // });
+  // const [showReturnDate, setShowReturnDate] = useState(false);
+  // const [tripType, setTripType] = useState("oneway");
+  // const [isRoundTrip, setIsRoundTrip] = useState(false);
+  // const location = useLocation();
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   window.scrollTo(0, 0);
   // }, [location]);
+
+  const {
+    departureCity,
+    arrivalCity,
+    departing,
+    returning,
+    tripType,
+    showReturnDate,
+    isRoundTrip,
+    setDepartureCity,
+    setArrivalCity,
+    setDeparting,
+    setReturning,
+    setShowReturnDate,
+    setIsRoundTrip,
+    setTripType,
+    setFlights
+  } = useFlightSearchStore();
 
   useEffect(() => {
     if (tripType === "roundtrip") {
@@ -57,18 +76,17 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
     if (tripType === "roundtrip") {
       searchParams.append("return_date", returning.toISOString().split("T")[0]);
     }
-    fetch(
-      `http://localhost:8000/api/flights/search/?${searchParams.toString()}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Data:", data);
-        setFlights(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching flights:", error);
-      });
-    // naviagate('/flight/list?${searchParams.toString()}');
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/flights/search/?${searchParams.toString()}`
+      );
+      const data = await response.json();
+      setFlights(data);
+      navigate('/flight/list?${searchParams.toString()}');
+    } catch (error) {
+      console.error("Error fetching flights:", error);
+    }
+
   };
   return (
     <Box
