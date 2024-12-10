@@ -20,3 +20,6 @@ def update_airport(db: Session, db_airport: Airport, airport: AirportUpdate) -> 
 
 def delete_airport(db: Session, db_airport: Airport) -> Airport:
     return delete(db_airport, db)
+
+def get_city_by_airport_id(db: Session, airport_id: int) -> str:
+    return db.query(Airport.city).filter(Airport.airport_id == airport_id).first()

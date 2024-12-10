@@ -17,18 +17,21 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchFlights } from "hooks/flight-hook";
 
 interface Flight {
-  id: number;
-  flightId: string;
-  registrationNumber: string;
-  departure: string;
-  destination: string;
-  departureTime: string;
-  arrivalTime: string;
-  price: string;
-  status: "On time" | "Delayed" | "Canceled" | "Departed" | "Landed";
+  flight_id: number;
+  flight_number: string;
+  registration_number: string;
+  departure_city: string;
+  destination_city: string;
+  estimated_departure_time: string;
+  estimated_arrival_time: string;
+  actual_departure_time?: string;
+  actual_arrival_time?: string;
+  status: "Landed" | "Delayed" | "Canceled" | "Departed" | "On time";
+  flight_price: number;
 }
 
 interface Passenger {
@@ -40,63 +43,63 @@ interface Passenger {
   seat: string;
 }
 
-const flights: Flight[] = [
-  {
-    id: 1,
-    flightId: "1",
-    registrationNumber: "MH370",
-    departure: "Hanoi",
-    destination: "Ho Chi Minh",
-    departureTime: "10:00 - Dec 04, 2024",
-    arrivalTime: "12:00 - Dec 04, 2024",
-    price: "$100 - $200",
-    status: "On time",
-  },
-  {
-    id: 2,
-    flightId: "2",
-    registrationNumber: "MH370",
-    departure: "Hanoi",
-    destination: "Ho Chi Minh",
-    departureTime: "10:00 - Dec 04, 2024",
-    arrivalTime: "12:00 - Dec 04, 2024",
-    price: "$100 - $200",
-    status: "Delayed",
-  },
-  {
-    id: 3,
-    flightId: "3",
-    registrationNumber: "MH370",
-    departure: "Hanoi",
-    destination: "Ho Chi Minh",
-    departureTime: "10:00 - Dec 04, 2024",
-    arrivalTime: "12:00 - Dec 04, 2024",
-    price: "$100 - $200",
-    status: "Canceled",
-  },
-  {
-    id: 4,
-    flightId: "4",
-    registrationNumber: "MH370",
-    departure: "Hanoi",
-    destination: "Ho Chi Minh",
-    departureTime: "10:00 - Dec 04, 2024",
-    arrivalTime: "12:00 - Dec 04, 2024",
-    price: "$100 - $200",
-    status: "Departed",
-  },
-  {
-    id: 5,
-    flightId: "5",
-    registrationNumber: "MH370",
-    departure: "Hanoi",
-    destination: "Ho Chi Minh",
-    departureTime: "10:00 - Dec 04, 2024",
-    arrivalTime: "12:00 - Dec 04, 2024",
-    price: "$100 - $200",
-    status: "Landed",
-  },
-];
+// const flights: Flight[] = [
+//   {
+//     id: 1,
+//     flightId: "1",
+//     registrationNumber: "MH370",
+//     departure: "Hanoi",
+//     destination: "Ho Chi Minh",
+//     departureTime: "10:00 - Dec 04, 2024",
+//     arrivalTime: "12:00 - Dec 04, 2024",
+//     price: "$100 - $200",
+//     status: "On time",
+//   },
+//   {
+//     id: 2,
+//     flightId: "2",
+//     registrationNumber: "MH370",
+//     departure: "Hanoi",
+//     destination: "Ho Chi Minh",
+//     departureTime: "10:00 - Dec 04, 2024",
+//     arrivalTime: "12:00 - Dec 04, 2024",
+//     price: "$100 - $200",
+//     status: "Delayed",
+//   },
+//   {
+//     id: 3,
+//     flightId: "3",
+//     registrationNumber: "MH370",
+//     departure: "Hanoi",
+//     destination: "Ho Chi Minh",
+//     departureTime: "10:00 - Dec 04, 2024",
+//     arrivalTime: "12:00 - Dec 04, 2024",
+//     price: "$100 - $200",
+//     status: "Canceled",
+//   },
+//   {
+//     id: 4,
+//     flightId: "4",
+//     registrationNumber: "MH370",
+//     departure: "Hanoi",
+//     destination: "Ho Chi Minh",
+//     departureTime: "10:00 - Dec 04, 2024",
+//     arrivalTime: "12:00 - Dec 04, 2024",
+//     price: "$100 - $200",
+//     status: "Departed",
+//   },
+//   {
+//     id: 5,
+//     flightId: "5",
+//     registrationNumber: "MH370",
+//     departure: "Hanoi",
+//     destination: "Ho Chi Minh",
+//     departureTime: "10:00 - Dec 04, 2024",
+//     arrivalTime: "12:00 - Dec 04, 2024",
+//     price: "$100 - $200",
+//     status: "Landed",
+//   },
+// ];
 
 const passengersByFlightId: Record<string, Passenger[]> = {
   1: [
@@ -136,17 +139,16 @@ const passengersByFlightId: Record<string, Passenger[]> = {
 };
 
 const FlightList = () => {
-  const sortedFlights = [...flights].sort((a, b) => a.id - b.id);
 
   const getStatusStyle = (status: string) => {
     switch (status) {
-      case "On time":
+      case "On Time":
         return { color: "green", fontWeight: "bold" };
       case "Delayed":
         return { color: "orange", fontWeight: "bold" };
       case "Canceled":
         return { color: "red", fontWeight: "bold" };
-      case "Departed":
+      case "Scheduled":
         return { color: "blue", fontWeight: "bold" };
       case "Landed":
         return { color: "purple", fontWeight: "bold" };
@@ -155,11 +157,25 @@ const FlightList = () => {
     }
   };
 
-  const [flightData, setFlightData] = useState(flights);
+  const [flightData, setFlightData] = useState<Flight[]>([]);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [open, setOpen] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [selectedPassengers, setSelectedPassengers] = useState<Passenger[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadFlights = async () => {
+      try {
+        const flights = await fetchFlights();
+        setFlightData(flights);
+      } catch (err) {
+        setError("Failed to fetch flights");
+      }
+    };
+
+    loadFlights();
+  }, []);
 
   const handleEdit = (flight: Flight) => {
     setSelectedFlight({ ...flight });
@@ -215,11 +231,22 @@ const FlightList = () => {
     if (selectedFlight) {
       setFlightData(
         flightData.map((flight) =>
-          flight.id === selectedFlight.id ? selectedFlight : flight
+          flight.flight_id === selectedFlight.flight_id ? selectedFlight : flight
         )
       );
     }
     setOpen(false);
+  };
+
+  const formatDateTime = (dateTime: string) => {
+    return new Date(dateTime).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
   };
 
   return (
@@ -247,7 +274,7 @@ const FlightList = () => {
                   border: "1px solid #ddd",
                 }}
               >
-                Flight ID
+                Flight Number
               </TableCell>
               <TableCell
                 sx={{
@@ -324,9 +351,9 @@ const FlightList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedFlights.map((flight, index) => (
+            {flightData.map((flight, index) => (
               <TableRow
-                key={flight.id}
+                key={flight.flight_id}
                 sx={{
                   backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white",
                   "&:hover": {
@@ -335,28 +362,28 @@ const FlightList = () => {
                 }}
               >
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.id}
+                  {flight.flight_id}
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.flightId}
+                  {flight.flight_number}
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.registrationNumber}
+                  {flight.registration_number}
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.departure}
+                  {flight.departure_city}
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.destination}
+                  {flight.destination_city}
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.departureTime}
+                  {formatDateTime(flight.estimated_departure_time)}
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.arrivalTime}
+                  {formatDateTime(flight.estimated_arrival_time)}
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
-                  {flight.price}
+                  {flight.flight_price}
                 </TableCell>
                 <TableCell
                   sx={{
@@ -368,7 +395,7 @@ const FlightList = () => {
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
                   <Button
-                    onClick={() => handleView(flight.flightId)}
+                    onClick={() => handleView("1")}
                     variant="contained"
                     size="small"
                     color="primary"
@@ -437,31 +464,31 @@ const FlightList = () => {
             label="Airplane Registration Number"
             fullWidth
             margin="dense"
-            value={selectedFlight?.registrationNumber || ""}
-            onChange={(e) => handleChange("registrationNumber", e.target.value)}
+            value={selectedFlight?.registration_number || ""}
+            onChange={(e) => handleChange("registration_number", e.target.value)}
           />
           <Box display="flex" gap={2}>
             <TextField
               label="Departure Time"
               fullWidth
               margin="dense"
-              value={selectedFlight?.departureTime || ""}
-              onChange={(e) => handleChange("departureTime", e.target.value)}
+              value={selectedFlight?.estimated_departure_time || ""}
+              onChange={(e) => handleChange("estimated_departure_time", e.target.value)}
             />
             <TextField
               label="Arrival Time"
               fullWidth
               margin="dense"
-              value={selectedFlight?.arrivalTime || ""}
-              onChange={(e) => handleChange("arrivalTime", e.target.value)}
+              value={selectedFlight?.estimated_arrival_time || ""}
+              onChange={(e) => handleChange("estimated_arrival_time", e.target.value)}
             />
           </Box>
           <TextField
             label="Price"
             fullWidth
             margin="dense"
-            value={selectedFlight?.price || ""}
-            onChange={(e) => handleChange("price", e.target.value)}
+            value={selectedFlight?.flight_price || ""}
+            onChange={(e) => handleChange("flight_price", e.target.value)}
           />
           <Select
             fullWidth
