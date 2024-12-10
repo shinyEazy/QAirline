@@ -80,6 +80,8 @@ def get_flights_by_departure_time_and_cities(
                 "arrivalTime": flight.estimated_arrival_time.strftime("%H:%M"),
                 "from": dep_airport.city,
                 "to": arr_airport.city,
+                "departure_airport_code": dep_airport.airport_code,
+                "arrival_airport_code": arr_airport.airport_code,
                 "seatsLeft": 666,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
                 "flightNumber": "VN 7239",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
                 "price": "$100 - $200",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế

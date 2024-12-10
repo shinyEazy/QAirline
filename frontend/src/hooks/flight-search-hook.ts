@@ -22,6 +22,11 @@ interface FlightSearchState {
     resetSearch: () => void;
 }
 
+interface FlightSelectStore {
+    selectedFlight: Flight | null;
+    setSelectedFlight: (flight: Flight) => void;
+}
+
 export const useFlightSearchStore = create<FlightSearchState>((set) => ({
     departureCity: '',
     arrivalCity: '',
@@ -59,4 +64,9 @@ export const useFlightSearchStore = create<FlightSearchState>((set) => ({
         tripType: 'oneway',
         flights: [],
     }),
+}));
+
+export const useFlightStore = create<FlightSelectStore>((set) => ({
+    selectedFlight: null,
+    setSelectedFlight: (flight) => set({ selectedFlight: flight }),
 }));

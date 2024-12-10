@@ -4,8 +4,6 @@ import FlightSearch from "components/home-page/FlightSearch";
 import FilterSearch from "components/flight/flight-list/filter-search";
 import SearchResult from "components/flight/flight-list/search-result";
 import Footer from "components/home-page/Footer";
-import { useState } from "react";
-import { Flight } from "types/flight";
 import { useFlightSearchStore } from "hooks/flight-search-hook";
 const FlightList = () => {
   const { flights } = useFlightSearchStore();

@@ -1,6 +1,13 @@
 import { Box, Divider, Typography } from "@mui/material";
-
+import { useFlightStore } from "hooks/flight-search-hook";
 const FlightRoute = () => {
+  const { selectedFlight } = useFlightStore();
+  if (!selectedFlight) {
+    return <Typography>No flight selected</Typography>;
+  }
+
+  // const departureTime = new Date(selectedFlight.departureTime);
+  // const arrivalTime = new Date(selectedFlight.arrivalTime);
   return (
     <Box
       sx={{
@@ -15,10 +22,10 @@ const FlightRoute = () => {
       <Box display="flex" alignItems="center" marginTop="20px">
         <Box textAlign="center" sx={{ minWidth: "80px" }}>
           <Typography fontSize="1.2rem">
-            <strong>07:00</strong>
+            <strong>{selectedFlight.departureTime}</strong>
           </Typography>
           <Typography fontSize="1rem" color="text.secondary">
-            HAN
+            {selectedFlight.departure_airport_code}
           </Typography>
         </Box>
 
@@ -50,17 +57,17 @@ const FlightRoute = () => {
 
         <Box textAlign="center" sx={{ minWidth: "80px" }}>
           <Typography fontSize="1.2rem">
-            <strong>09:10</strong>
+            <strong>{selectedFlight.arrivalTime}</strong>
           </Typography>
           <Typography fontSize="1rem" color="text.secondary">
-            PQC
+            {selectedFlight.arrival_airport_code}
           </Typography>
         </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" marginTop="20px">
         <Box>
           <Typography variant="h6">Departure</Typography>
-          <Typography>11 November, 2024</Typography>
+          <Typography>{selectedFlight.flightDate}</Typography>
         </Box>
         <Divider orientation="vertical" flexItem />
         <Box>
