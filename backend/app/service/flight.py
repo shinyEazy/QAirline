@@ -1,4 +1,5 @@
 from datetime import datetime
+from service.airport import get_city_by_airport_id
 from sqlalchemy.orm import joinedload
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, aliased
@@ -33,8 +34,8 @@ def create_flight(db: Session, flight: FlightCreate) -> Flight:
         db.query(Airplane).filter(Airplane.registration_number == flight.registration_number).first()
     )
 
-    flight_data = flight.model_dump(exclude={"flight_seats"})
-    flight_data["departure_airport_id"] = airplane.current_airport_id
+    flight_data = flight.model_dump()
+    # flight_data["departure_airport_id"] = airplane.current_airport_id
     db_flight = create(Flight, db, flight_data)
 
     # create_flight_seats_for_flight(flight, db_flight, db)
@@ -138,14 +139,10 @@ def get_all_flights(db: Session):
     result = []
     for flight in flights:
         # Tìm thông tin departure airport
-        departure_airport = db.query(Airport).filter(
-            Airport.airport_id == flight.departure_airport_id
-        ).first()
+        departure_airport = get_city_by_airport_id(db, flight.departure_airport_id)
         
         # Tìm thông tin destination airport
-        destination_airport = db.query(Airport).filter(
-            Airport.airport_id == flight.destination_airport_id
-        ).first()
+        destination_airport = get_city_by_airport_id(db, flight.destination_airport_id)
         
         # Tạo dictionary flight với thông tin thành phố
         flight_dict = flight.__dict__.copy()
