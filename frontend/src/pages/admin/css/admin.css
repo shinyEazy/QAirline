@@ -15,7 +15,7 @@
     /* Tắt mũi tên mặc định trong các trình duyệt hiện đại */
     padding-right: 30px;
     /* Thêm khoảng cách cho mũi tên mới */
-    background: url('../image/down-arrow.png')no-repeat right 10px center;
+    background: url('../../../../public/down-arrow.png')no-repeat right 10px center;
     /* Thêm mũi tên tùy chỉnh */
     background-size: 12px;
     /* Đặt kích thước cho mũi tên */
