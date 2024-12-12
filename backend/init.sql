@@ -293,9 +293,9 @@ INSERT INTO flight_seats (
     max_row_seat,
     max_col_seat
 ) VALUES 
-('N789BA', 'Economy', 1.0, 0.8, 200, 'T'), -- 20 (chẵn)
-('N789BA', 'Business', 1.5, 0.9, 40, 'J'), -- 10 (chia hết cho 5)
-('N789BA', 'First Class', 2.0, 1.0, 20, 'F'), -- 6 (chia hết cho 3)
+('N789BA', 'Economy', 1.0, 0.8, 10, 'F'), -- 20 (chẵn)
+('N789BA', 'Business', 1.5, 0.9, 10, 'F'), -- 10 (chia hết cho 5)
+('N789BA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
 ('G-XWBA', 'Economy', 1.0, 0.8, 162, 'R'), -- 18 (chia hết cho 3)
 ('G-XWBA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)

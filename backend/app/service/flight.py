@@ -30,7 +30,9 @@ from app.service.service_utils import seat_col_to_int, conint
 def create_flight(db: Session, flight: FlightCreate) -> Flight:
     # Lấy máy bay từ database
     airplane = (
-        db.query(Airplane).filter(Airplane.registration_number == flight.registration_number).first()
+        db.query(Airplane)
+        .filter(Airplane.registration_number == flight.registration_number)
+        .first()
     )
 
     flight_data = flight.model_dump(exclude={"flight_seats"})
@@ -134,31 +136,40 @@ def get_flight_by_citizen_id(citizen_id: str, db: Session) -> Flight:
 def get_all_flights(db: Session):
     # Truy vấn tất cả các flights
     flights = db.query(Flight).all()
-    
+
     result = []
     for flight in flights:
         # Tìm thông tin departure airport
-        departure_airport = db.query(Airport).filter(
-            Airport.airport_id == flight.departure_airport_id
-        ).first()
-        
+        departure_airport = (
+            db.query(Airport)
+            .filter(Airport.airport_id == flight.departure_airport_id)
+            .first()
+        )
+
         # Tìm thông tin destination airport
-        destination_airport = db.query(Airport).filter(
-            Airport.airport_id == flight.destination_airport_id
-        ).first()
-        
+        destination_airport = (
+            db.query(Airport)
+            .filter(Airport.airport_id == flight.destination_airport_id)
+            .first()
+        )
+
         # Tạo dictionary flight với thông tin thành phố
         flight_dict = flight.__dict__.copy()
-        flight_dict['departure_city'] = departure_airport.city if departure_airport else None
-        flight_dict['destination_city'] = destination_airport.city if destination_airport else None
-        
+        flight_dict["departure_city"] = (
+            departure_airport.city if departure_airport else None
+        )
+        flight_dict["destination_city"] = (
+            destination_airport.city if destination_airport else None
+        )
+
         # Loại bỏ các thuộc tính không cần thiết
-        flight_dict.pop('departure_airport_id', None)
-        flight_dict.pop('destination_airport_id', None)
-        
+        flight_dict.pop("departure_airport_id", None)
+        flight_dict.pop("destination_airport_id", None)
+
         result.append(flight_dict)
-    
+
     return result
+
 
 async def delay_flight(flight: FlightDelay, db_flight: Flight, db: Session):
     """
@@ -256,3 +267,4 @@ def get_flight_price(flight_id: int, flight_class: str, db: Session) -> float:
     flight_seats = get_flight_seat_by_flight_id_and_class(db, flight_id, flight_class)
 
     return flight_seats.class_multiplier * flight.flight_price
+
