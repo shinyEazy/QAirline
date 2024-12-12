@@ -30,9 +30,9 @@ from app.service.service_utils import seat_col_to_int, conint
 # CRUD for Flight
 def create_flight(db: Session, flight: FlightCreate) -> Flight:
     # Lấy máy bay từ database
-    airplane = (
-        db.query(Airplane).filter(Airplane.registration_number == flight.registration_number).first()
-    )
+    # airplane = (
+    #     db.query(Airplane).filter(Airplane.registration_number == flight.registration_number).first()
+    # )
 
     flight_data = flight.model_dump()
     # flight_data["departure_airport_id"] = airplane.current_airport_id
