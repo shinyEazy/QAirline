@@ -468,7 +468,7 @@ const FlightList = () => {
             margin="dense"
             sx={{ marginTop: 1 }}
           >
-            <MenuItem value="On time">On time</MenuItem>
+            <MenuItem value="On Time">On time</MenuItem>
             <MenuItem value="Delayed">Delayed</MenuItem>
             <MenuItem value="Canceled">Canceled</MenuItem>
             <MenuItem value="Departed">Departed</MenuItem>
