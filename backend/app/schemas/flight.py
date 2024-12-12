@@ -33,10 +33,12 @@ class FlightCreate(SchemaModel):
 
 
 class FlightUpdate(SchemaModel):
+    registration_number: str
     estimated_departure_time: datetime
     actual_departure_time: Optional[datetime]
     estimated_arrival_time: datetime
     actual_arrival_time: Optional[datetime]
+    flight_price: float
     status: str
 
 

@@ -18,7 +18,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { fetchFlights } from "hooks/flight-hook";
+import { fetchFlights, updateFlight } from "hooks/flight-hook";
 
 interface Flight {
   flight_id: number;
@@ -42,64 +42,6 @@ interface Passenger {
   class: string;
   seat: string;
 }
-
-// const flights: Flight[] = [
-//   {
-//     id: 1,
-//     flightId: "1",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "On time",
-//   },
-//   {
-//     id: 2,
-//     flightId: "2",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Delayed",
-//   },
-//   {
-//     id: 3,
-//     flightId: "3",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Canceled",
-//   },
-//   {
-//     id: 4,
-//     flightId: "4",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Departed",
-//   },
-//   {
-//     id: 5,
-//     flightId: "5",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Landed",
-//   },
-// ];
 
 const passengersByFlightId: Record<string, Passenger[]> = {
   1: [
@@ -163,7 +105,9 @@ const FlightList = () => {
   const [openView, setOpenView] = useState(false);
   const [selectedPassengers, setSelectedPassengers] = useState<Passenger[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+  const sortFlightsByID = (flights: Flight[]) => {
+    return [...flights].sort((a, b) => a.flight_id - b.flight_id);
+  };
   useEffect(() => {
     const loadFlights = async () => {
       try {
@@ -227,15 +171,41 @@ const FlightList = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+
     if (selectedFlight) {
-      setFlightData(
-        flightData.map((flight) =>
-          flight.flight_id === selectedFlight.flight_id ? selectedFlight : flight
-        )
-      );
+      try {
+        const { registration_number, estimated_departure_time, actual_departure_time, estimated_arrival_time, actual_arrival_time, flight_price, status } = selectedFlight;
+        const { departure_city, destination_city } = selectedFlight;
+
+        // Tạo payload với chỉ các trường cần thiết
+        const payload = {
+          registration_number,
+          estimated_departure_time,
+          actual_departure_time: actual_departure_time || "",
+          estimated_arrival_time,
+          actual_arrival_time: actual_arrival_time || "",
+          flight_price,
+          status
+        };
+        // Gọi API để cập nhật chuyến bay
+        const updatedFlight = await updateFlight(selectedFlight.flight_id, payload);
+        updatedFlight.departure_city = departure_city;
+        updatedFlight.destination_city = destination_city;
+
+        // Cập nhật lại danh sách chuyến bay trong state
+        setFlightData(flightData.map((flight) =>
+          flight.flight_id === selectedFlight.flight_id ? updatedFlight : flight
+        ));
+
+        // Đóng modal sau khi cập nhật thành công
+        setOpen(false);
+      } catch (error) {
+        setError("Failed to update flight");
+        console.error("Error updating flight", error);
+      }
     }
-    setOpen(false);
+
   };
 
   const formatDateTime = (dateTime: string) => {
@@ -351,7 +321,7 @@ const FlightList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {flightData.map((flight, index) => (
+            {sortFlightsByID(flightData).map((flight, index) => (
               <TableRow
                 key={flight.flight_id}
                 sx={{

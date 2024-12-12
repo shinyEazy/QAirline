@@ -41,3 +41,24 @@ export async function fetchAirplanes() {
     throw error;
   }
 }
+
+export async function updateFlight(flightId: number, flightData: {
+  registration_number: string;
+  estimated_departure_time: string;
+  actual_departure_time: string;
+  estimated_arrival_time: string;
+  actual_arrival_time: string;
+  flight_price: number;
+  status: string;
+}) {
+
+  try {
+    flightData.actual_departure_time = flightData.estimated_departure_time;
+    flightData.actual_arrival_time = flightData.estimated_arrival_time;
+    const response = await axios.put(`/api/flights/${flightId}`, flightData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating flight", error);
+    throw error;
+  }
+}
