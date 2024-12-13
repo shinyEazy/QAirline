@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
-from starlette.status import HTTP_404_NOT_FOUND
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks, status
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from app.core.security import role_checker
 from app.models import FlightStatus
 from service.airplane import get_airplane_by_registration_number
@@ -121,6 +121,11 @@ async def delay_flight_end_point(
     db: Session = Depends(get_db),
 ):
     db_flight = get_flight(db, flight.flight_id)
+    if flight.status not in FlightStatus.__members__:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail=f"Flight status is invalid, please choose a correct flight status: Scheduled, On Time, Delayed, Cancelled, Landed",
+        )
     if not db_flight:
         raise HTTPException(status_code=404, detail="Flight not found")
 

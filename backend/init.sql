@@ -1,13 +1,4 @@
 -- Create User Table
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    firstname TEXT NOT NULL,
-    lastname TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    role TEXT NOT NULL
-);
 -- Create Airport Table
 CREATE TABLE airport (
     airport_id SERIAL PRIMARY KEY,
@@ -65,22 +56,21 @@ CREATE TABLE flight_seats (
 
 -- Create Booking Table
 CREATE TABLE booking (
-    booking_id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,  
+    booking_id TEXT PRIMARY KEY,
+    booker_email TEXT NOT NULL,
     number_of_adults INTEGER NOT NULL CHECK (number_of_adults >= 0),
     number_of_children INTEGER NOT NULL CHECK (number_of_children >= 0),
     flight_class TEXT NOT NULL,
     cancelled BOOLEAN DEFAULT FALSE,
     flight_id INTEGER NOT NULL,
     booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,  
     FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE
 );
 
 -- Create Passenger Table
 CREATE TABLE passengers (
     passenger_id SERIAL PRIMARY KEY, 
-    booking_id INTEGER NOT NULL,
+    booking_id TEXT NOT NULL,
     citizen_id TEXT NOT NULL,
     passport_number TEXT,
     gender BOOLEAN NOT NULL,
@@ -102,7 +92,7 @@ CREATE TABLE payment (
     currency TEXT DEFAULT 'USD',
     payment_method TEXT,
     status TEXT DEFAULT 'pending',
-    booking_id INTEGER UNIQUE,
+    booking_id TEXT UNIQUE,
     FOREIGN KEY (booking_id) REFERENCES booking(booking_id) ON DELETE CASCADE
 );
 

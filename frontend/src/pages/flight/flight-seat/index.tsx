@@ -26,11 +26,11 @@ const FlightSeat = () => {
   const [letters, setLetters] = useState([]);
   const [seats, setSeats] = useState([]);
 
-  const payload = getPayload();
-
-  console.log(payload);
   // Fetch flight seats on component mount
   useEffect(() => {
+    const payload = getPayload();
+
+    console.log(payload);
     const fetchSeats = async () => {
       try {
         const fetchedMatrix = await fetchFlightSeats(1);
@@ -138,7 +138,12 @@ const FlightSeat = () => {
 
   const handleNext = () => {
     setFlightClass(selectedClass);
-    navigate("/flight/detail");
+
+    navigate("/flight/detail", {
+      state: {
+        selectedSeats,
+      }
+    });
   };
 
   const [focusedButton, setFocusedButton] = useState<string | null>(null);

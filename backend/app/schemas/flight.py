@@ -31,7 +31,6 @@ class FlightCreate(SchemaModel):
     )
 
 
-
 class FlightUpdate(SchemaModel):
     registration_number: str
     estimated_departure_time: datetime

@@ -83,9 +83,9 @@ class Booking(Base):
     __tablename__ = "booking"
 
     booking_id = Column(
-        Integer, primary_key=True, index=True
+        String, primary_key=True, index=True
     )  # Unique identifier for each booking
-    user_id = Column(Integer, nullable=False)
+    booker_email = Column(String, nullable=False)
     number_of_adults = Column(Integer, nullable=False)
     number_of_children = Column(Integer, nullable=False)
     flight_class = Column(
@@ -127,7 +127,9 @@ class Flight(Base):
 
     flight_id = Column(Integer, primary_key=True, index=True)
     flight_number = Column(String, unique=True, nullable=False)
-    registration_number = Column(String, ForeignKey("airplane.registration_number", ondelete="CASCADE"))
+    registration_number = Column(
+        String, ForeignKey("airplane.registration_number", ondelete="CASCADE")
+    )
     estimated_departure_time = Column(DateTime)
     actual_departure_time = Column(DateTime)
     estimated_arrival_time = Column(DateTime)
@@ -167,9 +169,9 @@ class Airplane(Base):
     airplane_model = relationship("AirplaneModel", back_populates="airplanes")
 
     # Thêm relationship với FlightSeats
-    flight_seats = relationship("FlightSeats", back_populates="airplane", cascade="all, delete-orphan"
+    flight_seats = relationship(
+        "FlightSeats", back_populates="airplane", cascade="all, delete-orphan"
     )
-
 
 
 class Airport(Base):
@@ -186,7 +188,9 @@ class FlightSeats(Base):
 
     flight_seats_id = Column(Integer, primary_key=True, index=True)
     registration_number = Column(
-        String, ForeignKey("airplane.registration_number", ondelete="CASCADE"), nullable=False
+        String,
+        ForeignKey("airplane.registration_number", ondelete="CASCADE"),
+        nullable=False,
     )
     flight_class = Column(String, nullable=False)
     class_multiplier = Column(Float, nullable=False)
