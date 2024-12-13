@@ -10,6 +10,8 @@ import {
   DialogActions,
   TextField,
   Autocomplete,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import FlightList from "../../components/admin/flight-list";
 import { createFlight } from "../../hooks/flight-hook";
@@ -17,6 +19,7 @@ import { fetchAirplanes } from "../../hooks/flight-hook";
 import DatePicker from "react-datepicker";
 import { fetchAirport } from "hooks/airport-hook";
 import AirplaneList from "../../components/admin/airplane-list";
+import AirportList from "../../components/admin/airport-list";
 
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
@@ -32,7 +35,6 @@ const AdminPage = () => {
     arrivalTime: new Date(),
     price: 0.0,
   });
-
   const [newAirplane, setNewAirplane] = useState({
     airplane_model_id: 0,
     registration_number: "",
@@ -60,13 +62,11 @@ const AdminPage = () => {
       },
     ],
   });
-
   const [newNews, setNewNews] = useState({
     imageUrl: "",
     title: "",
     content: "",
   });
-
   const [airplaneSuggestions, setAirplaneSuggestions] = useState<
     { registration_number: string }[]
   >([]);
@@ -140,6 +140,7 @@ const AdminPage = () => {
   };
 
   const handleNewsModalOpen = () => setNewsModalOpen(true);
+
   const handleNewsModalClose = () => {
     setNewsModalOpen(false);
     setNewNews({
@@ -212,63 +213,133 @@ const AdminPage = () => {
     handleNewsModalClose();
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
+  };
+
+  const [selectedTab, setSelectedTab] = useState(0);
+
   return (
     <Box>
-      <Box padding={2}>
-        <Typography variant="h4">Admin Page</Typography>
-        <Button
-          onClick={handleAirplaneModalOpen}
-          sx={{
-            backgroundColor: "#1e90ff",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            marginRight: "10px",
-            "&:hover": { backgroundColor: "#2177cb" },
-          }}
-        >
-          Add Airplane
-        </Button>
-        <Button
-          onClick={handleFlightModalOpen}
-          sx={{
-            marginRight: "10px",
-            backgroundColor: "#1e90ff",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            "&:hover": { backgroundColor: "#2177cb" },
-          }}
-        >
-          Add Flight
-        </Button>
-        <Button
-          onClick={handleNewsModalOpen}
-          sx={{
-            backgroundColor: "#1e90ff",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            "&:hover": { backgroundColor: "#2177cb" },
-          }}
-        >
-          Add News
-        </Button>
+      <Box padding={2} justifyContent="center" width="100vw">
+        <Typography variant="h3" align="center" marginBottom={2}>
+          Admin Page
+        </Typography>
+        <Box display="flex" justifyContent="center">
+          <Button
+            onClick={handleAirplaneModalOpen}
+            sx={{
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              marginRight: "10px",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Add Airplane
+          </Button>
+          <Button
+            onClick={handleFlightModalOpen}
+            sx={{
+              marginRight: "10px",
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Add Flight
+          </Button>
+          <Button
+            onClick={handleNewsModalOpen}
+            sx={{
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Add News
+          </Button>
+        </Box>
       </Box>
-      <FlightList />
-      <AirplaneList />
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ width: "100%" }}
+      >
+        <Tabs
+          value={selectedTab}
+          onChange={handleTabChange}
+          aria-label="Admin Management Tabs"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Tab
+            disableRipple
+            label="Flights"
+            sx={{
+              textTransform: "none",
+              fontSize: "1.2rem",
+              "&:hover": {
+                color: "#1976d2",
+              },
+            }}
+          />
+          <Tab
+            disableRipple
+            label="Airplanes"
+            sx={{
+              textTransform: "none",
+              fontSize: "1.2rem",
+              "&:hover": {
+                color: "#1976d2",
+              },
+            }}
+          />
+          <Tab
+            disableRipple
+            label="Airports"
+            sx={{
+              textTransform: "none",
+              fontSize: "1.2rem",
+              "&:hover": {
+                color: "#1976d2",
+              },
+            }}
+          />
+        </Tabs>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ width: "100vw", paddingTop: 1 }}
+        >
+          {selectedTab === 0 && <FlightList />}
+          {selectedTab === 1 && <AirplaneList />}
+          {selectedTab === 2 && <AirportList />}
+        </Box>
+      </Box>
       {/* Add Flight Modal */}
       <Dialog open={flightModalOpen} onClose={handleFlightModalClose} fullWidth>
         <DialogTitle>Add New Flight</DialogTitle>

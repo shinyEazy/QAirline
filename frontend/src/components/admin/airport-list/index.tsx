@@ -16,76 +16,65 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 
-interface Airplane {
-  airplane_id: number;
-  airplane_model: string;
-  registration_number: string;
-  manufacturer: string;
-  capacity: number;
+interface Airport {
+  airport_id: number;
+  airport_code: string;
+  city: string;
+  name: string;
 }
 
-const mockAirplaneData: Airplane[] = [
+const mockAirportData: Airport[] = [
   {
-    airplane_id: 1,
-    airplane_model: "Boeing 737",
-    registration_number: "N12345",
-    manufacturer: "Boeing",
-    capacity: 200,
+    airport_id: 1,
+    airport_code: "SFO",
+    city: "San Francisco",
+    name: "San Francisco International Airport",
   },
   {
-    airplane_id: 2,
-    airplane_model: "Airbus A320",
-    registration_number: "A54321",
-    manufacturer: "Airbus",
-    capacity: 180,
+    airport_id: 2,
+    airport_code: "MIA",
+    city: "Miami",
+    name: "Miami International Airport",
   },
   {
-    airplane_id: 3,
-    airplane_model: "Boeing 747",
-    registration_number: "B98765",
-    manufacturer: "Boeing",
-    capacity: 400,
-  },
-  {
-    airplane_id: 4,
-    airplane_model: "Embraer E190",
-    registration_number: "E67890",
-    manufacturer: "Embraer",
-    capacity: 100,
+    airport_id: 3,
+    airport_code: "SEA",
+    city: "Seattle",
+    name: "Seattle-Tacoma International Airport",
   },
 ];
 
-const AirplaneList = () => {
-  const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
+const AirportList = () => {
+  const [airportData, setAirportData] = useState<Airport[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedAirplaneId, setSelectedAirplaneId] = useState<number | null>(
+  const [selectedAirportId, setSelectedAirportId] = useState<number | null>(
     null
   );
 
   useEffect(() => {
-    // Simulate fetching airplane data
-    setAirplaneData(mockAirplaneData);
+    // Simulate fetching airport data
+    setAirportData(mockAirportData);
   }, []);
 
-  const handleDeleteClick = (airplane_id: number) => {
-    setSelectedAirplaneId(airplane_id);
+  const handleDeleteClick = (airport_id: number) => {
+    setSelectedAirportId(airport_id);
     setDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (selectedAirplaneId !== null) {
-      setAirplaneData((prevData) =>
+    if (selectedAirportId !== null) {
+      setAirportData((prevData) =>
         prevData
-          .filter((airplane) => airplane.airplane_id !== selectedAirplaneId)
-          .map((airplane, index) => ({ ...airplane, airplane_id: index + 1 }))
+          .filter((airport) => airport.airport_id !== selectedAirportId)
+          .map((airport, index) => ({ ...airport, airport_id: index + 1 }))
       );
-      setSelectedAirplaneId(null);
+      setSelectedAirportId(null);
     }
     setDialogOpen(false);
   };
 
   const handleCancelDelete = () => {
-    setSelectedAirplaneId(null);
+    setSelectedAirportId(null);
     setDialogOpen(false);
   };
 
@@ -106,7 +95,7 @@ const AirplaneList = () => {
                   textAlign: "center",
                 }}
               >
-                Airplane ID
+                Airport ID
               </TableCell>
               <TableCell
                 sx={{
@@ -116,7 +105,7 @@ const AirplaneList = () => {
                   textAlign: "center",
                 }}
               >
-                Model
+                Code
               </TableCell>
               <TableCell
                 sx={{
@@ -126,7 +115,7 @@ const AirplaneList = () => {
                   textAlign: "center",
                 }}
               >
-                Registration Number
+                City
               </TableCell>
               <TableCell
                 sx={{
@@ -136,17 +125,7 @@ const AirplaneList = () => {
                   textAlign: "center",
                 }}
               >
-                Manufacturer
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: "white",
-                  fontWeight: "bold",
-                  border: "1px solid #ddd",
-                  textAlign: "center",
-                }}
-              >
-                Capacity
+                Name
               </TableCell>
               <TableCell
                 sx={{
@@ -161,11 +140,11 @@ const AirplaneList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {airplaneData.map((airplane, index) => (
+            {airportData.map((airport, index) => (
               <TableRow
-                key={airplane.airplane_id}
+                key={airport.airport_id}
                 sx={{
-                  backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white",
+                  backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white",
                   "&:hover": {
                     backgroundColor: "#e0f7fa",
                   },
@@ -174,27 +153,22 @@ const AirplaneList = () => {
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
                 >
-                  {airplane.airplane_id}
+                  {airport.airport_id}
                 </TableCell>
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
                 >
-                  {airplane.airplane_model}
+                  {airport.airport_code}
                 </TableCell>
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
                 >
-                  {airplane.registration_number}
+                  {airport.city}
                 </TableCell>
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
                 >
-                  {airplane.manufacturer}
-                </TableCell>
-                <TableCell
-                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
-                >
-                  {airplane.capacity}
+                  {airport.name}
                 </TableCell>
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
@@ -202,7 +176,8 @@ const AirplaneList = () => {
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={() => handleDeleteClick(airplane.airplane_id)}
+                    onClick={() => handleDeleteClick(airport.airport_id)}
+                    sx={{ boxShadow: "none" }}
                   >
                     Delete
                   </Button>
@@ -213,15 +188,26 @@ const AirplaneList = () => {
         </Table>
       </TableContainer>
       <Dialog open={dialogOpen} onClose={handleCancelDelete}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle sx={{ fontWeight: "bold", color: "#1e90ff" }}>
+          Confirm Delete
+        </DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this airplane?
+          Are you sure you want to delete this airport?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelDelete} color="primary">
+          <Button
+            onClick={handleCancelDelete}
+            color="primary"
+            sx={{ fontWeight: "bold" }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" autoFocus>
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            sx={{ fontWeight: "bold" }}
+            autoFocus
+          >
             Delete
           </Button>
         </DialogActions>
@@ -230,4 +216,4 @@ const AirplaneList = () => {
   );
 };
 
-export default AirplaneList;
+export default AirportList;
