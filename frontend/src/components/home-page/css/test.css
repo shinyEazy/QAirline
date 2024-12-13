@@ -1,0 +1,22 @@
+#departure {
+    font-size: 1.2rem;
+    border-radius: 0px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 0px 10px;
+    margin-bottom: 30px;
+
+}
+
+#departure:focus {
+    outline: none;
+    /* Remove default outline */
+    border-bottom: 1px solid #2177cb;
+    /* Change border color on focus */
+}
+
+#departure option[value=""] {
+    padding-top: 50px;
+    /* Adjust this value as needed */
+}

@@ -1,3 +1,40 @@
+/* body {
+    background: linear-gradient(-45deg, #213A57, #14919B, #0AD1C8, #);
+    background-size: 400% 400%;
+    -webkit-animation: gradient 12s ease infinite;
+    animation: gradient 12s ease infinite;
+
+    font-family: 'Poppins', sans-serif;
+}
+
+@-webkit-keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+} */
+
 .custom-select {
     width: 100%;
     height: 56px;

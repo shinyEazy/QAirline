@@ -19,7 +19,8 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { fetchFlights, updateFlight } from "hooks/flight-hook";
-
+import { getPassengerInFlight } from "hooks/passenger-hook";
+import { Passenger, NewPassenger } from "types/passenger";
 interface Flight {
   flight_id: number;
   flight_number: string;
@@ -34,51 +35,44 @@ interface Flight {
   flight_price: number;
 }
 
-interface Passenger {
-  passengerId: number;
-  firstName: string;
-  lastName: string;
-  dob: string;
-  class: string;
-  seat: string;
-}
 
-const passengersByFlightId: Record<string, Passenger[]> = {
-  1: [
-    {
-      passengerId: 1,
-      firstName: "John",
-      lastName: "Doe",
-      dob: "1990-01-01",
-      class: "Economy",
-      seat: "A1",
-    },
-    {
-      passengerId: 2,
-      firstName: "Jane",
-      lastName: "Smith",
-      dob: "1985-05-15",
-      class: "First Class",
-      seat: "B2",
-    },
-    {
-      passengerId: 3,
-      firstName: "Alice",
-      lastName: "Johnson",
-      dob: "1992-07-21",
-      class: "Business",
-      seat: "C3",
-    },
-    {
-      passengerId: 4,
-      firstName: "Joshep",
-      lastName: "Zues",
-      dob: "1992-07-21",
-      class: "Business",
-      seat: "A4",
-    },
-  ],
-};
+
+// const passengersByFlightId: Record<string, Passenger[]> = {
+//   1: [
+//     {
+//       passengerId: 1,
+//       firstName: "John",
+//       lastName: "Doe",
+//       dob: "1990-01-01",
+//       class: "Economy",
+//       seat: "A1",
+//     },
+//     {
+//       passengerId: 2,
+//       firstName: "Jane",
+//       lastName: "Smith",
+//       dob: "1985-05-15",
+//       class: "First Class",
+//       seat: "B2",
+//     },
+//     {
+//       passengerId: 3,
+//       firstName: "Alice",
+//       lastName: "Johnson",
+//       dob: "1992-07-21",
+//       class: "Business",
+//       seat: "C3",
+//     },
+//     {
+//       passengerId: 4,
+//       firstName: "Joshep",
+//       lastName: "Zues",
+//       dob: "1992-07-21",
+//       class: "Business",
+//       seat: "A4",
+//     },
+//   ],
+// };
 
 const FlightList = () => {
 
@@ -103,7 +97,7 @@ const FlightList = () => {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [open, setOpen] = useState(false);
   const [openView, setOpenView] = useState(false);
-  const [selectedPassengers, setSelectedPassengers] = useState<Passenger[]>([]);
+  const [selectedPassengers, setSelectedPassengers] = useState<NewPassenger[]>([]);
   const [error, setError] = useState<string | null>(null);
   const sortFlightsByID = (flights: Flight[]) => {
     return [...flights].sort((a, b) => a.flight_id - b.flight_id);
@@ -126,43 +120,48 @@ const FlightList = () => {
     setOpen(true);
   };
 
-  const handleView = (flightId: string) => {
-    const passengers = passengersByFlightId[flightId] || [];
-    console.log(passengers);
-    const classPriority: Record<string, number> = {
-      "First Class": 1,
-      Business: 2,
-      Economy: 3,
-    };
-
-    const sortedPassengers = [...passengers].sort((a, b) => {
-      // Compare by class priority
-      const classDiff =
-        (classPriority[a.class] || Infinity) -
-        (classPriority[b.class] || Infinity);
-      if (classDiff !== 0) return classDiff;
-
-      // Compare by seat order (e.g., "A1" vs "B2")
-      const parseSeat = (seat: string) => {
-        const match = seat.match(/^([A-Za-z])(\d+)$/);
-        if (match) {
-          const [, letter, number] = match;
-          return { letter, number: parseInt(number, 10) };
-        }
-        return { letter: "", number: Infinity };
+  const handleView = async (flightId: number) => {
+    try {
+      const passengers = await getPassengerInFlight(flightId);
+      console.log(passengers);
+      const classPriority: Record<string, number> = {
+        "First Class": 1,
+        Business: 2,
+        Economy: 3,
       };
 
-      const seatA = parseSeat(a.seat);
-      const seatB = parseSeat(b.seat);
+      const sortedPassengers = [...passengers].sort((a, b) => {
+        // Compare by class priority
+        const classDiff =
+          (classPriority[a.flight_class] || Infinity) -
+          (classPriority[b.flight_class] || Infinity);
+        if (classDiff !== 0) return classDiff;
 
-      if (seatA.letter !== seatB.letter) {
-        return seatA.letter.localeCompare(seatB.letter);
-      }
-      return seatA.number - seatB.number;
-    });
+        // Compare by seat order (e.g., "A1" vs "B2")
+        const parseSeat = (seat: string) => {
+          const match = seat.match(/^([A-Za-z])(\d+)$/);
+          if (match) {
+            const [, letter, number] = match;
+            return { letter, number: parseInt(number, 10) };
+          }
+          return { letter: "", number: Infinity };
+        };
 
-    setSelectedPassengers(sortedPassengers);
-    setOpenView(true);
+        const seatA = parseSeat(a.seat_col);
+        const seatB = parseSeat(b.seat_col);
+
+        if (seatA.letter !== seatB.letter) {
+          return seatA.letter.localeCompare(seatB.letter);
+        }
+        return seatA.number - seatB.number;
+      });
+
+      setSelectedPassengers(sortedPassengers);
+      setOpenView(true);
+    } catch (error) {
+      setError("Failed to fetch passengers");
+      console.error("Error fetching passengers", error);
+    }
   };
 
   const handleChange = (field: keyof Flight, value: string) => {
@@ -365,7 +364,7 @@ const FlightList = () => {
                 </TableCell>
                 <TableCell sx={{ border: "1px solid #ddd" }}>
                   <Button
-                    onClick={() => handleView("1")}
+                    onClick={() => handleView(flight.flight_id)}
                     variant="contained"
                     size="small"
                     color="primary"
@@ -397,21 +396,21 @@ const FlightList = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>Date of Birth</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>DOB</TableCell>
                   <TableCell>Seat</TableCell>
+                  <TableCell>Class</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {selectedPassengers.map((passenger, index) => (
-                  <TableRow key={passenger.passengerId}>
+                  <TableRow >
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{passenger.firstName}</TableCell>
-                    <TableCell>{passenger.lastName}</TableCell>
-                    <TableCell>{passenger.dob}</TableCell>
+                    <TableCell>{passenger.first_name + " " + passenger.last_name}</TableCell>
+                    <TableCell>{passenger.date_of_birth}</TableCell>
+                    <TableCell>{passenger.flight_class}</TableCell>
                     <TableCell>
-                      {passenger.class + " - " + passenger.seat}
+                      {passenger.seat_col + " - " + passenger.seat_row}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -468,7 +467,7 @@ const FlightList = () => {
             margin="dense"
             sx={{ marginTop: 1 }}
           >
-            <MenuItem value="On Time">On time</MenuItem>
+            <MenuItem value="On Time">On Time</MenuItem>
             <MenuItem value="Delayed">Delayed</MenuItem>
             <MenuItem value="Canceled">Canceled</MenuItem>
             <MenuItem value="Departed">Departed</MenuItem>

@@ -4,12 +4,12 @@ import { Passenger } from 'types/passenger';
 
 const useBookingPayload = () => {
     const [payload, setPayload] = useState<BookingPayload>({
-        user_id: null,
+        user_id: 0,
         number_of_adults: 0,
         number_of_children: 0,
-        flight_class: null,
+        flight_class: "",
         cancelled: false,
-        flight_id: null,
+        flight_id: 0,
         passengers: [],
     });
 
@@ -27,6 +27,7 @@ const useBookingPayload = () => {
             ...prev,
             flight_id: flightId
         }));
+        console.log(payload);
     };
 
     // Function to update flight class

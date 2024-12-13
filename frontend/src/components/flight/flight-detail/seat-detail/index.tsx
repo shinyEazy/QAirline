@@ -9,8 +9,9 @@ interface SeatOwner {
   class: string;
   nationality: string;
   phone: string;
-  gender: boolean;
+  gender: string;
 }
+
 
 const SeatDetail = () => {
   const [seatOwners, setSeatOwners] = useState<SeatOwner[]>([
@@ -22,7 +23,7 @@ const SeatDetail = () => {
       class: "Economy",
       nationality: "",
       phone: "",
-      gender: true,
+      gender: "",
     },
     {
       id: "A2",
@@ -32,7 +33,7 @@ const SeatDetail = () => {
       class: "Economy",
       nationality: "",
       phone: "",
-      gender: true,
+      gender: "",
     },
     {
       id: "A3",
@@ -42,7 +43,7 @@ const SeatDetail = () => {
       class: "Economy",
       nationality: "",
       phone: "",
-      gender: true,
+      gender: "",
     },
   ]);
 
@@ -67,7 +68,7 @@ const SeatDetail = () => {
         : Math.min(prevIndex + 1, seatOwners.length - 1)
     );
   };
-
+  console.log('hello');
   return (
     <Box
       sx={{

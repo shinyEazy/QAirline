@@ -17,11 +17,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
+import "./css/test.css";
 import { Flight } from "types/flight";
 // interface FlightSearchProps {
 //   setFlights: React.Dispatch<React.SetStateAction<Flight[]>>;
 // }
 import { useFlightSearchStore } from "hooks/flight-search-hook";
+import { fetchAirport } from "hooks/airport-hook";
 const FlightSearch: React.FC = () => {
   // const [departureCity, setDepartureCity] = useState("");
   // const [arrivalCity, setArrivalCity] = useState("");
@@ -36,7 +38,19 @@ const FlightSearch: React.FC = () => {
   // const [isRoundTrip, setIsRoundTrip] = useState(false);
   // const location = useLocation();
   const navigate = useNavigate();
+  const [airports, setAirports] = useState<{ airport_id: number; city: string; airport_code: string }[]>([]);
+  useEffect(() => {
+    const fetchInitialAirports = async () => {
+      try {
+        const data = await fetchAirport();
+        setAirports(data);
+      } catch (error) {
+        console.error("Failed to fetch airports:", error);
+      }
+    };
 
+    fetchInitialAirports();
+  }, []);
   // useEffect(() => {
   //   window.scrollTo(0, 0);
   // }, [location]);
@@ -225,25 +239,21 @@ const FlightSearch: React.FC = () => {
                 >
                   From
                 </Typography>
-                <TextField
-                  fullWidth
-                  value={departureCity}
+                <select
+                  id="departure"
+                  value={departureCity || ""}
+                  className="custom-select"
                   onChange={(e) => setDepartureCity(e.target.value)}
-                  variant="standard"
-                  InputProps={{
-                    disableUnderline: false,
-                    style: {
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                  sx={{
-                    "& .MuiInput-root": {
-                      fontSize: "1.3rem",
-                      borderRadius: "10px",
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                />
+                >
+                  <option value="" disabled>
+                    Select city
+                  </option>
+                  {airports.map((airport) => (
+                    <option key={airport.airport_id} value={airport.city}>
+                      {`${airport.city} (${airport.airport_code})`}
+                    </option>
+                  ))}
+                </select>
               </Box>
               <FontAwesomeIcon
                 icon={faArrowRightArrowLeft}
@@ -264,25 +274,21 @@ const FlightSearch: React.FC = () => {
                 >
                   To
                 </Typography>
-                <TextField
-                  fullWidth
-                  value={arrivalCity}
+                <select
+                  id="departure"
+                  value={arrivalCity || ""}
+                  className="custom-select"
                   onChange={(e) => setArrivalCity(e.target.value)}
-                  variant="standard"
-                  InputProps={{
-                    disableUnderline: false,
-                    style: {
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                  sx={{
-                    "& .MuiInput-root": {
-                      fontSize: "1.3rem",
-                      borderRadius: "10px",
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                />
+                >
+                  <option value="" disabled>
+                    Select city
+                  </option>
+                  {airports.map((airport) => (
+                    <option key={airport.airport_id} value={airport.city}>
+                      {`${airport.city} (${airport.airport_code})`}
+                    </option>
+                  ))}
+                </select>
               </Box>
             </Box>
             <Divider
