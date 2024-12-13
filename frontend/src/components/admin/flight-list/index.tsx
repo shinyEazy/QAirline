@@ -81,7 +81,6 @@ const passengersByFlightId: Record<string, Passenger[]> = {
 };
 
 const FlightList = () => {
-
   const getStatusStyle = (status: string) => {
     switch (status) {
       case "On Time":
@@ -172,10 +171,17 @@ const FlightList = () => {
   };
 
   const handleSave = async () => {
-
     if (selectedFlight) {
       try {
-        const { registration_number, estimated_departure_time, actual_departure_time, estimated_arrival_time, actual_arrival_time, flight_price, status } = selectedFlight;
+        const {
+          registration_number,
+          estimated_departure_time,
+          actual_departure_time,
+          estimated_arrival_time,
+          actual_arrival_time,
+          flight_price,
+          status,
+        } = selectedFlight;
         const { departure_city, destination_city } = selectedFlight;
 
         // Tạo payload với chỉ các trường cần thiết
@@ -186,17 +192,24 @@ const FlightList = () => {
           estimated_arrival_time,
           actual_arrival_time: actual_arrival_time || "",
           flight_price,
-          status
+          status,
         };
         // Gọi API để cập nhật chuyến bay
-        const updatedFlight = await updateFlight(selectedFlight.flight_id, payload);
+        const updatedFlight = await updateFlight(
+          selectedFlight.flight_id,
+          payload
+        );
         updatedFlight.departure_city = departure_city;
         updatedFlight.destination_city = destination_city;
 
         // Cập nhật lại danh sách chuyến bay trong state
-        setFlightData(flightData.map((flight) =>
-          flight.flight_id === selectedFlight.flight_id ? updatedFlight : flight
-        ));
+        setFlightData(
+          flightData.map((flight) =>
+            flight.flight_id === selectedFlight.flight_id
+              ? updatedFlight
+              : flight
+          )
+        );
 
         // Đóng modal sau khi cập nhật thành công
         setOpen(false);
@@ -205,26 +218,25 @@ const FlightList = () => {
         console.error("Error updating flight", error);
       }
     }
-
   };
 
   const formatDateTime = (dateTime: string) => {
-    return new Date(dateTime).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
+    return new Date(dateTime).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     });
   };
 
   return (
-    <Box padding={2}>
-      <Typography variant="h4" gutterBottom>
-        Flight Management
-      </Typography>
-      <TableContainer component={Paper}>
+    <Box padding={2} width="100vw">
+      <TableContainer
+        component={Paper}
+        sx={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", borderRadius: 2 }}
+      >
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#1e90ff" }}>
@@ -233,6 +245,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 ID
@@ -242,6 +255,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Flight Number
@@ -251,6 +265,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Airplane Registration Number
@@ -260,6 +275,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Departure
@@ -269,6 +285,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Destination
@@ -278,6 +295,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Departure Time
@@ -287,6 +305,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Arrival Time
@@ -296,6 +315,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Price
@@ -305,6 +325,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Status
@@ -314,6 +335,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Actions
@@ -327,32 +349,48 @@ const FlightList = () => {
                 sx={{
                   backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white",
                   "&:hover": {
-                    backgroundColor: "#e0f7fa", // Light blue hover color
+                    backgroundColor: "#e0f7fa",
                   },
                 }}
               >
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.flight_id}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.flight_number}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.registration_number}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.departure_city}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.destination_city}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {formatDateTime(flight.estimated_departure_time)}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {formatDateTime(flight.estimated_arrival_time)}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.flight_price}
                 </TableCell>
                 <TableCell
@@ -363,7 +401,9 @@ const FlightList = () => {
                 >
                   {flight.status}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   <Button
                     onClick={() => handleView("1")}
                     variant="contained"
@@ -435,7 +475,9 @@ const FlightList = () => {
             fullWidth
             margin="dense"
             value={selectedFlight?.registration_number || ""}
-            onChange={(e) => handleChange("registration_number", e.target.value)}
+            onChange={(e) =>
+              handleChange("registration_number", e.target.value)
+            }
           />
           <Box display="flex" gap={2}>
             <TextField
@@ -443,14 +485,18 @@ const FlightList = () => {
               fullWidth
               margin="dense"
               value={selectedFlight?.estimated_departure_time || ""}
-              onChange={(e) => handleChange("estimated_departure_time", e.target.value)}
+              onChange={(e) =>
+                handleChange("estimated_departure_time", e.target.value)
+              }
             />
             <TextField
               label="Arrival Time"
               fullWidth
               margin="dense"
               value={selectedFlight?.estimated_arrival_time || ""}
-              onChange={(e) => handleChange("estimated_arrival_time", e.target.value)}
+              onChange={(e) =>
+                handleChange("estimated_arrival_time", e.target.value)
+              }
             />
           </Box>
           <TextField
