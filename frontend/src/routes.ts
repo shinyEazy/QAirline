@@ -16,6 +16,7 @@ import Flight from "pages/flight";
 import FlightList from "pages/flight/flight-list";
 import FlightDetail from "pages/flight/flight-detail";
 import FlightPayment from "pages/flight/flight-payment";
+import FlightBooking from "components/flight/flight-booking";
 
 const routes = [
   {
@@ -91,6 +92,10 @@ const routes = [
       {
         path: "payment",
         component: FlightPayment,
+      },
+      {
+        path: "booking",
+        component: FlightBooking,
       },
     ],
   },
