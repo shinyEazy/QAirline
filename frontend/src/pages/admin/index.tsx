@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import './css/admin.css';
 import {
   Box,
   Typography,
@@ -8,9 +9,13 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Autocomplete
 } from "@mui/material";
 import FlightList from "../../components/admin/flight-list";
 import { createFlight } from "../../hooks/flight-hook";
+import { fetchAirplanes } from "../../hooks/flight-hook";
+import DatePicker from "react-datepicker";
+import { fetchAirport } from "hooks/airport-hook";
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
   const [airplaneModalOpen, setAirplaneModalOpen] = useState(false);
@@ -19,17 +24,16 @@ const AdminPage = () => {
   const [newFlight, setNewFlight] = useState({
     flightNumber: "",
     airplaneRegistrationNumber: "",
-    departure: "",
-    destination: "",
-    departureTime: "",
-    arrivalTime: "",
+    departure: 0,
+    destination: 0,
+    departureTime: new Date(),
+    arrivalTime: new Date(),
     price: 0.0,
   });
 
   const [newAirplane, setNewAirplane] = useState({
     airplane_model_id: 0,
     registration_number: "",
-    current_airport_id: 0,
     flight_seats: [
       {
         flight_class: "Economy",
@@ -61,6 +65,37 @@ const AdminPage = () => {
     content: "",
   });
 
+  const [airplaneSuggestions, setAirplaneSuggestions] = useState<{ registration_number: string }[]>([]);
+  const [airports, setAirports] = useState<{ airport_id: number; city: string; airport_code: string }[]>([]);
+
+  useEffect(() => {
+    const fetchInitialAirports = async () => {
+      try {
+        const data = await fetchAirport();
+        setAirports(data);
+      } catch (error) {
+        console.error("Failed to fetch airports:", error);
+      }
+    };
+
+    fetchInitialAirports();
+  }, []);
+
+  // Fetch máy bay
+  useEffect(() => {
+    const fetchInitialAirplanes = async () => {
+      try {
+        const data = await fetchAirplanes();
+        setAirplaneSuggestions(data);
+      } catch (error) {
+        console.error("Failed to fetch airplane suggestions:", error);
+      }
+    };
+
+    fetchInitialAirplanes();
+  }, []);
+
+
   const handleFlightModalOpen = () => {
     setFlightModalOpen(true);
   };
@@ -70,10 +105,10 @@ const AdminPage = () => {
     setNewFlight({
       flightNumber: "",
       airplaneRegistrationNumber: "",
-      departure: "",
-      destination: "",
-      departureTime: "",
-      arrivalTime: "",
+      departure: 0,
+      destination: 0,
+      departureTime: new Date(),
+      arrivalTime: new Date(),
       price: 0.0,
     });
   };
@@ -87,7 +122,6 @@ const AdminPage = () => {
     setNewAirplane({
       airplane_model_id: 0,
       registration_number: "",
-      current_airport_id: 0,
       flight_seats: [
         {
           flight_class: "",
@@ -110,7 +144,7 @@ const AdminPage = () => {
     });
   };
 
-  const handleFlightChange = (field: string, value: string) => {
+  const handleFlightChange = (field: string, value: any) => {
     setNewFlight({ ...newFlight, [field]: value });
   };
 
@@ -138,9 +172,10 @@ const AdminPage = () => {
       const payload = {
         flight_number: newFlight.flightNumber,
         registration_number: newFlight.airplaneRegistrationNumber,
-        estimated_departure_time: newFlight.departureTime,
-        estimated_arrival_time: newFlight.arrivalTime,
-        destination_airport_id: 30, // Assuming it's a number
+        estimated_departure_time: newFlight.departureTime.toISOString().split("T")[0],
+        estimated_arrival_time: newFlight.arrivalTime.toISOString().split("T")[0],
+        departure_airport_id: newFlight.departure,
+        destination_airport_id: newFlight.destination,
         flight_price: newFlight.price,
         status: "Scheduled", // Default status or you can add a field in the UI to select this
       };
@@ -164,6 +199,7 @@ const AdminPage = () => {
     console.log("New News Data:", newNews);
     handleNewsModalClose();
   };
+
 
   return (
     <Box>
@@ -232,42 +268,102 @@ const AdminPage = () => {
             value={newFlight.flightNumber}
             onChange={(e) => handleFlightChange("flightNumber", e.target.value)}
           />
-          <TextField
-            label="Airplane Registration Number"
-            fullWidth
-            margin="dense"
-            value={newFlight.airplaneRegistrationNumber}
-            onChange={(e) => handleFlightChange("airplaneRegistrationNumber", e.target.value)}
-          />
-          <TextField
-            label="Departure"
-            fullWidth
-            margin="dense"
-            value={newFlight.departure}
-            onChange={(e) => handleFlightChange("departure", e.target.value)}
-          />
-          <TextField
-            label="Destination"
-            fullWidth
-            margin="dense"
-            value={newFlight.destination}
-            onChange={(e) => handleFlightChange("destination", e.target.value)}
-          />
-          <TextField
-            label="Departure Time"
-            fullWidth
-            margin="dense"
-            value={newFlight.departureTime}
-            onChange={(e) =>
-              handleFlightChange("departureTime", e.target.value)
+          {/* <Autocomplete
+            options={airports}
+            getOptionLabel={(option) => `${option.city} (${option.airport_code})`}
+            onChange={(e, value) =>
+              handleFlightChange("departure", value ? value.airport_id : 0)
             }
+            renderInput={(params) => (
+              <TextField {...params} label="Departure" fullWidth margin="dense" />
+            )}
           />
-          <TextField
-            label="Arrival Time"
-            fullWidth
-            margin="dense"
-            value={newFlight.arrivalTime}
-            onChange={(e) => handleFlightChange("arrivalTime", e.target.value)}
+          <Autocomplete
+            options={airports}
+            getOptionLabel={(option) => `${option.city} (${option.airport_code})`}
+            onChange={(e, value) =>
+              handleFlightChange("destination", value ? value.airport_id : 0)
+            }
+            renderInput={(params) => (
+              <TextField {...params} label="Destination" fullWidth margin="dense" />
+            )}
+          /> */}
+          {/* <label htmlFor="departure">Departure:</label> */}
+          <select
+            id="departure"
+            value={newFlight.departure || ""}
+            className="custom-select"
+            onChange={(e) => handleFlightChange("departure", Number(e.target.value))}
+          >
+            <option value="" disabled>
+              Select Departure Airport
+            </option>
+            {airports.map((airport) => (
+              <option key={airport.airport_id} value={airport.airport_id}>
+                {`${airport.city} (${airport.airport_code})`}
+              </option>
+            ))}
+          </select>
+
+          {/* <label htmlFor="destination">Destination:</label> */}
+          <select
+            id="destination"
+            className="custom-select"
+            value={newFlight.destination || ""}
+            onChange={(e) => handleFlightChange("destination", Number(e.target.value))}
+          >
+            <option value="" disabled>
+              Select Destination Airport
+            </option>
+            {airports.map((airport) => (
+              <option key={airport.airport_id} value={airport.airport_id}>
+                {`${airport.city} (${airport.airport_code})`}
+              </option>
+            ))}
+          </select>
+          {/* <label htmlFor="airplane">Airplane Registration Number:</label> */}
+          <select
+            id="airplane"
+            className="custom-select"
+            value={newFlight.airplaneRegistrationNumber || ""}
+            onChange={(e) => handleFlightChange("airplaneRegistrationNumber", e.target.value)}
+          >
+            <option value="" disabled>
+              Select Airplane Registration Number
+            </option>
+            {airplaneSuggestions.map((airplane) => (
+              <option key={airplane.registration_number} value={airplane.registration_number}>
+                {airplane.registration_number}
+              </option>
+            ))}
+          </select>
+
+          {/* <Autocomplete
+            options={airplaneSuggestions.map((airplane) => airplane.registration_number)}
+            value={newFlight.airplaneRegistrationNumber}
+            onChange={(e, value) => handleFlightChange("airplaneRegistrationNumber", value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Airplane Registration Number"
+                fullWidth
+                margin="dense"
+              />
+            )}
+          /> */}
+          <DatePicker
+            selected={newFlight.departureTime}
+            onChange={(date) => handleFlightChange("departureTime", date)}
+            showTimeSelect
+            dateFormat="Pp"
+            customInput={<TextField label="Departure Time" fullWidth margin="dense" />}
+          />
+          <DatePicker
+            selected={newFlight.arrivalTime}
+            onChange={(date) => handleFlightChange("arrivalTime", date)}
+            showTimeSelect
+            dateFormat="Pp"
+            customInput={<TextField label="Arrival Time" fullWidth margin="dense" />}
           />
           <TextField
             label="Price"
@@ -309,14 +405,6 @@ const AdminPage = () => {
             margin="dense"
             value={newAirplane.registration_number}
             onChange={(e) => handleAirplaneChange("registration_number", e.target.value)}
-          />
-          <TextField
-            label="Current Airport ID"
-            type="number"
-            fullWidth
-            margin="dense"
-            value={newAirplane.current_airport_id}
-            onChange={(e) => handleAirplaneChange("current_airport_id", Number(e.target.value))}
           />
           {newAirplane.flight_seats.map((seat, index) => (
             <Box key={seat.flight_class} sx={{ border: '1px solid #ccc', padding: 2, marginTop: 2 }}>

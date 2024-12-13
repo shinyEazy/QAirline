@@ -19,14 +19,16 @@ const SEAT_PRICE = 100;
 
 const FlightSeat = () => {
   const navigate = useNavigate();
-  const { setFlightClass } = useBookingPayload();
-  const payload = useBookingPayload().getPayload();
+  const { getPayload, setFlightClass } = useBookingPayload();
 
   const [matrix, setMatrix] = useState([]);
   const [loading, setLoading] = useState(true); // For handling loading state
   const [letters, setLetters] = useState([]);
   const [seats, setSeats] = useState([]);
 
+  const payload = getPayload();
+
+  console.log(payload);
   // Fetch flight seats on component mount
   useEffect(() => {
     const fetchSeats = async () => {

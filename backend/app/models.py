@@ -162,13 +162,14 @@ class Airplane(Base):
         Integer, ForeignKey("airplane_model.airplane_model_id", ondelete="CASCADE")
     )
     registration_number = Column(String, unique=True)
-    current_airport_id = Column(
-        Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
-    )
 
     # Thêm relationship
     airplane_model = relationship("AirplaneModel", back_populates="airplanes")
-    current_airport = relationship("Airport", back_populates="airplanes")
+
+    # Thêm relationship với FlightSeats
+    flight_seats = relationship("FlightSeats", back_populates="airplane", cascade="all, delete-orphan"
+    )
+
 
 
 class Airport(Base):
@@ -178,8 +179,6 @@ class Airport(Base):
     airport_code = Column(String, index=True)
     city = Column(String)
     name = Column(String)
-
-    airplanes = relationship("Airplane", back_populates="current_airport")
 
 
 class FlightSeats(Base):
@@ -194,6 +193,8 @@ class FlightSeats(Base):
     child_multiplier = Column(Float, nullable=True)
     max_row_seat = Column(Integer, nullable=False)
     max_col_seat = Column(String, nullable=False)
+    # Thêm relationship với Airplane
+    airplane = relationship("Airplane", back_populates="flight_seats")
 
 
 class Advert(Base):

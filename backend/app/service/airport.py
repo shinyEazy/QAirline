@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.orm import Session
 from app.schemas import AirportCreate, AirportUpdate
 from .crud_utils import *
@@ -13,6 +14,8 @@ def get_airport(db: Session, airport_id: int) -> Airport:
     db_airport = db.query(Airport).filter(Airport.airport_id == airport_id).first()
     return db_airport
 
+def get_all_airports(db: Session) -> List[Airport]:
+    return db.query(Airport).all()
 
 def update_airport(db: Session, db_airport: Airport, airport: AirportUpdate) -> Airport:
     return update(db_airport, db, airport.model_dump())

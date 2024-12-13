@@ -1,0 +1,38 @@
+.custom-select {
+    width: 100%;
+    height: 56px;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    /* Tùy chỉnh mũi tên cho select */
+    -webkit-appearance: none;
+    /* Tắt mũi tên mặc định trong Chrome, Safari */
+    -moz-appearance: none;
+    /* Tắt mũi tên mặc định trong Firefox */
+    appearance: none;
+    /* Tắt mũi tên mặc định trong các trình duyệt hiện đại */
+    padding-right: 30px;
+    /* Thêm khoảng cách cho mũi tên mới */
+    background: url('../../../../public/down-arrow.png')no-repeat right 10px center;
+    /* Thêm mũi tên tùy chỉnh */
+    background-size: 12px;
+    /* Đặt kích thước cho mũi tên */
+    background-color: white;
+    /* Màu nền của select */
+    border: 1px solid #ccc;
+    /* Đặt viền cho select */
+    border-radius: 4px;
+    /* Bo góc */
+    padding: 8px 12px;
+    /* Thêm khoảng cách cho text bên trong */
+}
+
+select:focus {
+    outline: none;
+    /* Xóa viền khi chọn */
+    border-color: #0779ec;
+    /* Đổi màu viền khi focus */
+    border-width: 2px;
+}

@@ -29,9 +29,7 @@ CREATE TABLE airplane (
     airplane_id SERIAL PRIMARY KEY,
     airplane_model_id INTEGER,
     registration_number TEXT UNIQUE,
-    current_airport_id INTEGER,
-    FOREIGN KEY (airplane_model_id) REFERENCES airplane_model(airplane_model_id) ON DELETE CASCADE,
-    FOREIGN KEY (current_airport_id) REFERENCES airport(airport_id) ON DELETE CASCADE
+    FOREIGN KEY (airplane_model_id) REFERENCES airplane_model(airplane_model_id) ON DELETE CASCADE
 );
 
 -- Create Flight Table
@@ -221,40 +219,40 @@ INSERT INTO "airport" (airport_code, city, name) VALUES
 
 
 -- Insert Airplane Data
-INSERT INTO airplane (airplane_model_id, registration_number, current_airport_id) 
-VALUES 
-(1, 'N789BA', 1),
-(2, 'G-XWBA', 2),
-(3, 'F-HZBA', 3),
-(4, 'D-ABYC', 4),
-(5, 'C-FZBA', 5),
-(6, 'JA123A', 6),
-(7, 'VH-ZNA', 7),
-(8, '9V-SKA', 8),
-(9, 'HS-TKA', 9),
-(10, 'B-2088', 10),
-(11, 'CC-BGA', 11),
-(12, 'XA-ZAA', 12),
-(13, 'EI-DYC', 13),
-(14, 'CS-TKA', 14),
-(15, 'EC-MUA', 15),
-(16, 'OO-SBA', 16),
-(17, 'PH-BHA', 17),
-(18, 'LN-NOR', 18),
-(19, 'SE-RKA', 19),
-(20, 'OY-KBA', 20),
-(21, 'SP-LRA', 21),
-(22, 'TC-LKA', 22),
-(23, 'SU-GEA', 23),
-(24, 'ET-ASK', 24),
-(25, 'ZK-NZE', 25),
-(26, 'JA803A', 26),
-(27, 'HL8003', 27),
-(28, 'PR-OPA', 28),
-(29, 'LV-FQA', 29),
-(30, 'CC-BGC', 30),
-(31, 'VT-ALJ', 31),
-(32, 'PK-GIC', 32);
+INSERT INTO airplane (airplane_model_id, registration_number) VALUES 
+(1, 'N789BA'),
+(2, 'G-XWBA'),
+(3, 'F-HZBA'),
+(4, 'D-ABYC'),
+(5, 'C-FZBA'),
+(6, 'JA123A'),
+(7, 'VH-ZNA'),
+(8, '9V-SKA'),
+(9, 'HS-TKA'),
+(10, 'B-2088'),
+(11, 'CC-BGA'),
+(12, 'XA-ZAA'),
+(13, 'EI-DYC'),
+(14, 'CS-TKA'),
+(15, 'EC-MUA'),
+(16, 'OO-SBA'),
+(17, 'PH-BHA'),
+(18, 'LN-NOR'),
+(19, 'SE-RKA'),
+(20, 'OY-KBA'),
+(21, 'SP-LRA'),
+(22, 'TC-LKA'),
+(23, 'SU-GEA'),
+(24, 'ET-ASK'),
+(25, 'ZK-NZE'),
+(26, 'JA803A'),
+(27, 'HL8003'),
+(28, 'PR-OPA'),
+(29, 'LV-FQA'),
+(30, 'CC-BGC'),
+(31, 'VT-ALJ'),
+(32, 'PK-GIC');
+
 
 -- Insert Flight Data
 INSERT INTO flight (
