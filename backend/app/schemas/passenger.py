@@ -20,7 +20,7 @@ class PassengerBase(SchemaModel):
 
 
 class PassengerCreate(PassengerBase):
-    booking_id: int = Field(..., description="Associated booking ID")
+    booking_id: str = Field(..., description="Associated booking ID")
 
 
 class PassengerRead(PassengerBase):

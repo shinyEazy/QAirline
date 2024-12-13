@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
-from starlette.status import HTTP_404_NOT_FOUND
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks, status
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from app.core.security import role_checker
 from app.models import FlightStatus
 from service.airplane import get_airplane_by_registration_number
@@ -121,6 +121,11 @@ async def delay_flight_end_point(
     db: Session = Depends(get_db),
 ):
     db_flight = get_flight(db, flight.flight_id)
+    if flight.status not in FlightStatus.__members__:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail=f"Flight status is invalid, please choose a correct flight status: Scheduled, On Time, Delayed, Cancelled, Landed",
+        )
     if not db_flight:
         raise HTTPException(status_code=404, detail="Flight not found")
 
@@ -129,19 +134,25 @@ async def delay_flight_end_point(
     return {"message": "Flight delayed"}
 
 
-@router.get("/{flight_id}/{flight_class}")
-def get_flight_seats_matrix_end_point(
-    flight_id: int, flight_class: FlightClass, db: Session = Depends(get_db)
-):
+@router.get("/flight-seats/{flight_id}/")
+def get_flight_seats_matrix_end_point(flight_id: int, db: Session = Depends(get_db)):
     """
     End point to get the flight's seat matrix based on the flight class
     """
-    if flight_class not in FlightClass:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid flight class value: {flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
-        )
+    # if flight_class not in FlightClass:
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail=f"Invalid flight class value: {flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
+    #     )
 
-    return get_flight_seats_matrix(
-        flight_id=flight_id, flight_class=flight_class, db=db
-    )
+    flight_seats_matrix = []
+    for flight_class in FlightClass:
+        flight_seats_matrix.append(
+            [
+                flight_class.value,
+                get_flight_seats_matrix(
+                    flight_id=flight_id, flight_class=flight_class, db=db
+                ),
+            ]
+        )
+    return flight_seats_matrix
