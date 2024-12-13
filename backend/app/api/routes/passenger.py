@@ -70,7 +70,6 @@ def get_passenger_by_flight_end_point(
 
     return db_passenger
 
-
 @router.delete("/{citizen_id}/{flight_id}")
 def delete_passenger_end_point(
     citizen_id: str, flight_id: int, db: Session = Depends(get_db)
