@@ -67,7 +67,7 @@ class Passenger(Base):
     )
     citizen_id = Column(String, nullable=True)
     passport_number = Column(String, nullable=True)  # Optional passport number
-    gender = Column(Boolean, nullable=False)  # TRUE for male, FALSE for female
+    gender = Column(String(10), nullable=False)  # TRUE for male, FALSE for female
     phone_number = Column(String, nullable=False)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)

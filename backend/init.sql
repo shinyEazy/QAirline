@@ -73,16 +73,17 @@ CREATE TABLE passengers (
     booking_id TEXT NOT NULL,
     citizen_id TEXT NOT NULL,
     passport_number TEXT,
-    gender BOOLEAN NOT NULL,
+    gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')) NOT NULL,
     phone_number TEXT NOT NULL,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     nationality TEXT NOT NULL,
-    date_of_birth TIMESTAMP NOT NULL,
+    date_of_birth DATE NOT NULL,
     seat_row INTEGER NOT NULL,
-    seat_col VARCHAR NOT NULL,
+    seat_col VARCHAR(2) NOT NULL,
     FOREIGN KEY (booking_id) REFERENCES booking(booking_id) ON DELETE CASCADE
 );
+
 
 -- Create Payment Table
 CREATE TABLE payment (
@@ -329,4 +330,30 @@ INSERT INTO flight_seats (
 ('XA-ZAA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
 ('XA-ZAA', 'First Class', 2.0, 1.0, 8, 'F'); -- 6 (chia hết cho 3)
 
+INSERT INTO users (firstname, lastname, email, username, password, role) VALUES
+('John', 'Doe', 'john.doe@example.com', 'johndoe', 'hashed_password_1', 'customer'),
+('Jane', 'Smith', 'jane.smith@example.com', 'janesmith', 'hashed_password_2', 'customer');
+
+INSERT INTO booking (user_id, number_of_adults, number_of_children, flight_class, cancelled, flight_id) VALUES
+(2, 2, 0, 'Economy', FALSE, 1), 
+(2, 1, 1, 'Business', FALSE, 2),
+(2, 3, 0, 'Economy', FALSE, 3),
+(2, 2, 2, 'First Class', TRUE, 4), 
+(2, 1, 0, 'Economy', FALSE, 5); 
+
+INSERT INTO passengers (
+    booking_id, citizen_id, passport_number, 
+    gender, phone_number, first_name, last_name, 
+    nationality, date_of_birth, seat_row, seat_col
+) VALUES 
+(1, '001234567890', 'VN123456', 'Male', '0912345678', 'Nguyễn', 'Văn An', 'Vietnam', '1990-05-15', 1, 'A'),
+(1, '009876543210', 'VN654321', 'Female', '0987654321', 'Trần', 'Thị Bích', 'Vietnetnam', '1992-08-20', 1, 'B'),
+(2, '002345678901', 'VN234567', 'Male', '0923456789', 'Phạm', 'Văn Cường', 'Vietnam', '1985-11-30', 2, 'C'),
+(2, '008765432109', 'VN765432', 'Female', '0976543210', 'Lê', 'Thị Diệu', 'Vietietnam', '1988-03-25', 2, 'D'),
+(3, 'FR123456789', 'FR987654', 'Male', '+33612345678', 'Jean', 'Dupont', 'France', '1985-04-12', 5, 'A'),
+(3, 'FR987654321', 'FR123456', 'Female', '+33698765432', 'Marie', 'Laurent', 'France', '1990-09-23', 5, 'B'),
+(4, 'DE234567890', 'DE876543', 'Male', '+49160123456', 'Hans', 'Mueller', 'Germany', '1978-11-05', 6, 'C'),
+(4, 'DE876543210', 'DE345678', 'Female', '+491601234567', 'Anna', 'Schmidt', 'Germany', '1982-07-15',6, 'D'),
+(5, 'IT345678901', 'IT765432', 'Male', '+393912345678', 'Giovanni', 'Rossi', 'Italy', '1975-02-28', 7, 'E'),
+(5, 'IT765432109', 'IT456789', 'Female', '+393387654321', 'Sofia', 'Bianchi', 'Italy', '1988-06-10',7, 'F');
 

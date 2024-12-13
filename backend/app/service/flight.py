@@ -112,13 +112,22 @@ def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
     """
     Get all passengers in a given flight
     """
-    passengers = (
-        db.query(Passenger)
+    db_passengers = (
+        db.query(Passenger, Booking.flight_class)
+        .select_from(Passenger)
         .join(Booking, Booking.booking_id == Passenger.booking_id)
-        .filter(Booking.flight_id == flight_id)
+        .join(Flight, Booking.flight_id == Flight.flight_id)
+        .filter(Flight.flight_id == flight_id)
         .all()
     )
-
+    
+    passengers = []
+    for db_passenger, flight_class in db_passengers:
+        passengers.append({
+            "passenger": db_passenger,
+            "flight_class": flight_class
+        })
+    
     return passengers
 
 

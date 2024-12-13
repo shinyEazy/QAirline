@@ -42,6 +42,10 @@ def get_passenger_by_flight(citizen_id: str, flight_id: int, db: Session) -> Pas
     )
     return db_passenger
 
+# def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
+#     booking_id = db.query(Booking.booking_id).filter(Booking.flight_id == flight_id).all()
+#     db_passengers = db.query(Passenger).filter(Passenger.booking_id.in_(booking_id)).all()
+#     return db_passengers
 
 def update_passenger(
     db_passenger: Passenger, passenger: PassengerUpdate, db: Session
