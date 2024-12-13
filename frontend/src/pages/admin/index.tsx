@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import './css/admin.css';
+import "./css/admin.css";
 import {
   Box,
   Typography,
@@ -9,13 +9,15 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Autocomplete
+  Autocomplete,
 } from "@mui/material";
 import FlightList from "../../components/admin/flight-list";
 import { createFlight } from "../../hooks/flight-hook";
 import { fetchAirplanes } from "../../hooks/flight-hook";
 import DatePicker from "react-datepicker";
 import { fetchAirport } from "hooks/airport-hook";
+import AirplaneList from "../../components/admin/airplane-list";
+
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
   const [airplaneModalOpen, setAirplaneModalOpen] = useState(false);
@@ -40,23 +42,23 @@ const AdminPage = () => {
         class_multiplier: 1,
         child_multiplier: 0.5,
         max_row_seat: 20,
-        max_col_seat: "6"
+        max_col_seat: "6",
       },
       {
         flight_class: "Business",
         class_multiplier: 3,
         child_multiplier: 0.7,
         max_row_seat: 5,
-        max_col_seat: "4"
+        max_col_seat: "4",
       },
       {
         flight_class: "FirstClass",
         class_multiplier: 5,
         child_multiplier: 0.8,
         max_row_seat: 2,
-        max_col_seat: "3"
-      }
-    ]
+        max_col_seat: "3",
+      },
+    ],
   });
 
   const [newNews, setNewNews] = useState({
@@ -65,8 +67,12 @@ const AdminPage = () => {
     content: "",
   });
 
-  const [airplaneSuggestions, setAirplaneSuggestions] = useState<{ registration_number: string }[]>([]);
-  const [airports, setAirports] = useState<{ airport_id: number; city: string; airport_code: string }[]>([]);
+  const [airplaneSuggestions, setAirplaneSuggestions] = useState<
+    { registration_number: string }[]
+  >([]);
+  const [airports, setAirports] = useState<
+    { airport_id: number; city: string; airport_code: string }[]
+  >([]);
 
   useEffect(() => {
     const fetchInitialAirports = async () => {
@@ -94,7 +100,6 @@ const AdminPage = () => {
 
     fetchInitialAirplanes();
   }, []);
-
 
   const handleFlightModalOpen = () => {
     setFlightModalOpen(true);
@@ -128,9 +133,9 @@ const AdminPage = () => {
           class_multiplier: 1,
           child_multiplier: 1,
           max_row_seat: 1,
-          max_col_seat: "A"
-        }
-      ]
+          max_col_seat: "A",
+        },
+      ],
     });
   };
 
@@ -148,13 +153,17 @@ const AdminPage = () => {
     setNewFlight({ ...newFlight, [field]: value });
   };
 
-  const handleAirplaneChange = (field: string, value: string | number, seatIndex?: number) => {
+  const handleAirplaneChange = (
+    field: string,
+    value: string | number,
+    seatIndex?: number
+  ) => {
     const updatedAirplane = { ...newAirplane };
 
     if (seatIndex !== undefined) {
       updatedAirplane.flight_seats[seatIndex] = {
         ...updatedAirplane.flight_seats[seatIndex],
-        [field]: value
+        [field]: value,
       };
     } else {
       updatedAirplane[field] = value;
@@ -172,8 +181,12 @@ const AdminPage = () => {
       const payload = {
         flight_number: newFlight.flightNumber,
         registration_number: newFlight.airplaneRegistrationNumber,
-        estimated_departure_time: newFlight.departureTime.toISOString().split("T")[0],
-        estimated_arrival_time: newFlight.arrivalTime.toISOString().split("T")[0],
+        estimated_departure_time: newFlight.departureTime
+          .toISOString()
+          .split("T")[0],
+        estimated_arrival_time: newFlight.arrivalTime
+          .toISOString()
+          .split("T")[0],
         departure_airport_id: newFlight.departure,
         destination_airport_id: newFlight.destination,
         flight_price: newFlight.price,
@@ -188,7 +201,6 @@ const AdminPage = () => {
     }
   };
 
-
   const handleSaveAirplane = () => {
     console.log("New Airplane Data:", newAirplane);
     // Logic to save the new airplane
@@ -199,7 +211,6 @@ const AdminPage = () => {
     console.log("New News Data:", newNews);
     handleNewsModalClose();
   };
-
 
   return (
     <Box>
@@ -257,6 +268,7 @@ const AdminPage = () => {
         </Button>
       </Box>
       <FlightList />
+      <AirplaneList />
       {/* Add Flight Modal */}
       <Dialog open={flightModalOpen} onClose={handleFlightModalClose} fullWidth>
         <DialogTitle>Add New Flight</DialogTitle>
@@ -293,7 +305,9 @@ const AdminPage = () => {
             id="departure"
             value={newFlight.departure || ""}
             className="custom-select"
-            onChange={(e) => handleFlightChange("departure", Number(e.target.value))}
+            onChange={(e) =>
+              handleFlightChange("departure", Number(e.target.value))
+            }
           >
             <option value="" disabled>
               Select Departure Airport
@@ -310,7 +324,9 @@ const AdminPage = () => {
             id="destination"
             className="custom-select"
             value={newFlight.destination || ""}
-            onChange={(e) => handleFlightChange("destination", Number(e.target.value))}
+            onChange={(e) =>
+              handleFlightChange("destination", Number(e.target.value))
+            }
           >
             <option value="" disabled>
               Select Destination Airport
@@ -326,13 +342,18 @@ const AdminPage = () => {
             id="airplane"
             className="custom-select"
             value={newFlight.airplaneRegistrationNumber || ""}
-            onChange={(e) => handleFlightChange("airplaneRegistrationNumber", e.target.value)}
+            onChange={(e) =>
+              handleFlightChange("airplaneRegistrationNumber", e.target.value)
+            }
           >
             <option value="" disabled>
               Select Airplane Registration Number
             </option>
             {airplaneSuggestions.map((airplane) => (
-              <option key={airplane.registration_number} value={airplane.registration_number}>
+              <option
+                key={airplane.registration_number}
+                value={airplane.registration_number}
+              >
                 {airplane.registration_number}
               </option>
             ))}
@@ -356,14 +377,18 @@ const AdminPage = () => {
             onChange={(date) => handleFlightChange("departureTime", date)}
             showTimeSelect
             dateFormat="Pp"
-            customInput={<TextField label="Departure Time" fullWidth margin="dense" />}
+            customInput={
+              <TextField label="Departure Time" fullWidth margin="dense" />
+            }
           />
           <DatePicker
             selected={newFlight.arrivalTime}
             onChange={(date) => handleFlightChange("arrivalTime", date)}
             showTimeSelect
             dateFormat="Pp"
-            customInput={<TextField label="Arrival Time" fullWidth margin="dense" />}
+            customInput={
+              <TextField label="Arrival Time" fullWidth margin="dense" />
+            }
           />
           <TextField
             label="Price"
@@ -382,7 +407,6 @@ const AdminPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* Add Airplane Modal */}
       <Dialog
         open={airplaneModalOpen}
@@ -397,25 +421,40 @@ const AdminPage = () => {
             fullWidth
             margin="dense"
             value={newAirplane.airplane_model_id}
-            onChange={(e) => handleAirplaneChange("airplane_model_id", Number(e.target.value))}
+            onChange={(e) =>
+              handleAirplaneChange("airplane_model_id", Number(e.target.value))
+            }
           />
           <TextField
             label="Airplane Registration Number"
             fullWidth
             margin="dense"
             value={newAirplane.registration_number}
-            onChange={(e) => handleAirplaneChange("registration_number", e.target.value)}
+            onChange={(e) =>
+              handleAirplaneChange("registration_number", e.target.value)
+            }
           />
           {newAirplane.flight_seats.map((seat, index) => (
-            <Box key={seat.flight_class} sx={{ border: '1px solid #ccc', padding: 2, marginTop: 2 }}>
-              <Typography variant="subtitle1">{seat.flight_class} Seats Configuration</Typography>
+            <Box
+              key={seat.flight_class}
+              sx={{ border: "1px solid #ccc", padding: 2, marginTop: 2 }}
+            >
+              <Typography variant="subtitle1">
+                {seat.flight_class} Seats Configuration
+              </Typography>
               <TextField
                 label="Class Multiplier"
                 type="number"
                 fullWidth
                 margin="dense"
                 value={seat.class_multiplier}
-                onChange={(e) => handleAirplaneChange("class_multiplier", Number(e.target.value), index)}
+                onChange={(e) =>
+                  handleAirplaneChange(
+                    "class_multiplier",
+                    Number(e.target.value),
+                    index
+                  )
+                }
               />
               <TextField
                 label="Child Multiplier"
@@ -423,7 +462,13 @@ const AdminPage = () => {
                 fullWidth
                 margin="dense"
                 value={seat.child_multiplier}
-                onChange={(e) => handleAirplaneChange("child_multiplier", Number(e.target.value), index)}
+                onChange={(e) =>
+                  handleAirplaneChange(
+                    "child_multiplier",
+                    Number(e.target.value),
+                    index
+                  )
+                }
               />
               <TextField
                 label="Max Row Seat"
@@ -431,14 +476,22 @@ const AdminPage = () => {
                 fullWidth
                 margin="dense"
                 value={seat.max_row_seat}
-                onChange={(e) => handleAirplaneChange("max_row_seat", Number(e.target.value), index)}
+                onChange={(e) =>
+                  handleAirplaneChange(
+                    "max_row_seat",
+                    Number(e.target.value),
+                    index
+                  )
+                }
               />
               <TextField
                 label="Max Column Seat"
                 fullWidth
                 margin="dense"
                 value={seat.max_col_seat}
-                onChange={(e) => handleAirplaneChange("max_col_seat", e.target.value, index)}
+                onChange={(e) =>
+                  handleAirplaneChange("max_col_seat", e.target.value, index)
+                }
               />
             </Box>
           ))}
