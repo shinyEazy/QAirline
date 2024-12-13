@@ -3,16 +3,19 @@ from app.schemas import BookingBase, BookingUpdate, BookingCreate
 from datetime import datetime
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+
+from app.service.email import send_email
 from .crud_utils import *
 from app.models import Booking, Passenger
 from typing import List
 from schemas.passenger import PassengerBase, PassengerCreate
 from service.flight import delete_flight, get_all_passenger_in_flight
-from service.passenger import create_passenger, delete_passenger
+from service.passenger import create_passenger, delete_passengers
 from service.flight_seat import get_flight_seat_by_flight_id_and_class
 from typing import List
 from app.models import FlightSeats, Flight, User
 from app.service.service_utils import conint, seat_col_to_int
+from app.core.security import generate_booking_id_hash
 
 
 def get_bookings_by_flight_id(flight_id: int, db: Session) -> List[Booking]:
@@ -35,20 +38,26 @@ def get_booking(booking_id: int, db: Session) -> Booking:
     return db_booking
 
 
-
-def create_booking(user: User, booking: BookingCreate, db: Session) -> Booking:
+async def create_booking(booking: BookingCreate, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'INSERT INTO booking values ()'
     When creating the booking, we need to ensure that the passenger_id and flight_id are valid
     The flight_class enums in the data has already been validated by pydantic, but the format needs to be like this:
     'Economy' or 'Business' or 'First'
     """
+
     booking_data = BookingBase(**booking.model_dump(exclude={"passengers"}))
-    booking_data.user_id = user.user_id
+    # booking_data.user_id = user.user_id
 
     current_dict = booking_data.model_dump()
     current_dict["booking_date"] = datetime.now()
-
+    current_dict["booking_id"] = generate_booking_id_hash(
+        booker_email=booking_data.booker_email,
+        number_of_adults=booking_data.number_of_adults,
+        number_of_children=booking_data.number_of_children,
+        flight_class=booking_data.flight_class,
+        flight_id=booking_data.flight_id,
+    )
     db_booking = create(Booking, db, current_dict)
 
     flight = get_flight_compared_current_time(db_booking, db)
@@ -66,6 +75,12 @@ def create_booking(user: User, booking: BookingCreate, db: Session) -> Booking:
         )
 
     create_booking_passengers(booking, db_booking, db)
+
+    await send_email(
+        [booking.booker_email],
+        f"Your booking ID",
+        f"Booking ID: {db_booking.booking_id}",
+    )
     return db_booking
 
 
@@ -173,17 +188,16 @@ def check_valid_passenger_seats(
     flight = db.query(Flight).filter(Flight.flight_id == booking.flight_id).first()
     if not flight:
         raise HTTPException(status_code=404, detail="Flight not found.")
-    
+
     # Query FlightSeats using the registration_number and flight class
     seating_info = (
         db.query(FlightSeats.max_col_seat, FlightSeats.max_row_seat)
         .filter(
             FlightSeats.registration_number == flight.registration_number,
-            FlightSeats.flight_class == booking.flight_class
+            FlightSeats.flight_class == booking.flight_class,
         )
         .first()
     )
-
 
     # Check if seating information was found
     if seating_info is None:

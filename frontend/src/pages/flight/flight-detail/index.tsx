@@ -13,7 +13,6 @@ import axios from "../../../hooks/axios-config";
 
 const FlightDetail = () => {
   const navigate = useNavigate();
-
   const location = useLocation();
 
   useEffect(() => {

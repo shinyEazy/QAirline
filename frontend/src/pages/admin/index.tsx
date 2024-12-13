@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import './css/admin.css';
+import "./css/admin.css";
 import {
   Box,
   Typography,
@@ -9,7 +9,9 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Autocomplete
+  Autocomplete,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import FlightList from "../../components/admin/flight-list";
 import { createFlight } from "../../hooks/flight-hook";
@@ -17,6 +19,9 @@ import { fetchAirplanes } from "../../hooks/flight-hook";
 import DatePicker from "react-datepicker";
 import { fetchAirport } from "hooks/airport-hook";
 import { createAirplane } from "hooks/airplane-hook";
+import AirplaneList from "../../components/admin/airplane-list";
+import AirportList from "../../components/admin/airport-list";
+
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
   const [airplaneModalOpen, setAirplaneModalOpen] = useState(false);
@@ -31,7 +36,6 @@ const AdminPage = () => {
     arrivalTime: new Date(),
     price: 0.0,
   });
-
   const [newAirplane, setNewAirplane] = useState({
     airplane_model_id: 0,
     registration_number: "",
@@ -42,7 +46,7 @@ const AdminPage = () => {
         class_multiplier: 1,
         child_multiplier: 0.5,
         max_row_seat: 20,
-        max_col_seat: "A"
+        max_col_seat: "A",
       },
       {
         registration_number: "",
@@ -62,15 +66,17 @@ const AdminPage = () => {
       }
     ]
   });
-
   const [newNews, setNewNews] = useState({
     imageUrl: "",
     title: "",
     content: "",
   });
-
-  const [airplaneSuggestions, setAirplaneSuggestions] = useState<{ registration_number: string }[]>([]);
-  const [airports, setAirports] = useState<{ airport_id: number; city: string; airport_code: string }[]>([]);
+  const [airplaneSuggestions, setAirplaneSuggestions] = useState<
+    { registration_number: string }[]
+  >([]);
+  const [airports, setAirports] = useState<
+    { airport_id: number; city: string; airport_code: string }[]
+  >([]);
 
   useEffect(() => {
     const fetchInitialAirports = async () => {
@@ -98,7 +104,6 @@ const AdminPage = () => {
 
     fetchInitialAirplanes();
   }, []);
-
 
   const handleFlightModalOpen = () => {
     setFlightModalOpen(true);
@@ -133,13 +138,14 @@ const AdminPage = () => {
           class_multiplier: 1,
           child_multiplier: 1,
           max_row_seat: 1,
-          max_col_seat: "A"
-        }
-      ]
+          max_col_seat: "A",
+        },
+      ],
     });
   };
 
   const handleNewsModalOpen = () => setNewsModalOpen(true);
+
   const handleNewsModalClose = () => {
     setNewsModalOpen(false);
     setNewNews({
@@ -159,7 +165,7 @@ const AdminPage = () => {
     if (seatIndex !== undefined) {
       updatedAirplane.flight_seats[seatIndex] = {
         ...updatedAirplane.flight_seats[seatIndex],
-        [field]: value
+        [field]: value,
       };
     } else {
       updatedAirplane[field] = value;
@@ -177,8 +183,12 @@ const AdminPage = () => {
       const payload = {
         flight_number: newFlight.flightNumber,
         registration_number: newFlight.airplaneRegistrationNumber,
-        estimated_departure_time: newFlight.departureTime.toISOString().split("T")[0],
-        estimated_arrival_time: newFlight.arrivalTime.toISOString().split("T")[0],
+        estimated_departure_time: newFlight.departureTime
+          .toISOString()
+          .split("T")[0],
+        estimated_arrival_time: newFlight.arrivalTime
+          .toISOString()
+          .split("T")[0],
         departure_airport_id: newFlight.departure,
         destination_airport_id: newFlight.destination,
         flight_price: newFlight.price,
@@ -192,7 +202,6 @@ const AdminPage = () => {
       console.error("Failed to save flight:", error);
     }
   };
-
 
   const handleSaveAirplane = () => {
     console.log("New Airplane Data:", newAirplane);
@@ -215,63 +224,133 @@ const AdminPage = () => {
     handleNewsModalClose();
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
+  };
+
+  const [selectedTab, setSelectedTab] = useState(0);
 
   return (
     <Box>
-      <Box padding={2}>
-        <Typography variant="h4">Admin Page</Typography>
-        <Button
-          onClick={handleAirplaneModalOpen}
-          sx={{
-            backgroundColor: "#1e90ff",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            marginRight: "10px",
-            "&:hover": { backgroundColor: "#2177cb" },
-          }}
-        >
-          Add Airplane
-        </Button>
-        <Button
-          onClick={handleFlightModalOpen}
-          sx={{
-            marginRight: "10px",
-            backgroundColor: "#1e90ff",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            "&:hover": { backgroundColor: "#2177cb" },
-          }}
-        >
-          Add Flight
-        </Button>
-        <Button
-          onClick={handleNewsModalOpen}
-          sx={{
-            backgroundColor: "#1e90ff",
-            color: "white",
-            textTransform: "none",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            borderRadius: "8px",
-            padding: "10px 20px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            "&:hover": { backgroundColor: "#2177cb" },
-          }}
-        >
-          Add News
-        </Button>
+      <Box padding={2} justifyContent="center" width="100vw">
+        <Typography variant="h3" align="center" marginBottom={2}>
+          Admin Page
+        </Typography>
+        <Box display="flex" justifyContent="center">
+          <Button
+            onClick={handleAirplaneModalOpen}
+            sx={{
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              marginRight: "10px",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Add Airplane
+          </Button>
+          <Button
+            onClick={handleFlightModalOpen}
+            sx={{
+              marginRight: "10px",
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Add Flight
+          </Button>
+          <Button
+            onClick={handleNewsModalOpen}
+            sx={{
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Add News
+          </Button>
+        </Box>
       </Box>
-      <FlightList />
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ width: "100%" }}
+      >
+        <Tabs
+          value={selectedTab}
+          onChange={handleTabChange}
+          aria-label="Admin Management Tabs"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Tab
+            disableRipple
+            label="Flights"
+            sx={{
+              textTransform: "none",
+              fontSize: "1.2rem",
+              "&:hover": {
+                color: "#1976d2",
+              },
+            }}
+          />
+          <Tab
+            disableRipple
+            label="Airplanes"
+            sx={{
+              textTransform: "none",
+              fontSize: "1.2rem",
+              "&:hover": {
+                color: "#1976d2",
+              },
+            }}
+          />
+          <Tab
+            disableRipple
+            label="Airports"
+            sx={{
+              textTransform: "none",
+              fontSize: "1.2rem",
+              "&:hover": {
+                color: "#1976d2",
+              },
+            }}
+          />
+        </Tabs>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ width: "100vw", paddingTop: 1 }}
+        >
+          {selectedTab === 0 && <FlightList />}
+          {selectedTab === 1 && <AirplaneList />}
+          {selectedTab === 2 && <AirportList />}
+        </Box>
+      </Box>
       {/* Add Flight Modal */}
       <Dialog open={flightModalOpen} onClose={handleFlightModalClose} fullWidth>
         <DialogTitle>Add New Flight</DialogTitle>
@@ -308,7 +387,9 @@ const AdminPage = () => {
             id="departure"
             value={newFlight.departure || ""}
             className="custom-select"
-            onChange={(e) => handleFlightChange("departure", Number(e.target.value))}
+            onChange={(e) =>
+              handleFlightChange("departure", Number(e.target.value))
+            }
           >
             <option value="" disabled>
               Select Departure Airport
@@ -325,7 +406,9 @@ const AdminPage = () => {
             id="destination"
             className="custom-select"
             value={newFlight.destination || ""}
-            onChange={(e) => handleFlightChange("destination", Number(e.target.value))}
+            onChange={(e) =>
+              handleFlightChange("destination", Number(e.target.value))
+            }
           >
             <option value="" disabled>
               Select Destination Airport
@@ -341,13 +424,18 @@ const AdminPage = () => {
             id="airplane"
             className="custom-select"
             value={newFlight.airplaneRegistrationNumber || ""}
-            onChange={(e) => handleFlightChange("airplaneRegistrationNumber", e.target.value)}
+            onChange={(e) =>
+              handleFlightChange("airplaneRegistrationNumber", e.target.value)
+            }
           >
             <option value="" disabled>
               Select Airplane Registration Number
             </option>
             {airplaneSuggestions.map((airplane) => (
-              <option key={airplane.registration_number} value={airplane.registration_number}>
+              <option
+                key={airplane.registration_number}
+                value={airplane.registration_number}
+              >
                 {airplane.registration_number}
               </option>
             ))}
@@ -371,14 +459,18 @@ const AdminPage = () => {
             onChange={(date) => handleFlightChange("departureTime", date)}
             showTimeSelect
             dateFormat="Pp"
-            customInput={<TextField label="Departure Time" fullWidth margin="dense" />}
+            customInput={
+              <TextField label="Departure Time" fullWidth margin="dense" />
+            }
           />
           <DatePicker
             selected={newFlight.arrivalTime}
             onChange={(date) => handleFlightChange("arrivalTime", date)}
             showTimeSelect
             dateFormat="Pp"
-            customInput={<TextField label="Arrival Time" fullWidth margin="dense" />}
+            customInput={
+              <TextField label="Arrival Time" fullWidth margin="dense" />
+            }
           />
           <TextField
             label="Price"
@@ -397,7 +489,6 @@ const AdminPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* Add Airplane Modal */}
       <Dialog
         open={airplaneModalOpen}
@@ -418,18 +509,31 @@ const AdminPage = () => {
             fullWidth
             margin="dense"
             value={newAirplane.registration_number}
-            onChange={(e) => handleAirplaneChange("registration_number", e.target.value)}
+            onChange={(e) =>
+              handleAirplaneChange("registration_number", e.target.value)
+            }
           />
           {newAirplane.flight_seats.map((seat, index) => (
-            <Box key={seat.flight_class} sx={{ border: '1px solid #ccc', padding: 2, marginTop: 2 }}>
-              <Typography variant="subtitle1">{seat.flight_class} Seats Configuration</Typography>
+            <Box
+              key={seat.flight_class}
+              sx={{ border: "1px solid #ccc", padding: 2, marginTop: 2 }}
+            >
+              <Typography variant="subtitle1">
+                {seat.flight_class} Seats Configuration
+              </Typography>
               <TextField
                 label="Class Multiplier"
                 type="number"
                 fullWidth
                 margin="dense"
                 value={seat.class_multiplier}
-                onChange={(e) => handleAirplaneChange("class_multiplier", Number(e.target.value), index)}
+                onChange={(e) =>
+                  handleAirplaneChange(
+                    "class_multiplier",
+                    Number(e.target.value),
+                    index
+                  )
+                }
               />
               <TextField
                 label="Child Multiplier"
@@ -437,7 +541,13 @@ const AdminPage = () => {
                 fullWidth
                 margin="dense"
                 value={seat.child_multiplier}
-                onChange={(e) => handleAirplaneChange("child_multiplier", Number(e.target.value), index)}
+                onChange={(e) =>
+                  handleAirplaneChange(
+                    "child_multiplier",
+                    Number(e.target.value),
+                    index
+                  )
+                }
               />
               <TextField
                 label="Max Row Seat"
@@ -445,14 +555,22 @@ const AdminPage = () => {
                 fullWidth
                 margin="dense"
                 value={seat.max_row_seat}
-                onChange={(e) => handleAirplaneChange("max_row_seat", Number(e.target.value), index)}
+                onChange={(e) =>
+                  handleAirplaneChange(
+                    "max_row_seat",
+                    Number(e.target.value),
+                    index
+                  )
+                }
               />
               <TextField
                 label="Max Column Seat"
                 fullWidth
                 margin="dense"
                 value={seat.max_col_seat}
-                onChange={(e) => handleAirplaneChange("max_col_seat", e.target.value, index)}
+                onChange={(e) =>
+                  handleAirplaneChange("max_col_seat", e.target.value, index)
+                }
               />
             </Box>
           ))}

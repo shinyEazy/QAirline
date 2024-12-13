@@ -14,7 +14,11 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
     Record<number, boolean>
   >({});
   const { setSelectedFlight } = useFlightStore();
+<<<<<<< HEAD
   const { setFlightId } = useBookingPayload();
+=======
+  const { tFlightId, payload } = useBookingPayload();
+>>>>>>> aa71bdc1b4dd4eb186b12b8d60cf24a5a18ae4c9
   const location = useLocation();
 
   useEffect(() => {

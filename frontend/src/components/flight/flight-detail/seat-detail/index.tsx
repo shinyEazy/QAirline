@@ -1,5 +1,6 @@
 import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 interface SeatOwner {
   id: string;
@@ -14,15 +15,18 @@ interface SeatOwner {
 
 
 const SeatDetail = () => {
-  const [seatOwners, setSeatOwners] = useState<SeatOwner[]>([
-    {
-      id: "A1",
+  const location = useLocation();
+  const selectedSeats = location.state?.selectedSeats;
+  const [seatOwners, setSeatOwners] = useState<SeatOwner[]>(
+    selectedSeats.map((seat) => ({
+      id: seat.id,
       firstName: "",
       lastName: "",
       dob: "",
-      class: "Economy",
+      class: seat.class || "Economy", // Default to "Economy" if class is not provided
       nationality: "",
       phone: "",
+<<<<<<< HEAD
       gender: "",
     },
     {
@@ -47,6 +51,11 @@ const SeatDetail = () => {
     },
   ]);
 
+=======
+      gender: true,
+    }))
+  );
+>>>>>>> aa71bdc1b4dd4eb186b12b8d60cf24a5a18ae4c9
   const [currentSeatIndex, setCurrentSeatIndex] = useState(0);
 
   const handleInputChange = (

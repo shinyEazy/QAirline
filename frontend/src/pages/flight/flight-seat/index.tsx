@@ -4,8 +4,9 @@ import Footer from "components/home-page/Footer";
 import StepFlightSeat from "components/flight/flight-seat/step-flight-seat";
 import FlightRoute from "components/flight/flight-detail/flight-route";
 import { useNavigate } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import useBookingPayload from "hooks/booking-hook";
+import { fetchFlightSeats } from "hooks/flight-hook";
 
 interface PriceSummary {
   [className: string]: {
@@ -15,48 +16,105 @@ interface PriceSummary {
 }
 
 const SEAT_PRICE = 100;
-const totalSeatsPerClass = 36;
 
 const FlightSeat = () => {
   const navigate = useNavigate();
-  const { setFlightClass } = useBookingPayload();
+  const { getPayload, setFlightClass } = useBookingPayload();
 
+  const [matrix, setMatrix] = useState([]);
+  const [loading, setLoading] = useState(true); // For handling loading state
+  const [letters, setLetters] = useState([]);
+  const [seats, setSeats] = useState([]);
+
+  // Fetch flight seats on component mount
+  useEffect(() => {
+    const payload = getPayload();
+
+    console.log(payload);
+    const fetchSeats = async () => {
+      try {
+        const fetchedMatrix = await fetchFlightSeats(1);
+        setMatrix(fetchedMatrix);
+      } catch (error) {
+        console.error("Error fetching flight seats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSeats();
+  }, []);
+
+  // Generate letters dynamically based on the number of columns in the first row of the first seat class
   const [selectedClass, setSelectedClass] = useState("Economy");
-  const [seats, setSeats] = useState(
-    Array.from({ length: totalSeatsPerClass * 3 }, (_, i) => ({
-      id: i + 1,
-      class:
-        i < totalSeatsPerClass
-          ? "Economy"
-          : i < totalSeatsPerClass * 2
-          ? "Business"
-          : "First Class",
-      available: i % 4 !== 0,
-      selected: false,
-    }))
-  );
+
+  useEffect(() => {
+    if (matrix.length > 0 && matrix[0].length > 0) {
+      const generateLetters = (length) => {
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        return Array.from({ length }, (_, i) => alphabet[i % alphabet.length]);
+      };
+      const generatedLetters = generateLetters(matrix[0][0].length - 2);
+      setLetters(generatedLetters);
+      const seatArray = [];
+
+      for (let i = 0; i < matrix.length; i++) {
+        const [seatClass, seatMatrix] = matrix[i];
+        const classRows = []; // Holds rows of the current seat class
+        for (let row = 0; row < seatMatrix.length; row++) {
+          const rowArray = []; // Temporary array for the current row
+          for (let col = 0; col < seatMatrix[row].length; col++) {
+            rowArray.push({
+              id: row + 1 + String.fromCharCode(col + 65) + seatClass, // Sequential IDs
+              class: seatClass,
+              available: !seatMatrix[row][col], // Use matrix value
+              selected: false,
+            });
+          }
+          classRows.push(rowArray); // Add the row to the class-specific rows
+        }
+        seatArray.push(classRows); // Add the class-specific rows to the main array
+      }
+
+      setSeats(seatArray); // 3D array: [ [ [row1], [row2] ], [ [row1], [row2] ] ]
+    }
+  }, [matrix]);
+
 
   const seatRows = useMemo(() => {
-    const filteredSeats = seats.filter((seat) => seat.class === selectedClass);
-    const rows = [];
-    for (let i = 0; i < filteredSeats.length; i += 6) {
-      rows.push(filteredSeats.slice(i, i + 6));
-    }
-    return rows;
+    // Flatten and filter only rows belonging to the selected class
+    const filteredSeats = seats
+      .flat() // Flatten by one level: [ [row1], [row2] ] -> [row1, row2]
+      .filter((row) => row[0]?.class === selectedClass); // Ensure the first seat in row matches the class
+
+    return filteredSeats.map((row) => {
+      // Break rows into chunks of 6 if needed
+      const chunks = [];
+      for (let i = 0; i < row.length; i += row.length) {
+        chunks.push(row.slice(i, i + row.length));
+      }
+      return chunks;
+    }).flat(); // Flatten again to keep rows consistent
   }, [seats, selectedClass]);
 
-  const toggleSeatSelection = (id: number) => {
+  const toggleSeatSelection = (id: string) => {
     setSeats((prevSeats) =>
-      prevSeats.map((seat) =>
-        seat.id === id ? { ...seat, selected: !seat.selected } : seat
+      prevSeats.map((classRows) =>
+        classRows.map((row) =>
+          row.map((seat) =>
+            seat.id === id ? { ...seat, selected: !seat.selected } : seat
+          )
+        )
       )
     );
   };
 
-  const selectedSeats = useMemo(
-    () => seats.filter((seat) => seat.selected),
-    [seats]
-  );
+
+  const selectedSeats = useMemo(() => {
+    return seats
+      .flat(2) // Flatten by two levels to get a flat array of seats
+      .filter((seat) => seat.selected);
+  }, [seats]);
 
   const priceSummary = useMemo<PriceSummary>(() => {
     const classPrices = {
@@ -65,20 +123,27 @@ const FlightSeat = () => {
       "First Class": SEAT_PRICE * 2,
     };
 
-    return seats.reduce((acc, seat) => {
-      if (seat.selected) {
-        if (!acc[seat.class]) acc[seat.class] = { count: 0, total: 0 };
-        acc[seat.class].count += 1;
-        acc[seat.class].total +=
-          classPrices[seat.class as keyof typeof classPrices];
-      }
-      return acc;
-    }, {} as PriceSummary);
+    return seats
+      .flat(2) // Flatten by two levels to get a flat array of seats
+      .reduce((acc, seat) => {
+        if (seat.selected) {
+          if (!acc[seat.class]) acc[seat.class] = { count: 0, total: 0 };
+          acc[seat.class].count += 1;
+          acc[seat.class].total +=
+            classPrices[seat.class as keyof typeof classPrices];
+        }
+        return acc;
+      }, {} as PriceSummary);
   }, [seats]);
 
   const handleNext = () => {
     setFlightClass(selectedClass);
-    navigate("/flight/detail");
+
+    navigate("/flight/detail", {
+      state: {
+        selectedSeats,
+      }
+    });
   };
 
   const [focusedButton, setFocusedButton] = useState<string | null>(null);
@@ -99,6 +164,10 @@ const FlightSeat = () => {
     transition: "all 0.3s ease",
     "&:hover": { backgroundColor: "#1e90ff", color: "white" },
   });
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading state
+  }
 
   return (
     <div>
@@ -176,7 +245,7 @@ const FlightSeat = () => {
               <Box display="flex" flexDirection="column" gap={2}>
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item xs={1} />
-                  {["A", "B", "C"].map((label) => (
+                  {letters.slice(0, letters.length / 2 + 1).map((label) => (
                     <Grid
                       item
                       key={label}
@@ -190,7 +259,7 @@ const FlightSeat = () => {
                     </Grid>
                   ))}
                   <Grid item xs={1} />
-                  {["D", "E", "F"].map((label) => (
+                  {letters.slice(letters.length / 2, letters.length).map((label) => (
                     <Grid
                       item
                       key={label}
@@ -217,7 +286,7 @@ const FlightSeat = () => {
                         {rowIndex + 1}
                       </Typography>
                     </Grid>
-                    {row.slice(0, 3).map((seat) => (
+                    {row.slice(0, row.length / 2).map((seat) => (
                       <Grid
                         item
                         key={seat.id}
@@ -256,7 +325,7 @@ const FlightSeat = () => {
                       </Grid>
                     ))}
                     <Grid item xs={1} />
-                    {row.slice(3, 6).map((seat) => (
+                    {row.slice(row.length / 2, row.length).map((seat) => (
                       <Grid
                         item
                         key={seat.id}
