@@ -62,3 +62,16 @@ export async function updateFlight(flightId: number, flightData: {
     throw error;
   }
 }
+export async function fetchFlightSeats(flight_id: number) {
+  try {
+    const response = await axios.get(`/api/flights/flight-seats/${flight_id}`);
+
+    const flights_matrix = response.data;
+
+    return flights_matrix;
+  } catch (error) {
+    console.error("Error fetching flights matrix", error);
+    throw error;
+
+  }
+}

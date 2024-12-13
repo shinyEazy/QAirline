@@ -23,7 +23,7 @@ from app.models import (
     User,
 )
 from typing import List
-from app.service.email import send_email
+from app.service.email import is_valid_email, send_email
 from app.service.service_utils import seat_col_to_int, conint
 
 
@@ -144,59 +144,62 @@ def get_flight_by_citizen_id(citizen_id: str, db: Session) -> Flight:
 def get_all_flights(db: Session):
     # Truy vấn tất cả các flights
     flights = db.query(Flight).all()
-    
+
     result = []
     for flight in flights:
         # Tìm thông tin departure airport
         departure_airport = get_city_by_airport_id(db, flight.departure_airport_id)
-        
+
         # Tìm thông tin destination airport
         destination_airport = get_city_by_airport_id(db, flight.destination_airport_id)
-        
+
         # Tạo dictionary flight với thông tin thành phố
         flight_dict = flight.__dict__.copy()
-        flight_dict['departure_city'] = departure_airport.city if departure_airport else None
-        flight_dict['destination_city'] = destination_airport.city if destination_airport else None
-        
+        flight_dict["departure_city"] = (
+            departure_airport.city if departure_airport else None
+        )
+        flight_dict["destination_city"] = (
+            destination_airport.city if destination_airport else None
+        )
+
         # Loại bỏ các thuộc tính không cần thiết
-        flight_dict.pop('departure_airport_id', None)
-        flight_dict.pop('destination_airport_id', None)
-        
+        flight_dict.pop("departure_airport_id", None)
+        flight_dict.pop("destination_airport_id", None)
+
         result.append(flight_dict)
-    
+
     return result
+
 
 async def delay_flight(flight: FlightDelay, db_flight: Flight, db: Session):
     """
     Delays the flight
     """
-    users = get_users_in_flight(flight_id=flight.flight_id, db=db)
+    user_emails = get_user_emails_in_flight(flight_id=flight.flight_id, db=db)
 
-    recipents = [str(user.email) for user in users]
+    recipents = [email for email in user_emails if is_valid_email(email)]
 
-    await send_email(
-        recipents,
-        f"Flight {flight.flight_id} delay",
-        f"Flight {flight.flight_id} has been delayed to {flight.actual_arrival_time}",
-    )
+    if recipents:
+        await send_email(
+            recipents,
+            f"Flight {db_flight.flight_number} delay",
+            f"Flight {db_flight.flight_number} has been delayed to {flight.actual_arrival_time}",
+        )
 
     return update(db_flight, db, flight.model_dump())
 
 
-def get_users_in_flight(flight_id: int, db: Session) -> List[User]:
+def get_user_emails_in_flight(flight_id: int, db: Session) -> List[str]:
     """
     Used to send email to all users who booked this flight
     """
     bookings: List[Booking] = get_bookings_by_flight(flight_id, db)
 
-    users: List[User] = []
+    bookers_email: List[str] = []
 
     for booking in bookings:
-        user = get_booking_user(booking, db)
-
-        users.append(user)
-
-    return users
+        bookers_email.append(str(booking.booker_email))
+    return bookers_email
 
 
 def get_booking_user(db_booking: Booking, db: Session) -> User:

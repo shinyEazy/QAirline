@@ -10,7 +10,7 @@ from jose import jwt, JWTError
 from core.database import get_db
 from typing import List
 from app.models import User
-
+import hashlib
 import os
 
 SECRET_KEY = "123"
@@ -139,3 +139,20 @@ def role_checker(required_roles: List[str]):
         return user
 
     return check_role
+
+
+def generate_booking_id_hash(
+    booker_email: str,
+    number_of_adults: int,
+    number_of_children: int,
+    flight_class: str,
+    flight_id: int,
+) -> str:
+    # Create a string representation of the key fields
+    hash_input = f"{booker_email}|{number_of_adults}|{number_of_children}|{flight_class}|{flight_id}"
+
+    # Generate a SHA-256 hash
+    booking_id_hash = hashlib.sha256(hash_input.encode()).hexdigest()
+
+    # Optional: You can truncate the hash if you want a shorter ID
+    return booking_id_hash[:16]  # First 16 characters
