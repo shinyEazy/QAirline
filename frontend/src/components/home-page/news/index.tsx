@@ -112,7 +112,7 @@ const News = () => {
       </Box>
 
       <Button
-        onClick={() => navigate("/news/list/1")}
+        onClick={() => navigate("/news/list")}
         disableRipple
         endIcon={<ArrowForward />}
         variant="text"

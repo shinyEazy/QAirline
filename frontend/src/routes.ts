@@ -104,7 +104,7 @@ const routes = [
     component: NewsList,
     routes: [
       {
-        path: "list/:id",
+        path: "list",
         component: NewsList,
       },
     ],

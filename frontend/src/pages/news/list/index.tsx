@@ -3,6 +3,8 @@ import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import { useNavigate } from "react-router-dom";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const newsItems = [
   {
@@ -100,8 +102,38 @@ const titleStyle = {
   },
 };
 
+const PAGE_SIZE = 5;
+
 const NewsList = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const sortedNews = [...newsItems].sort((a, b) => b.id - a.id);
+  const totalPages = Math.ceil(newsItems.length / PAGE_SIZE);
+
+  const paginatedNews = sortedNews.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [currentPage]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "auto",
+    });
+  }, []);
 
   return (
     <Box>
@@ -125,6 +157,7 @@ const NewsList = () => {
             }}
           >
             <i
+              onClick={() => navigate("/")}
               className="fa-solid fa-house"
               style={{
                 opacity: "0.6",
@@ -162,6 +195,7 @@ const NewsList = () => {
               }}
             ></i>
             <Typography
+              onClick={() => goToPage(1)}
               variant="h6"
               sx={{
                 opacity: 0.6,
@@ -182,7 +216,6 @@ const NewsList = () => {
         </Box>
         <Box width="1200px" margin="auto" marginTop="20px">
           <Grid container spacing={3}>
-            {/* First row with 1 item */}
             <Grid item xs={12}>
               <Box>
                 <Box
@@ -194,7 +227,8 @@ const NewsList = () => {
                   }}
                 >
                   <img
-                    src={newsItems[0].imageUrl}
+                    src={paginatedNews[0]?.imageUrl}
+                    alt={paginatedNews[0]?.title}
                     style={{
                       height: "368px",
                       width: "100%",
@@ -203,7 +237,6 @@ const NewsList = () => {
                       cursor: "pointer",
                       transition: "transform 0.3s ease-in-out",
                     }}
-                    alt={newsItems[0].title}
                     onMouseEnter={(e) =>
                       (e.currentTarget.style.transform = "scale(1.1)")
                     }
@@ -214,7 +247,7 @@ const NewsList = () => {
                 </Box>
                 <Box mt={2}>
                   <Typography variant="h5" sx={titleStyle}>
-                    {newsItems[0].title}
+                    {paginatedNews[0]?.title}{" "}
                   </Typography>
                   <Typography variant="h6" color="primary" sx={readMoreStyle}>
                     Read More
@@ -222,199 +255,90 @@ const NewsList = () => {
                 </Box>
               </Box>
             </Grid>
-
-            {/* Second row with 2 items */}
-            <Grid item xs={12} md={6}>
-              <Box>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "368px",
-                    overflow: "hidden",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <img
-                    src={newsItems[1].imageUrl}
-                    style={{
-                      height: "368px",
+            {paginatedNews.slice(1).map((news) => (
+              <Grid item xs={12} md={6} key={news.id}>
+                <Box>
+                  <Box
+                    sx={{
                       width: "100%",
-                      objectFit: "cover",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      transition: "transform 0.3s ease-in-out",
-                    }}
-                    alt={newsItems[1].title}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.1)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  />
-                </Box>
-                <Box mt={2}>
-                  <Typography variant="h5" sx={titleStyle}>
-                    {newsItems[1].title}
-                  </Typography>
-                  <Typography variant="h6" color="primary" sx={readMoreStyle}>
-                    Read More
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Box>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "368px",
-                    overflow: "hidden",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <img
-                    src={newsItems[2].imageUrl}
-                    style={{
                       height: "368px",
-                      width: "100%",
-                      objectFit: "cover",
+                      overflow: "hidden",
                       borderRadius: "10px",
-                      cursor: "pointer",
-                      transition: "transform 0.3s ease-in-out",
                     }}
-                    alt={newsItems[2].title}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.1)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  />
-                </Box>
-                <Box mt={2}>
-                  <Typography variant="h5" sx={titleStyle}>
-                    {newsItems[2].title}
+                  >
+                    <img
+                      src={news.imageUrl}
+                      alt={news.title}
+                      style={{
+                        height: "368px",
+                        width: "100%",
+                        objectFit: "cover",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease-in-out",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.1)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                    />
+                  </Box>
+                  <Typography variant="h5" sx={titleStyle} marginTop="16px">
+                    {news.title}
                   </Typography>
                   <Typography variant="h6" color="primary" sx={readMoreStyle}>
                     Read More
                   </Typography>
                 </Box>
-              </Box>
-            </Grid>
-
-            {/* Third row with 2 items */}
-            <Grid item xs={12} md={6}>
-              <Box>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "368px",
-                    overflow: "hidden",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <img
-                    src={newsItems[3].imageUrl}
-                    style={{
-                      height: "368px",
-                      width: "100%",
-                      objectFit: "cover",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      transition: "transform 0.3s ease-in-out",
-                    }}
-                    alt={newsItems[3].title}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.1)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  />
-                </Box>
-                <Box mt={2}>
-                  <Typography variant="h5" sx={titleStyle}>
-                    {newsItems[3].title}
-                  </Typography>
-                  <Typography variant="h6" color="primary" sx={readMoreStyle}>
-                    Read More
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Box>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "368px",
-                    overflow: "hidden",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <img
-                    src={newsItems[4].imageUrl}
-                    style={{
-                      height: "368px",
-                      width: "100%",
-                      objectFit: "cover",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      transition: "transform 0.3s ease-in-out",
-                    }}
-                    alt={newsItems[4].title}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.1)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  />
-                </Box>
-                <Box mt={2}>
-                  <Typography variant="h5" sx={titleStyle}>
-                    {newsItems[4].title}
-                  </Typography>
-                  <Typography variant="h6" color="primary" sx={readMoreStyle}>
-                    Read More
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
+              </Grid>
+            ))}
           </Grid>
         </Box>
 
         {/* Pagination */}
-        <Box width="1200px" margin="auto">
-          <Divider sx={{ margin: "20px 0" }} />
+        <Box width="1200px" margin="auto" mt={3}>
+          <Divider />
           <Stack
             direction="row"
-            spacing={2}
             justifyContent="center"
-            paddingBottom="20px"
+            spacing={2}
+            padding="20px 0"
           >
             <Button
               disableRipple
-              variant="text"
-              startIcon={<ArrowBack />}
+              onClick={() => goToPage(1)}
               sx={paginationStyle}
+              startIcon={<ArrowBack />}
             >
               First
             </Button>
-            <Button disableRipple variant="text" sx={paginationStyle}>
+            <Button
+              disableRipple
+              onClick={() => goToPage(currentPage - 1)}
+              sx={paginationStyle}
+            >
               Previous
             </Button>
-            <Button disableRipple variant="text" sx={paginationStyle}>
+            <Box>
+              <Typography fontSize="1.2rem">
+                Page {currentPage} of {totalPages}
+              </Typography>
+            </Box>
+
+            <Button
+              disableRipple
+              onClick={() => goToPage(currentPage + 1)}
+              sx={paginationStyle}
+            >
               Next
             </Button>
             <Button
               disableRipple
-              variant="text"
-              endIcon={<ArrowForward />}
+              onClick={() => goToPage(totalPages)}
               sx={paginationStyle}
+              endIcon={<ArrowForward />}
             >
               Last
             </Button>
