@@ -384,7 +384,7 @@ const AdminPage = () => {
           /> */}
           {/* <label htmlFor="departure">Departure:</label> */}
           <select
-            id="departure"
+            id="departure-city"
             value={newFlight.departure || ""}
             className="custom-select"
             onChange={(e) =>
@@ -403,7 +403,7 @@ const AdminPage = () => {
 
           {/* <label htmlFor="destination">Destination:</label> */}
           <select
-            id="destination"
+            id="destination-city"
             className="custom-select"
             value={newFlight.destination || ""}
             onChange={(e) =>

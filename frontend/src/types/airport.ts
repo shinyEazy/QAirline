@@ -1,10 +1,7 @@
-export interface AirportCreateData {
+export interface Airport {
+  airport_id: number;
   airport_code: string
   city: string;
   name: string;
-}
-
-// Define the interface for updating an airport
-export interface AirportUpdateData extends AirportCreateData {
 }
 

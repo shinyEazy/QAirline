@@ -14,35 +14,10 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import { deleteAirport, fetchAirport } from "hooks/airport-hook";
 import { useState, useEffect } from "react";
+import { Airport } from "types/airport";
 
-interface Airport {
-  airport_id: number;
-  airport_code: string;
-  city: string;
-  name: string;
-}
-
-const mockAirportData: Airport[] = [
-  {
-    airport_id: 1,
-    airport_code: "SFO",
-    city: "San Francisco",
-    name: "San Francisco International Airport",
-  },
-  {
-    airport_id: 2,
-    airport_code: "MIA",
-    city: "Miami",
-    name: "Miami International Airport",
-  },
-  {
-    airport_id: 3,
-    airport_code: "SEA",
-    city: "Seattle",
-    name: "Seattle-Tacoma International Airport",
-  },
-];
 
 const AirportList = () => {
   const [airportData, setAirportData] = useState<Airport[]>([]);
@@ -52,12 +27,27 @@ const AirportList = () => {
   );
 
   useEffect(() => {
-    // Simulate fetching airport data
-    setAirportData(mockAirportData);
+    const loadAirport = async () => {
+      try {
+        const airports = await fetchAirport();
+        setAirportData(airports);
+      } catch (err) {
+        console.error("Error fetching airports", err);
+      }
+    };
+
+    loadAirport();
   }, []);
 
-  const handleDeleteClick = (airport_id: number) => {
-    setSelectedAirportId(airport_id);
+
+  const handleDeleteClick = async (airport_id: number) => {
+    try {
+      const response = await deleteAirport(airport_id);
+      console.log("Delete airport", response);
+      setSelectedAirportId(airport_id);
+    } catch (err) {
+      console.error("Error deleting airport", err);
+    }
     setDialogOpen(true);
   };
 
@@ -105,7 +95,7 @@ const AirportList = () => {
                   textAlign: "center",
                 }}
               >
-                Code
+                Airport Code
               </TableCell>
               <TableCell
                 sx={{

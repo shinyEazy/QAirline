@@ -9,3 +9,13 @@ export async function fetchAirport() {
         throw error;
     }
 }
+
+export async function deleteAirport(airport_id: number) {
+    try {
+        const response = await axios.delete(`/api/airports/${airport_id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch airplanes", error);
+        throw error;
+    }
+}

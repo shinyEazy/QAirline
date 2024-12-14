@@ -24,3 +24,13 @@ export async function createAirplane(airplaneData: AirplaneData) {
         throw error;
     }
 }
+
+export async function fetchAirplane() {
+    try {
+        const response = await axios.get("/api/airplanes");
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch airplanes", error);
+        throw error;
+    }
+}

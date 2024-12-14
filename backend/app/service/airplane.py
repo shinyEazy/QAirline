@@ -12,7 +12,7 @@ from app.schemas import (
 )
 from .crud_utils import *
 from app.models import AirplaneModel, Airplane, Airport, Flight
-from typing import List
+from typing import Dict, List
 
 
 # CRUD for AirplaneModel
@@ -29,7 +29,6 @@ def get_airplane_model(db: Session, airplane_model_id: int) -> AirplaneModel:
         .first()
     )
     return db_airplane_model
-
 
 def update_airplane_model(
     db: Session, db_airplane_model: Airplane, airplane_model: AirplaneModelUpdate
@@ -59,8 +58,18 @@ def get_airplane_by_id(db: Session, airplane_id: int) ->Airplane:
     db_airplane = db.query(Airplane).filter(Airplane.airplane_id == airplane_id).first()
     return db_airplane
 
-def get_all_airplanes(db: Session) -> List[Airplane]:
-    return db.query(Airplane).all()
+def get_all_airplanes(db: Session) -> List[Dict[str,any]]:
+    db_airplanes = db.query(Airplane).join(AirplaneModel).all()
+    result = []
+    for airplane in db_airplanes:
+        result.append({
+            "airplane_id": airplane.airplane_id,
+            "airplane_model": airplane.airplane_model.name,
+            "registration_number": airplane.registration_number,
+            "manufacturer": airplane.airplane_model.manufacturer,
+            "total_seats": airplane.airplane_model.total_seats,
+        })
+    return result
 
 def update_airplane(
     db: Session, db_airplane: Airplane, airplane: AirplaneUpdate

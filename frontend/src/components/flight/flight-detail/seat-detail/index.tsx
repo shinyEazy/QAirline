@@ -26,36 +26,9 @@ const SeatDetail = () => {
       class: seat.class || "Economy", // Default to "Economy" if class is not provided
       nationality: "",
       phone: "",
-<<<<<<< HEAD
-      gender: "",
-    },
-    {
-      id: "A2",
-      firstName: "",
-      lastName: "",
-      dob: "",
-      class: "Economy",
-      nationality: "",
-      phone: "",
-      gender: "",
-    },
-    {
-      id: "A3",
-      firstName: "",
-      lastName: "",
-      dob: "",
-      class: "Economy",
-      nationality: "",
-      phone: "",
-      gender: "",
-    },
-  ]);
-
-=======
       gender: true,
     }))
   );
->>>>>>> aa71bdc1b4dd4eb186b12b8d60cf24a5a18ae4c9
   const [currentSeatIndex, setCurrentSeatIndex] = useState(0);
 
   const handleInputChange = (
