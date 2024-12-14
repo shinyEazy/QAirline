@@ -24,6 +24,7 @@ import { Flight } from "types/flight";
 // }
 import { useFlightSearchStore } from "hooks/flight-search-hook";
 import { fetchAirport } from "hooks/airport-hook";
+
 const FlightSearch: React.FC = () => {
   // const [departureCity, setDepartureCity] = useState("");
   // const [arrivalCity, setArrivalCity] = useState("");
@@ -41,6 +42,7 @@ const FlightSearch: React.FC = () => {
   const [airports, setAirports] = useState<
     { airport_id: number; city: string; airport_code: string }[]
   >([]);
+
   useEffect(() => {
     const fetchInitialAirports = async () => {
       try {
@@ -53,6 +55,7 @@ const FlightSearch: React.FC = () => {
 
     fetchInitialAirports();
   }, []);
+
   // useEffect(() => {
   //   window.scrollTo(0, 0);
   // }, [location]);
@@ -73,6 +76,8 @@ const FlightSearch: React.FC = () => {
     setIsRoundTrip,
     setTripType,
     setFlights,
+    loading,
+    setLoading,
   } = useFlightSearchStore();
 
   useEffect(() => {
@@ -82,27 +87,46 @@ const FlightSearch: React.FC = () => {
       setShowReturnDate(false);
     }
   }, [tripType]);
+
   const handleSearch = async () => {
+    setLoading(true); // Start loading
     const searchParams = new URLSearchParams({
       departure_city: departureCity,
       arrival_city: arrivalCity,
       departure_time: departing.toISOString().split("T")[0],
     });
 
+    if (departureCity === "" || arrivalCity === "") {
+      alert("Please select departure and arrival cities");
+      setLoading(false); // Stop loading if there's an error
+      return;
+    }
+
     if (tripType === "roundtrip") {
       searchParams.append("return_date", returning.toISOString().split("T")[0]);
     }
+
     try {
       const response = await fetch(
         `http://localhost:8000/api/flights/search/?${searchParams.toString()}`
       );
-      const data = await response.json();
-      setFlights(data);
-      navigate("/flight/list?${searchParams.toString()}");
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setFlights(data);
+        navigate(`/flight/list?${searchParams.toString()}`);
+      } else {
+        setFlights([]);
+        navigate(`/flight/list`);
+      }
     } catch (error) {
       console.error("Error fetching flights:", error);
+      alert("An unexpected error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <Box
       sx={{
@@ -121,7 +145,7 @@ const FlightSearch: React.FC = () => {
               marginLeft: "12px",
               "@media (max-width:800px)": {
                 flexDirection: "column",
-                gap: "10px", // Adjust spacing for stacked layout
+                gap: "10px",
               },
             }}
           >

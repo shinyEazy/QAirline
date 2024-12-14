@@ -5,12 +5,13 @@ import FilterSearch from "components/flight/flight-list/filter-search";
 import SearchResult from "components/flight/flight-list/search-result";
 import Footer from "components/home-page/Footer";
 import { useFlightSearchStore } from "hooks/flight-search-hook";
+
 const FlightList = () => {
-  const { flights } = useFlightSearchStore();
+  const { flights, loading } = useFlightSearchStore();
+
   return (
     <Box bgcolor="rgb(234,234,234)">
       <Header />
-
       <FlightSearch />
       <Box
         display="flex"
@@ -39,7 +40,7 @@ const FlightList = () => {
             flexBasis: "70%",
           }}
         >
-          <SearchResult flights={flights} />
+          <SearchResult flights={flights} loading={loading} />
         </Box>
       </Box>
       <Box bgcolor="white">
