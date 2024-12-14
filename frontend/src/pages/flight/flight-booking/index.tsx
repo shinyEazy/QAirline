@@ -101,7 +101,7 @@ const FlightBooking = () => {
       <Header />
       <Box
         sx={{
-          margin: "100px 80px",
+          margin: "40px 80px",
           backgroundImage:
             "url('https://freesvg.org/img/shokunin_World_Map.png')", // Correct syntax for background image
           backgroundPosition: "center",
@@ -116,8 +116,21 @@ const FlightBooking = () => {
           color="white"
           padding="10px 0 10px 100px"
         >
-          <Typography fontSize="1.8rem">
-            <FontAwesomeIcon icon={faPlane} style={{ marginRight: "8px" }} />
+          <Typography fontSize="1.8rem" display="flex" alignItems="center">
+            <Box display="flex" alignItems="center">
+              <i
+                className="fa-thin fa-ticket-airline"
+                style={{
+                  height: "100%",
+                  marginRight: "8px",
+                  color: "white",
+                  fontSize: "2.4rem",
+                  alignItems: "center",
+                  textAlign: "center",
+                  justifyContent: "center",
+                }}
+              ></i>
+            </Box>
             BOARDING PASS
           </Typography>
         </Box>
@@ -278,27 +291,11 @@ const FlightBooking = () => {
                   justifyContent="center"
                   textAlign="center"
                 >
-                  <FontAwesomeIcon
-                    icon={faPlane}
-                    style={{
-                      fontSize: "8rem",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                    }}
-                  />
+                  <i
+                    className="fa-thin fa-plane-departure"
+                    style={{ fontSize: "13rem" }}
+                  ></i>
                 </Box>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleCancelClick}
-                  sx={{
-                    padding: "4px 10px",
-                    visibility: selectedFlight ? "visible" : "hidden",
-                  }}
-                >
-                  Cancel Ticket
-                </Button>
               </Box>
             </Box>
             <Box marginTop="80px"></Box>
@@ -363,6 +360,24 @@ const FlightBooking = () => {
             </Typography>
           </Box>
         </Box>
+      </Box>
+      <Box
+        justifyContent="center"
+        alignItems="center"
+        display="flex"
+        marginBottom="40px"
+      >
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleCancelClick}
+          sx={{
+            padding: "4px 10px",
+            visibility: selectedFlight ? "visible" : "hidden",
+          }}
+        >
+          Cancel Ticket
+        </Button>
       </Box>
       <Box bgcolor="white">
         <Footer />
