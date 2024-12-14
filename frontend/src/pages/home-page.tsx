@@ -12,6 +12,8 @@ import LatestNews from "components/home-page/LatestNews";
 import Footer from "components/home-page/Footer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import News from "components/home-page/news";
+
 const theme = createTheme({
   typography: {
     fontFamily: "JetBrains Mono, monospace",
@@ -27,13 +29,13 @@ const HomePage = () => {
         <Box sx={{ bgcolor: "rgb(234, 234, 234)" }}>
           <Banner />
           <FlightSearch />
+          <News />
           <Benefit />
           <LatestFlight />
           <GlobalTravel />
           <Achievement />
           <Testimonial />
           <LatestNews />
-
         </Box>
         <Footer />
       </Box>
