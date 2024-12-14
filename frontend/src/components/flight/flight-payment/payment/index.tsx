@@ -1,5 +1,6 @@
 import {
   Box,
+  TextField,
   Typography,
   Radio,
   FormControlLabel,
@@ -7,13 +8,21 @@ import {
   Collapse,
 } from "@mui/material";
 import { useState } from "react";
-
+import useBookingStore from "hooks/booking-hook"
 const Payment = () => {
   const [paymentOption, setPaymentOption] = useState("payLater");
-
+  const [bookerEmail, setBookerEmailField] = useState("");
+  const { setBookerEmail } = useBookingStore();
   const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPaymentOption((event.target as HTMLInputElement).value);
   };
+
+  const handleBookerEmailField = (bookerEmail) => {
+    setBookerEmailField(bookerEmail);
+
+    setBookerEmail(bookerEmail);
+
+  }
 
   return (
     <Box
@@ -60,7 +69,24 @@ const Payment = () => {
           </Box>
         </Collapse>
       </RadioGroup>
-    </Box>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "16px",
+        }}
+      >
+        <TextField
+          fullWidth
+          label="Booker Email*"
+          value={bookerEmail}
+          onChange={(e) =>
+            handleBookerEmailField(e.target.value)
+          }
+          variant="outlined"
+        />
+      </Box>
+    </Box >
   );
 };
 

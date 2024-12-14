@@ -5,8 +5,9 @@ import StepFlightSeat from "components/flight/flight-seat/step-flight-seat";
 import FlightRoute from "components/flight/flight-detail/flight-route";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
-import useBookingPayload from "hooks/booking-hook";
+import useBookingStore from "hooks/booking-hook";
 import { fetchFlightSeats } from "hooks/flight-hook";
+import { defaultPassenger, Passenger, updatePassengerSeat } from "types/passenger";
 
 interface PriceSummary {
   [className: string]: {
@@ -19,7 +20,7 @@ const SEAT_PRICE = 100;
 
 const FlightSeat = () => {
   const navigate = useNavigate();
-  const { getPayload, setFlightClass } = useBookingPayload();
+  const { setNumberOfAdultsAndChildren, setPassengers, getPayload, setFlightClass } = useBookingStore();
 
   const [matrix, setMatrix] = useState([]);
   const [loading, setLoading] = useState(true); // For handling loading state
@@ -28,9 +29,6 @@ const FlightSeat = () => {
 
   // Fetch flight seats on component mount
   useEffect(() => {
-    const payload = getPayload();
-
-    console.log(payload);
     const fetchSeats = async () => {
       try {
         const fetchedMatrix = await fetchFlightSeats(1);
@@ -54,7 +52,7 @@ const FlightSeat = () => {
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return Array.from({ length }, (_, i) => alphabet[i % alphabet.length]);
       };
-      const generatedLetters = generateLetters(matrix[0][0].length - 2);
+      const generatedLetters = generateLetters(matrix[0][0].length - 1);
       setLetters(generatedLetters);
       const seatArray = [];
 
@@ -65,7 +63,7 @@ const FlightSeat = () => {
           const rowArray = []; // Temporary array for the current row
           for (let col = 0; col < seatMatrix[row].length; col++) {
             rowArray.push({
-              id: row + 1 + String.fromCharCode(col + 65) + seatClass, // Sequential IDs
+              id: row + 1 + String.fromCharCode(col + 65) + seatClass[0],
               class: seatClass,
               available: !seatMatrix[row][col], // Use matrix value
               selected: false,
@@ -139,6 +137,16 @@ const FlightSeat = () => {
   const handleNext = () => {
     setFlightClass(selectedClass);
 
+    let passengers: [Passenger] = []
+    selectedSeats.forEach((seat) => {
+      let dummyPassenger = defaultPassenger;
+
+      dummyPassenger = updatePassengerSeat(dummyPassenger, seat.id.slice(0, -1));
+      passengers.push(dummyPassenger);
+    })
+
+    setPassengers(passengers);
+    setNumberOfAdultsAndChildren(passengers.length, 0);
     navigate("/flight/detail", {
       state: {
         selectedSeats,
@@ -245,7 +253,7 @@ const FlightSeat = () => {
               <Box display="flex" flexDirection="column" gap={2}>
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item xs={1} />
-                  {letters.slice(0, letters.length / 2 + 1).map((label) => (
+                  {letters.slice(0, letters.length / 2).map((label) => (
                     <Grid
                       item
                       key={label}

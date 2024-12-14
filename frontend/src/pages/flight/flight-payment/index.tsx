@@ -8,11 +8,27 @@ import StepFlightPayment from "components/flight/flight-payment/step-fight-payme
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import useBookingStore, { createBooking } from "hooks/booking-hook";
 
 const FlightPayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { getPayload } = useBookingStore();
+  const submitBooking = async () => {
 
+    try {
+      const payload = getPayload();
+
+      const response = await createBooking(payload);
+
+      // Handle the response, for example, log or store the booking details
+
+      // After successful POST, navigate to the home page
+      navigate("/");
+    } catch (error) {
+      console.error("Error in submitting booking", error);
+    }
+  }
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
@@ -65,7 +81,7 @@ const FlightPayment = () => {
                 Back
               </Button>
               <Button
-                onClick={() => navigate("/")}
+                onClick={submitBooking}
                 fullWidth
                 sx={{
                   marginTop: "40px",

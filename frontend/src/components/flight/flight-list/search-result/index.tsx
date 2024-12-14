@@ -4,17 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Flight } from "types/flight";
-import useBookingPayload from "hooks/booking-hook";
+import useBookingStore from "hooks/booking-hook";
 import { useFlightStore } from "hooks/flight-search-hook";
 interface SearchResultProps {
   flights: Flight[];
 }
-const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
-  const [expandedDetails, setExpandedDetails] = useState<
-    Record<number, boolean>
-  >({});
+const SearchResult: React.FC<SearchResultProps> = ({ flights = [] }) => {
+  const [expandedDetails, setExpandedDetails] = useState<Record<number, boolean>>({});
   const { setSelectedFlight } = useFlightStore();
-  const { setFlightId } = useBookingPayload();
+  const { setFlightId } = useBookingStore();
   const location = useLocation();
 
   useEffect(() => {
@@ -28,11 +26,14 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights }) => {
       [id]: !prev[id],
     }));
   };
+
   const handleBookNow = (flight: Flight) => {
+    if (!flight) {
+      return
+    }
     setFlightId(flight.id);
-    console.log(flight.id);
     setSelectedFlight(flight);
-    // navigate("/flight/seat");
+    navigate("/flight/seat");
   };
 
   return (

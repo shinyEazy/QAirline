@@ -108,7 +108,7 @@ def delete_flight(db: Session, db_flight: Flight) -> Flight:
     return delete(db_flight, db)
 
 
-def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
+def get_all_passenger_in_flight(flight_id: int, db: Session):
     """
     Get all passengers in a given flight
     """
@@ -120,14 +120,11 @@ def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
         .filter(Flight.flight_id == flight_id)
         .all()
     )
-    
+
     passengers = []
     for db_passenger, flight_class in db_passengers:
-        passengers.append({
-            "passenger": db_passenger,
-            "flight_class": flight_class
-        })
-    
+        passengers.append({"passenger": db_passenger, "flight_class": flight_class})
+
     return passengers
 
 
@@ -242,7 +239,7 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
     max_seat_col: int = seat_col_to_int(str(flight_seat.max_col_seat))
     # seat_row and seat_col are 1-based
     passengers_seats_in_flight_class = [
-        (conint(passenger.seat_row), seat_col_to_int(str(passenger.seat_col)))
+        (conint(passenger.seat_row) - 1, seat_col_to_int(str(passenger.seat_col)) - 1)
         for passenger in passengers_in_flight_class
     ]
 

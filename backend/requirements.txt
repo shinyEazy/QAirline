@@ -10,3 +10,4 @@ python-multipart
 fastapi-mail
 python-dotenv
 email-validator
+sib-api-v3-sdk

@@ -8,7 +8,7 @@ import Price from "components/flight/flight-detail/price";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import useBookingPayload from "hooks/booking-hook";
+import useBookingStore from "hooks/booking-hook";
 import axios from "../../../hooks/axios-config";
 
 const FlightDetail = () => {
@@ -18,7 +18,7 @@ const FlightDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
-  const { getPayload } = useBookingPayload();
+  const { getPayload } = useBookingStore();
   const handleNext = async () => {
     navigate("/flight/payment");
     // const payload = getPayload();

@@ -17,6 +17,11 @@ from datetime import datetime
 from enum import Enum as PyEnum
 
 
+class Gender(PyEnum):
+    Male = "Male"
+    Female = "Female"
+
+
 class Role(PyEnum):
     admin = "admin"
     user = "user"
