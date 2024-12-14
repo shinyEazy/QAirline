@@ -18,8 +18,9 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { fetchFlights } from "hooks/flight-hook";
-
+import { fetchFlights, updateFlight } from "hooks/flight-hook";
+import { getPassengerInFlight } from "hooks/passenger-hook";
+import { Passenger, NewPassenger } from "types/passenger";
 interface Flight {
   flight_id: number;
   flight_number: string;
@@ -34,112 +35,46 @@ interface Flight {
   flight_price: number;
 }
 
-interface Passenger {
-  passengerId: number;
-  firstName: string;
-  lastName: string;
-  dob: string;
-  class: string;
-  seat: string;
-}
 
-// const flights: Flight[] = [
-//   {
-//     id: 1,
-//     flightId: "1",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "On time",
-//   },
-//   {
-//     id: 2,
-//     flightId: "2",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Delayed",
-//   },
-//   {
-//     id: 3,
-//     flightId: "3",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Canceled",
-//   },
-//   {
-//     id: 4,
-//     flightId: "4",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Departed",
-//   },
-//   {
-//     id: 5,
-//     flightId: "5",
-//     registrationNumber: "MH370",
-//     departure: "Hanoi",
-//     destination: "Ho Chi Minh",
-//     departureTime: "10:00 - Dec 04, 2024",
-//     arrivalTime: "12:00 - Dec 04, 2024",
-//     price: "$100 - $200",
-//     status: "Landed",
-//   },
-// ];
 
-const passengersByFlightId: Record<string, Passenger[]> = {
-  1: [
-    {
-      passengerId: 1,
-      firstName: "John",
-      lastName: "Doe",
-      dob: "1990-01-01",
-      class: "Economy",
-      seat: "A1",
-    },
-    {
-      passengerId: 2,
-      firstName: "Jane",
-      lastName: "Smith",
-      dob: "1985-05-15",
-      class: "First Class",
-      seat: "B2",
-    },
-    {
-      passengerId: 3,
-      firstName: "Alice",
-      lastName: "Johnson",
-      dob: "1992-07-21",
-      class: "Business",
-      seat: "C3",
-    },
-    {
-      passengerId: 4,
-      firstName: "Joshep",
-      lastName: "Zues",
-      dob: "1992-07-21",
-      class: "Business",
-      seat: "A4",
-    },
-  ],
-};
+// const passengersByFlightId: Record<string, Passenger[]> = {
+//   1: [
+//     {
+//       passengerId: 1,
+//       firstName: "John",
+//       lastName: "Doe",
+//       dob: "1990-01-01",
+//       class: "Economy",
+//       seat: "A1",
+//     },
+//     {
+//       passengerId: 2,
+//       firstName: "Jane",
+//       lastName: "Smith",
+//       dob: "1985-05-15",
+//       class: "First Class",
+//       seat: "B2",
+//     },
+//     {
+//       passengerId: 3,
+//       firstName: "Alice",
+//       lastName: "Johnson",
+//       dob: "1992-07-21",
+//       class: "Business",
+//       seat: "C3",
+//     },
+//     {
+//       passengerId: 4,
+//       firstName: "Joshep",
+//       lastName: "Zues",
+//       dob: "1992-07-21",
+//       class: "Business",
+//       seat: "A4",
+//     },
+//   ],
+// };
 
 const FlightList = () => {
-
   const getStatusStyle = (status: string) => {
     switch (status) {
       case "On Time":
@@ -161,9 +96,11 @@ const FlightList = () => {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [open, setOpen] = useState(false);
   const [openView, setOpenView] = useState(false);
-  const [selectedPassengers, setSelectedPassengers] = useState<Passenger[]>([]);
+  const [selectedPassengers, setSelectedPassengers] = useState<NewPassenger[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+  const sortFlightsByID = (flights: Flight[]) => {
+    return [...flights].sort((a, b) => a.flight_id - b.flight_id);
+  };
   useEffect(() => {
     const loadFlights = async () => {
       try {
@@ -182,43 +119,48 @@ const FlightList = () => {
     setOpen(true);
   };
 
-  const handleView = (flightId: string) => {
-    const passengers = passengersByFlightId[flightId] || [];
-    console.log(passengers);
-    const classPriority: Record<string, number> = {
-      "First Class": 1,
-      Business: 2,
-      Economy: 3,
-    };
-
-    const sortedPassengers = [...passengers].sort((a, b) => {
-      // Compare by class priority
-      const classDiff =
-        (classPriority[a.class] || Infinity) -
-        (classPriority[b.class] || Infinity);
-      if (classDiff !== 0) return classDiff;
-
-      // Compare by seat order (e.g., "A1" vs "B2")
-      const parseSeat = (seat: string) => {
-        const match = seat.match(/^([A-Za-z])(\d+)$/);
-        if (match) {
-          const [, letter, number] = match;
-          return { letter, number: parseInt(number, 10) };
-        }
-        return { letter: "", number: Infinity };
+  const handleView = async (flightId: number) => {
+    try {
+      const passengers = await getPassengerInFlight(flightId);
+      console.log(passengers);
+      const classPriority: Record<string, number> = {
+        "First Class": 1,
+        Business: 2,
+        Economy: 3,
       };
 
-      const seatA = parseSeat(a.seat);
-      const seatB = parseSeat(b.seat);
+      const sortedPassengers = [...passengers].sort((a, b) => {
+        // Compare by class priority
+        const classDiff =
+          (classPriority[a.flight_class] || Infinity) -
+          (classPriority[b.flight_class] || Infinity);
+        if (classDiff !== 0) return classDiff;
 
-      if (seatA.letter !== seatB.letter) {
-        return seatA.letter.localeCompare(seatB.letter);
-      }
-      return seatA.number - seatB.number;
-    });
+        // Compare by seat order (e.g., "A1" vs "B2")
+        const parseSeat = (seat: string) => {
+          const match = seat.match(/^([A-Za-z])(\d+)$/);
+          if (match) {
+            const [, letter, number] = match;
+            return { letter, number: parseInt(number, 10) };
+          }
+          return { letter: "", number: Infinity };
+        };
 
-    setSelectedPassengers(sortedPassengers);
-    setOpenView(true);
+        const seatA = parseSeat(a.seat_col);
+        const seatB = parseSeat(b.seat_col);
+
+        if (seatA.letter !== seatB.letter) {
+          return seatA.letter.localeCompare(seatB.letter);
+        }
+        return seatA.number - seatB.number;
+      });
+
+      setSelectedPassengers(sortedPassengers);
+      setOpenView(true);
+    } catch (error) {
+      setError("Failed to fetch passengers");
+      console.error("Error fetching passengers", error);
+    }
   };
 
   const handleChange = (field: keyof Flight, value: string) => {
@@ -227,34 +169,73 @@ const FlightList = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedFlight) {
-      setFlightData(
-        flightData.map((flight) =>
-          flight.flight_id === selectedFlight.flight_id ? selectedFlight : flight
-        )
-      );
+      try {
+        const {
+          registration_number,
+          estimated_departure_time,
+          actual_departure_time,
+          estimated_arrival_time,
+          actual_arrival_time,
+          flight_price,
+          status,
+        } = selectedFlight;
+        const { departure_city, destination_city } = selectedFlight;
+
+        // Tạo payload với chỉ các trường cần thiết
+        const payload = {
+          registration_number,
+          estimated_departure_time,
+          actual_departure_time: actual_departure_time || "",
+          estimated_arrival_time,
+          actual_arrival_time: actual_arrival_time || "",
+          flight_price,
+          status,
+        };
+        // Gọi API để cập nhật chuyến bay
+        const updatedFlight = await updateFlight(
+          selectedFlight.flight_id,
+          payload
+        );
+        updatedFlight.departure_city = departure_city;
+        updatedFlight.destination_city = destination_city;
+
+        // Cập nhật lại danh sách chuyến bay trong state
+        setFlightData(
+          flightData.map((flight) =>
+            flight.flight_id === selectedFlight.flight_id
+              ? updatedFlight
+              : flight
+          )
+        );
+
+        // Đóng modal sau khi cập nhật thành công
+        setOpen(false);
+      } catch (error) {
+        setError("Failed to update flight");
+        console.error("Error updating flight", error);
+      }
     }
-    setOpen(false);
   };
 
   const formatDateTime = (dateTime: string) => {
-    return new Date(dateTime).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
+    return new Date(dateTime).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     });
   };
 
   return (
-    <Box padding={2}>
-      <Typography variant="h4" gutterBottom>
-        Flight Management
-      </Typography>
-      <TableContainer component={Paper}>
+    <Box padding={2} width="100vw">
+      <TableContainer
+        component={Paper}
+        sx={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", borderRadius: 2 }}
+      >
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#1e90ff" }}>
@@ -263,6 +244,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 ID
@@ -272,6 +254,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Flight Number
@@ -281,6 +264,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Airplane Registration Number
@@ -290,6 +274,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Departure
@@ -299,6 +284,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Destination
@@ -308,6 +294,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Departure Time
@@ -317,6 +304,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Arrival Time
@@ -326,6 +314,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Price
@@ -335,6 +324,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Status
@@ -344,6 +334,7 @@ const FlightList = () => {
                   color: "white",
                   fontWeight: "bold",
                   border: "1px solid #ddd",
+                  textAlign: "center",
                 }}
               >
                 Actions
@@ -351,38 +342,54 @@ const FlightList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {flightData.map((flight, index) => (
+            {sortFlightsByID(flightData).map((flight, index) => (
               <TableRow
                 key={flight.flight_id}
                 sx={{
                   backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white",
                   "&:hover": {
-                    backgroundColor: "#e0f7fa", // Light blue hover color
+                    backgroundColor: "#e0f7fa",
                   },
                 }}
               >
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.flight_id}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.flight_number}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.registration_number}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.departure_city}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.destination_city}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {formatDateTime(flight.estimated_departure_time)}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {formatDateTime(flight.estimated_arrival_time)}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   {flight.flight_price}
                 </TableCell>
                 <TableCell
@@ -393,9 +400,11 @@ const FlightList = () => {
                 >
                   {flight.status}
                 </TableCell>
-                <TableCell sx={{ border: "1px solid #ddd" }}>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   <Button
-                    onClick={() => handleView("1")}
+                    onClick={() => handleView(flight.flight_id)}
                     variant="contained"
                     size="small"
                     color="primary"
@@ -427,21 +436,21 @@ const FlightList = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>Date of Birth</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>DOB</TableCell>
                   <TableCell>Seat</TableCell>
+                  <TableCell>Class</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {selectedPassengers.map((passenger, index) => (
-                  <TableRow key={passenger.passengerId}>
+                  <TableRow >
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{passenger.firstName}</TableCell>
-                    <TableCell>{passenger.lastName}</TableCell>
-                    <TableCell>{passenger.dob}</TableCell>
+                    <TableCell>{passenger.first_name + " " + passenger.last_name}</TableCell>
+                    <TableCell>{passenger.date_of_birth}</TableCell>
+                    <TableCell>{passenger.flight_class}</TableCell>
                     <TableCell>
-                      {passenger.class + " - " + passenger.seat}
+                      {passenger.seat_col + " - " + passenger.seat_row}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -465,7 +474,9 @@ const FlightList = () => {
             fullWidth
             margin="dense"
             value={selectedFlight?.registration_number || ""}
-            onChange={(e) => handleChange("registration_number", e.target.value)}
+            onChange={(e) =>
+              handleChange("registration_number", e.target.value)
+            }
           />
           <Box display="flex" gap={2}>
             <TextField
@@ -473,14 +484,18 @@ const FlightList = () => {
               fullWidth
               margin="dense"
               value={selectedFlight?.estimated_departure_time || ""}
-              onChange={(e) => handleChange("estimated_departure_time", e.target.value)}
+              onChange={(e) =>
+                handleChange("estimated_departure_time", e.target.value)
+              }
             />
             <TextField
               label="Arrival Time"
               fullWidth
               margin="dense"
               value={selectedFlight?.estimated_arrival_time || ""}
-              onChange={(e) => handleChange("estimated_arrival_time", e.target.value)}
+              onChange={(e) =>
+                handleChange("estimated_arrival_time", e.target.value)
+              }
             />
           </Box>
           <TextField
@@ -498,7 +513,7 @@ const FlightList = () => {
             margin="dense"
             sx={{ marginTop: 1 }}
           >
-            <MenuItem value="On time">On time</MenuItem>
+            <MenuItem value="On Time">On Time</MenuItem>
             <MenuItem value="Delayed">Delayed</MenuItem>
             <MenuItem value="Canceled">Canceled</MenuItem>
             <MenuItem value="Departed">Departed</MenuItem>

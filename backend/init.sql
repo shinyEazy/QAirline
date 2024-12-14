@@ -1,13 +1,4 @@
 -- Create User Table
-CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    firstname TEXT NOT NULL,
-    lastname TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    role TEXT NOT NULL
-);
 -- Create Airport Table
 CREATE TABLE airport (
     airport_id SERIAL PRIMARY KEY,
@@ -29,9 +20,7 @@ CREATE TABLE airplane (
     airplane_id SERIAL PRIMARY KEY,
     airplane_model_id INTEGER,
     registration_number TEXT UNIQUE,
-    current_airport_id INTEGER,
-    FOREIGN KEY (airplane_model_id) REFERENCES airplane_model(airplane_model_id) ON DELETE CASCADE,
-    FOREIGN KEY (current_airport_id) REFERENCES airport(airport_id) ON DELETE CASCADE
+    FOREIGN KEY (airplane_model_id) REFERENCES airplane_model(airplane_model_id) ON DELETE CASCADE
 );
 
 -- Create Flight Table
@@ -67,34 +56,34 @@ CREATE TABLE flight_seats (
 
 -- Create Booking Table
 CREATE TABLE booking (
-    booking_id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,  
+    booking_id TEXT PRIMARY KEY,
+    booker_email TEXT NOT NULL,
     number_of_adults INTEGER NOT NULL CHECK (number_of_adults >= 0),
     number_of_children INTEGER NOT NULL CHECK (number_of_children >= 0),
     flight_class TEXT NOT NULL,
     cancelled BOOLEAN DEFAULT FALSE,
     flight_id INTEGER NOT NULL,
     booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,  
     FOREIGN KEY (flight_id) REFERENCES flight(flight_id) ON DELETE CASCADE
 );
 
 -- Create Passenger Table
 CREATE TABLE passengers (
     passenger_id SERIAL PRIMARY KEY, 
-    booking_id INTEGER NOT NULL,
+    booking_id TEXT NOT NULL,
     citizen_id TEXT NOT NULL,
     passport_number TEXT,
-    gender BOOLEAN NOT NULL,
+    gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')) NOT NULL,
     phone_number TEXT NOT NULL,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     nationality TEXT NOT NULL,
-    date_of_birth TIMESTAMP NOT NULL,
+    date_of_birth DATE NOT NULL,
     seat_row INTEGER NOT NULL,
-    seat_col VARCHAR NOT NULL,
+    seat_col VARCHAR(2) NOT NULL,
     FOREIGN KEY (booking_id) REFERENCES booking(booking_id) ON DELETE CASCADE
 );
+
 
 -- Create Payment Table
 CREATE TABLE payment (
@@ -104,7 +93,7 @@ CREATE TABLE payment (
     currency TEXT DEFAULT 'USD',
     payment_method TEXT,
     status TEXT DEFAULT 'pending',
-    booking_id INTEGER UNIQUE,
+    booking_id TEXT UNIQUE,
     FOREIGN KEY (booking_id) REFERENCES booking(booking_id) ON DELETE CASCADE
 );
 
@@ -221,40 +210,40 @@ INSERT INTO "airport" (airport_code, city, name) VALUES
 
 
 -- Insert Airplane Data
-INSERT INTO airplane (airplane_model_id, registration_number, current_airport_id) 
-VALUES 
-(1, 'N789BA', 1),
-(2, 'G-XWBA', 2),
-(3, 'F-HZBA', 3),
-(4, 'D-ABYC', 4),
-(5, 'C-FZBA', 5),
-(6, 'JA123A', 6),
-(7, 'VH-ZNA', 7),
-(8, '9V-SKA', 8),
-(9, 'HS-TKA', 9),
-(10, 'B-2088', 10),
-(11, 'CC-BGA', 11),
-(12, 'XA-ZAA', 12),
-(13, 'EI-DYC', 13),
-(14, 'CS-TKA', 14),
-(15, 'EC-MUA', 15),
-(16, 'OO-SBA', 16),
-(17, 'PH-BHA', 17),
-(18, 'LN-NOR', 18),
-(19, 'SE-RKA', 19),
-(20, 'OY-KBA', 20),
-(21, 'SP-LRA', 21),
-(22, 'TC-LKA', 22),
-(23, 'SU-GEA', 23),
-(24, 'ET-ASK', 24),
-(25, 'ZK-NZE', 25),
-(26, 'JA803A', 26),
-(27, 'HL8003', 27),
-(28, 'PR-OPA', 28),
-(29, 'LV-FQA', 29),
-(30, 'CC-BGC', 30),
-(31, 'VT-ALJ', 31),
-(32, 'PK-GIC', 32);
+INSERT INTO airplane (airplane_model_id, registration_number) VALUES 
+(1, 'N789BA'),
+(2, 'G-XWBA'),
+(3, 'F-HZBA'),
+(4, 'D-ABYC'),
+(5, 'C-FZBA'),
+(6, 'JA123A'),
+(7, 'VH-ZNA'),
+(8, '9V-SKA'),
+(9, 'HS-TKA'),
+(10, 'B-2088'),
+(11, 'CC-BGA'),
+(12, 'XA-ZAA'),
+(13, 'EI-DYC'),
+(14, 'CS-TKA'),
+(15, 'EC-MUA'),
+(16, 'OO-SBA'),
+(17, 'PH-BHA'),
+(18, 'LN-NOR'),
+(19, 'SE-RKA'),
+(20, 'OY-KBA'),
+(21, 'SP-LRA'),
+(22, 'TC-LKA'),
+(23, 'SU-GEA'),
+(24, 'ET-ASK'),
+(25, 'ZK-NZE'),
+(26, 'JA803A'),
+(27, 'HL8003'),
+(28, 'PR-OPA'),
+(29, 'LV-FQA'),
+(30, 'CC-BGC'),
+(31, 'VT-ALJ'),
+(32, 'PK-GIC');
+
 
 -- Insert Flight Data
 INSERT INTO flight (
@@ -293,9 +282,9 @@ INSERT INTO flight_seats (
     max_row_seat,
     max_col_seat
 ) VALUES 
-('N789BA', 'Economy', 1.0, 0.8, 200, 'T'), -- 20 (chẵn)
-('N789BA', 'Business', 1.5, 0.9, 40, 'J'), -- 10 (chia hết cho 5)
-('N789BA', 'First Class', 2.0, 1.0, 20, 'F'), -- 6 (chia hết cho 3)
+('N789BA', 'Economy', 1.0, 0.8, 10, 'F'), -- 20 (chẵn)
+('N789BA', 'Business', 1.5, 0.9, 10, 'F'), -- 10 (chia hết cho 5)
+('N789BA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
 ('G-XWBA', 'Economy', 1.0, 0.8, 162, 'R'), -- 18 (chia hết cho 3)
 ('G-XWBA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
@@ -341,4 +330,30 @@ INSERT INTO flight_seats (
 ('XA-ZAA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
 ('XA-ZAA', 'First Class', 2.0, 1.0, 8, 'F'); -- 6 (chia hết cho 3)
 
+INSERT INTO users (firstname, lastname, email, username, password, role) VALUES
+('John', 'Doe', 'john.doe@example.com', 'johndoe', 'hashed_password_1', 'customer'),
+('Jane', 'Smith', 'jane.smith@example.com', 'janesmith', 'hashed_password_2', 'customer');
+
+INSERT INTO booking (user_id, number_of_adults, number_of_children, flight_class, cancelled, flight_id) VALUES
+(2, 2, 0, 'Economy', FALSE, 1), 
+(2, 1, 1, 'Business', FALSE, 2),
+(2, 3, 0, 'Economy', FALSE, 3),
+(2, 2, 2, 'First Class', TRUE, 4), 
+(2, 1, 0, 'Economy', FALSE, 5); 
+
+INSERT INTO passengers (
+    booking_id, citizen_id, passport_number, 
+    gender, phone_number, first_name, last_name, 
+    nationality, date_of_birth, seat_row, seat_col
+) VALUES 
+(1, '001234567890', 'VN123456', 'Male', '0912345678', 'Nguyễn', 'Văn An', 'Vietnam', '1990-05-15', 1, 'A'),
+(1, '009876543210', 'VN654321', 'Female', '0987654321', 'Trần', 'Thị Bích', 'Vietnetnam', '1992-08-20', 1, 'B'),
+(2, '002345678901', 'VN234567', 'Male', '0923456789', 'Phạm', 'Văn Cường', 'Vietnam', '1985-11-30', 2, 'C'),
+(2, '008765432109', 'VN765432', 'Female', '0976543210', 'Lê', 'Thị Diệu', 'Vietietnam', '1988-03-25', 2, 'D'),
+(3, 'FR123456789', 'FR987654', 'Male', '+33612345678', 'Jean', 'Dupont', 'France', '1985-04-12', 5, 'A'),
+(3, 'FR987654321', 'FR123456', 'Female', '+33698765432', 'Marie', 'Laurent', 'France', '1990-09-23', 5, 'B'),
+(4, 'DE234567890', 'DE876543', 'Male', '+49160123456', 'Hans', 'Mueller', 'Germany', '1978-11-05', 6, 'C'),
+(4, 'DE876543210', 'DE345678', 'Female', '+491601234567', 'Anna', 'Schmidt', 'Germany', '1982-07-15',6, 'D'),
+(5, 'IT345678901', 'IT765432', 'Male', '+393912345678', 'Giovanni', 'Rossi', 'Italy', '1975-02-28', 7, 'E'),
+(5, 'IT765432109', 'IT456789', 'Female', '+393387654321', 'Sofia', 'Bianchi', 'Italy', '1988-06-10',7, 'F');
 

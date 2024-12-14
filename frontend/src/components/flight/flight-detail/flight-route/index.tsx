@@ -5,9 +5,6 @@ const FlightRoute = () => {
   if (!selectedFlight) {
     return <Typography>No flight selected</Typography>;
   }
-
-  // const departureTime = new Date(selectedFlight.departureTime);
-  // const arrivalTime = new Date(selectedFlight.arrivalTime);
   return (
     <Box
       sx={{

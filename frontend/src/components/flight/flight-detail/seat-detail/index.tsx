@@ -1,5 +1,6 @@
 import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 interface SeatOwner {
   id: string;
@@ -9,43 +10,25 @@ interface SeatOwner {
   class: string;
   nationality: string;
   phone: string;
-  gender: boolean;
+  gender: string;
 }
 
-const SeatDetail = () => {
-  const [seatOwners, setSeatOwners] = useState<SeatOwner[]>([
-    {
-      id: "A1",
-      firstName: "",
-      lastName: "",
-      dob: "",
-      class: "Economy",
-      nationality: "",
-      phone: "",
-      gender: true,
-    },
-    {
-      id: "A2",
-      firstName: "",
-      lastName: "",
-      dob: "",
-      class: "Economy",
-      nationality: "",
-      phone: "",
-      gender: true,
-    },
-    {
-      id: "A3",
-      firstName: "",
-      lastName: "",
-      dob: "",
-      class: "Economy",
-      nationality: "",
-      phone: "",
-      gender: true,
-    },
-  ]);
 
+const SeatDetail = () => {
+  const location = useLocation();
+  const selectedSeats = location.state?.selectedSeats;
+  const [seatOwners, setSeatOwners] = useState<SeatOwner[]>(
+    selectedSeats.map((seat) => ({
+      id: seat.id,
+      firstName: "",
+      lastName: "",
+      dob: "",
+      class: seat.class || "Economy", // Default to "Economy" if class is not provided
+      nationality: "",
+      phone: "",
+      gender: true,
+    }))
+  );
   const [currentSeatIndex, setCurrentSeatIndex] = useState(0);
 
   const handleInputChange = (
@@ -67,7 +50,7 @@ const SeatDetail = () => {
         : Math.min(prevIndex + 1, seatOwners.length - 1)
     );
   };
-
+  console.log('hello');
   return (
     <Box
       sx={{

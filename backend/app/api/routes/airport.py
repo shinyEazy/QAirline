@@ -52,3 +52,7 @@ async def delete_airport_end_point(airport_id: int, db: Session = Depends(get_db
     if not db_airport:
         raise HTTPException(status_code=404, detail="Airport not found")
     return delete_airport(db, db_airport)
+
+@router.get("/")
+async def get_all_airports_end_point(db: Session = Depends(get_db)):
+    return get_all_airports(db)

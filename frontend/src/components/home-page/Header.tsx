@@ -35,7 +35,7 @@ const Header = () => {
       label: "Flight",
       subItems: [
         { label: "Flight Listing", path: "/flight/list" },
-        // { label: "Flight Booking", path: "/flight/seat" },
+        { label: "Flight Booking", path: "/flight/booking" },
       ],
     },
     {
@@ -126,11 +126,12 @@ const Header = () => {
           >
             {menu.label}
           </Button>
-          {hoveredMenu === menu.label && (
+          {hoveredMenu === menu.label && menu.subItems.length > 0 && (
             <Box
               sx={{
                 position: "absolute",
-                left: 0,
+                left: menu.label === "News" ? "auto" : 0,
+                right: menu.label === "News" ? 0 : "auto",
                 bgcolor: "rgb(230, 238, 245)",
                 borderRadius: "8px",
                 padding: "10px",
@@ -378,7 +379,7 @@ const Header = () => {
       {isMobile ? renderMobileMenu() : renderDesktopMenu()}
 
       {/* Authentication Links */}
-      <Box display="flex" gap="10px">
+      {/* <Box display="flex" gap="10px">
         <Button
           sx={{
             color: "#1e90ff",
@@ -423,7 +424,7 @@ const Header = () => {
         >
           Signup
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

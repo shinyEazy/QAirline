@@ -67,7 +67,7 @@ class Passenger(Base):
     )
     citizen_id = Column(String, nullable=True)
     passport_number = Column(String, nullable=True)  # Optional passport number
-    gender = Column(Boolean, nullable=False)  # TRUE for male, FALSE for female
+    gender = Column(String(10), nullable=False)  # TRUE for male, FALSE for female
     phone_number = Column(String, nullable=False)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
@@ -83,9 +83,9 @@ class Booking(Base):
     __tablename__ = "booking"
 
     booking_id = Column(
-        Integer, primary_key=True, index=True
+        String, primary_key=True, index=True
     )  # Unique identifier for each booking
-    user_id = Column(Integer, nullable=False)
+    booker_email = Column(String, nullable=False)
     number_of_adults = Column(Integer, nullable=False)
     number_of_children = Column(Integer, nullable=False)
     flight_class = Column(
@@ -127,7 +127,9 @@ class Flight(Base):
 
     flight_id = Column(Integer, primary_key=True, index=True)
     flight_number = Column(String, unique=True, nullable=False)
-    registration_number = Column(String, ForeignKey("airplane.registration_number", ondelete="CASCADE"))
+    registration_number = Column(
+        String, ForeignKey("airplane.registration_number", ondelete="CASCADE")
+    )
     estimated_departure_time = Column(DateTime)
     actual_departure_time = Column(DateTime)
     estimated_arrival_time = Column(DateTime)
@@ -162,13 +164,14 @@ class Airplane(Base):
         Integer, ForeignKey("airplane_model.airplane_model_id", ondelete="CASCADE")
     )
     registration_number = Column(String, unique=True)
-    current_airport_id = Column(
-        Integer, ForeignKey("airport.airport_id", ondelete="CASCADE")
-    )
 
     # Thêm relationship
     airplane_model = relationship("AirplaneModel", back_populates="airplanes")
-    current_airport = relationship("Airport", back_populates="airplanes")
+
+    # Thêm relationship với FlightSeats
+    flight_seats = relationship(
+        "FlightSeats", back_populates="airplane", cascade="all, delete-orphan"
+    )
 
 
 class Airport(Base):
@@ -179,21 +182,23 @@ class Airport(Base):
     city = Column(String)
     name = Column(String)
 
-    airplanes = relationship("Airplane", back_populates="current_airport")
-
 
 class FlightSeats(Base):
     __tablename__ = "flight_seats"
 
     flight_seats_id = Column(Integer, primary_key=True, index=True)
     registration_number = Column(
-        String, ForeignKey("airplane.registration_number", ondelete="CASCADE"), nullable=False
+        String,
+        ForeignKey("airplane.registration_number", ondelete="CASCADE"),
+        nullable=False,
     )
     flight_class = Column(String, nullable=False)
     class_multiplier = Column(Float, nullable=False)
     child_multiplier = Column(Float, nullable=True)
     max_row_seat = Column(Integer, nullable=False)
     max_col_seat = Column(String, nullable=False)
+    # Thêm relationship với Airplane
+    airplane = relationship("Airplane", back_populates="flight_seats")
 
 
 class Advert(Base):
