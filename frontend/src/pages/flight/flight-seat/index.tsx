@@ -7,7 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import useBookingStore from "hooks/booking-hook";
 import { fetchFlightSeats } from "hooks/flight-hook";
-import { defaultPassenger, Passenger, updatePassengerSeat } from "types/passenger";
+import {
+  defaultPassenger,
+  Passenger,
+  updatePassengerSeat,
+} from "types/passenger";
+import Loading from "components/loading";
 
 interface PriceSummary {
   [className: string]: {
@@ -20,10 +25,15 @@ const SEAT_PRICE = 100;
 
 const FlightSeat = () => {
   const navigate = useNavigate();
-  const { setNumberOfAdultsAndChildren, setPassengers, getPayload, setFlightClass } = useBookingStore();
+  const {
+    setNumberOfAdultsAndChildren,
+    setPassengers,
+    getPayload,
+    setFlightClass,
+  } = useBookingStore();
 
   const [matrix, setMatrix] = useState([]);
-  const [loading, setLoading] = useState(true); // For handling loading state
+  const [loading, setLoading] = useState(true);
   const [letters, setLetters] = useState([]);
   const [seats, setSeats] = useState([]);
 
@@ -78,21 +88,22 @@ const FlightSeat = () => {
     }
   }, [matrix]);
 
-
   const seatRows = useMemo(() => {
     // Flatten and filter only rows belonging to the selected class
     const filteredSeats = seats
       .flat() // Flatten by one level: [ [row1], [row2] ] -> [row1, row2]
       .filter((row) => row[0]?.class === selectedClass); // Ensure the first seat in row matches the class
 
-    return filteredSeats.map((row) => {
-      // Break rows into chunks of 6 if needed
-      const chunks = [];
-      for (let i = 0; i < row.length; i += row.length) {
-        chunks.push(row.slice(i, i + row.length));
-      }
-      return chunks;
-    }).flat(); // Flatten again to keep rows consistent
+    return filteredSeats
+      .map((row) => {
+        // Break rows into chunks of 6 if needed
+        const chunks = [];
+        for (let i = 0; i < row.length; i += row.length) {
+          chunks.push(row.slice(i, i + row.length));
+        }
+        return chunks;
+      })
+      .flat(); // Flatten again to keep rows consistent
   }, [seats, selectedClass]);
 
   const toggleSeatSelection = (id: string) => {
@@ -106,7 +117,6 @@ const FlightSeat = () => {
       )
     );
   };
-
 
   const selectedSeats = useMemo(() => {
     return seats
@@ -137,20 +147,23 @@ const FlightSeat = () => {
   const handleNext = () => {
     setFlightClass(selectedClass);
 
-    let passengers: [Passenger] = []
+    let passengers: [Passenger] = [];
     selectedSeats.forEach((seat) => {
       let dummyPassenger = defaultPassenger;
 
-      dummyPassenger = updatePassengerSeat(dummyPassenger, seat.id.slice(0, -1));
+      dummyPassenger = updatePassengerSeat(
+        dummyPassenger,
+        seat.id.slice(0, -1)
+      );
       passengers.push(dummyPassenger);
-    })
+    });
 
     setPassengers(passengers);
     setNumberOfAdultsAndChildren(passengers.length, 0);
     navigate("/flight/detail", {
       state: {
         selectedSeats,
-      }
+      },
     });
   };
 
@@ -174,7 +187,7 @@ const FlightSeat = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading state
+    return <Loading />;
   }
 
   return (
@@ -267,19 +280,21 @@ const FlightSeat = () => {
                     </Grid>
                   ))}
                   <Grid item xs={1} />
-                  {letters.slice(letters.length / 2, letters.length).map((label) => (
-                    <Grid
-                      item
-                      key={label}
-                      xs={1}
-                      display="flex"
-                      justifyContent="center"
-                    >
-                      <Typography fontWeight="bold" fontSize="1.5rem">
-                        {label}
-                      </Typography>
-                    </Grid>
-                  ))}
+                  {letters
+                    .slice(letters.length / 2, letters.length)
+                    .map((label) => (
+                      <Grid
+                        item
+                        key={label}
+                        xs={1}
+                        display="flex"
+                        justifyContent="center"
+                      >
+                        <Typography fontWeight="bold" fontSize="1.5rem">
+                          {label}
+                        </Typography>
+                      </Grid>
+                    ))}
                 </Grid>
                 {seatRows.map((row, rowIndex) => (
                   <Grid

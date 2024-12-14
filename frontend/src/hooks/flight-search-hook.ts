@@ -1,15 +1,16 @@
-import { create } from 'zustand';
-import { Flight } from '../types/flight';
+import { create } from "zustand";
+import { Flight } from "../types/flight";
 
 interface FlightSearchState {
   departureCity: string;
   arrivalCity: string;
   departing: Date;
   returning: Date;
-  tripType: 'oneway' | 'roundtrip';
+  tripType: "oneway" | "roundtrip";
   flights: Flight[];
   showReturnDate: boolean;
   isRoundTrip: boolean;
+  loading: boolean;
 
   setDepartureCity: (city: string) => void;
   setArrivalCity: (city: string) => void;
@@ -17,9 +18,10 @@ interface FlightSearchState {
   setReturning: (date: Date) => void;
   setShowReturnDate: (show: boolean) => void;
   setIsRoundTrip: (isRoundTrip: boolean) => void;
-  setTripType: (type: 'oneway' | 'roundtrip') => void;
+  setTripType: (type: "oneway" | "roundtrip") => void;
   setFlights: (flights: Flight[]) => void;
   resetSearch: () => void;
+  setLoading: (loading: boolean) => void;
 }
 
 interface FlightSelectStore {
@@ -28,8 +30,8 @@ interface FlightSelectStore {
 }
 
 export const useFlightSearchStore = create<FlightSearchState>((set) => ({
-  departureCity: '',
-  arrivalCity: '',
+  departureCity: "",
+  arrivalCity: "",
   departing: new Date(),
   returning: (() => {
     const today = new Date();
@@ -38,8 +40,9 @@ export const useFlightSearchStore = create<FlightSearchState>((set) => ({
   })(),
   showReturnDate: false,
   isRoundTrip: false,
-  tripType: 'oneway',
+  tripType: "oneway",
   flights: [],
+  loading: false,
 
   setDepartureCity: (city) => set({ departureCity: city }),
   setArrivalCity: (city) => set({ arrivalCity: city }),
@@ -49,21 +52,24 @@ export const useFlightSearchStore = create<FlightSearchState>((set) => ({
   setIsRoundTrip: (isRoundTrip) => set({ isRoundTrip: isRoundTrip }),
   setTripType: (type) => set({ tripType: type }),
   setFlights: (flights) => set({ flights }),
+  setLoading: (loading) => set({ loading }),
 
-  resetSearch: () => set({
-    departureCity: '',
-    arrivalCity: '',
-    departing: new Date(),
-    returning: (() => {
-      const today = new Date();
-      today.setDate(today.getDate() + 2);
-      return today;
-    })(),
-    showReturnDate: false,
-    isRoundTrip: false,
-    tripType: 'oneway',
-    flights: [],
-  }),
+  resetSearch: () =>
+    set({
+      departureCity: "",
+      arrivalCity: "",
+      departing: new Date(),
+      returning: (() => {
+        const today = new Date();
+        today.setDate(today.getDate() + 2);
+        return today;
+      })(),
+      showReturnDate: false,
+      isRoundTrip: false,
+      tripType: "oneway",
+      flights: [],
+      loading: false,
+    }),
 }));
 
 export const useFlightStore = create<FlightSelectStore>((set) => ({
