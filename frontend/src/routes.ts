@@ -17,7 +17,8 @@ import FlightList from "pages/flight/flight-list";
 import FlightDetail from "pages/flight/flight-detail";
 import FlightPayment from "pages/flight/flight-payment";
 import FlightBooking from "pages/flight/flight-booking";
-
+import NewsList from "pages/news/list";
+import News from "pages/news";
 const routes = [
   {
     path: "/auth",
@@ -72,7 +73,6 @@ const routes = [
     path: "*",
     component: NoFoundPage,
   },
-
   {
     path: "/flight",
     component: Flight,
@@ -96,6 +96,16 @@ const routes = [
       {
         path: "booking",
         component: FlightBooking,
+      },
+    ],
+  },
+  {
+    path: "/news",
+    component: NewsList,
+    routes: [
+      {
+        path: "list/:id",
+        component: NewsList,
       },
     ],
   },

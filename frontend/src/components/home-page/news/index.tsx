@@ -5,6 +5,8 @@ import {
   KeyboardArrowDown,
 } from "@mui/icons-material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const newsData = [
   {
     id: 1,
@@ -29,6 +31,7 @@ const newsData = [
 ];
 
 const News = () => {
+  const navigate = useNavigate();
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
 
   const handleNavigate = (direction: "up" | "down") => {
@@ -109,6 +112,7 @@ const News = () => {
       </Box>
 
       <Button
+        onClick={() => navigate("/news/list/1")}
         disableRipple
         endIcon={<ArrowForward />}
         variant="text"
