@@ -19,12 +19,12 @@ const FlightPayment = () => {
     try {
       const payload = getPayload();
 
+      navigate("/");
+
       const response = await createBooking(payload);
 
       // Handle the response, for example, log or store the booking details
 
-      // After successful POST, navigate to the home page
-      navigate("/");
     } catch (error) {
       console.error("Error in submitting booking", error);
     }

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends
 from starlette.status import HTTP_404_NOT_FOUND
 from app.core.security import get_current_user, role_checker
 from schemas.booking import BookingCreate, BookingBase
@@ -57,8 +57,8 @@ def get_passenger_in_booking_end_point(booking_id, db: Session = Depends(get_db)
 
 @router.post("/")
 async def create_booking_end_point(
+    background_tasks: BackgroundTasks,
     booking: BookingCreate,
-    # user: Optional[User] = Depends(lambda: role_checker(["user", "admin"])),
     db: Session = Depends(get_db),
 ):
     """
