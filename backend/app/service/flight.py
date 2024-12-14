@@ -108,7 +108,7 @@ def delete_flight(db: Session, db_flight: Flight) -> Flight:
     return delete(db_flight, db)
 
 
-def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
+def get_all_passenger_in_flight(flight_id: int, db: Session):
     """
     Get all passengers in a given flight
     """
@@ -120,14 +120,11 @@ def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
         .filter(Flight.flight_id == flight_id)
         .all()
     )
-    
+
     passengers = []
     for db_passenger, flight_class in db_passengers:
-        passengers.append({
-            "passenger": db_passenger,
-            "flight_class": flight_class
-        })
-    
+        passengers.append({"passenger": db_passenger, "flight_class": flight_class})
+
     return passengers
 
 

@@ -1,45 +1,41 @@
 import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-
-interface SeatOwner {
-  id: string;
-  firstName: string;
-  lastName: string;
-  dob: string;
-  class: string;
-  nationality: string;
-  phone: string;
-  gender: boolean;
-}
+import useBookingStore from "hooks/booking-hook"
+import { Passenger } from "types/passenger"
 
 const SeatDetail = () => {
-  const location = useLocation();
-  const selectedSeats = location.state?.selectedSeats;
-  const [seatOwners, setSeatOwners] = useState<SeatOwner[]>(
-    selectedSeats.map((seat) => ({
-      id: seat.id,
-      firstName: "",
-      lastName: "",
-      dob: "",
-      class: seat.class || "Economy", // Default to "Economy" if class is not provided
-      nationality: "",
-      phone: "",
-      gender: true,
+  const { payload, getPassengers, setPassengers } = useBookingStore();
+  const seatClass = payload.flight_class;
+  const passengers = getPassengers();
+  const constructSeatId = (seatOwner: Passenger) =>
+    `${seatOwner.seat_col}${seatOwner.seat_row}`;
+
+  const [seatOwners, setSeatOwners] = useState<Passenger[]>(
+    passengers.map((passenger: Passenger) => ({
+      //id: passenger.seat_col + passenger.seat_row,
+      ...passenger, // Copy all passenger properties
+      seat_row: passenger.seat_row || 0,
+      seat_col: passenger.seat_col || "A",
     }))
   );
   const [currentSeatIndex, setCurrentSeatIndex] = useState(0);
 
   const handleInputChange = (
-    id: string,
-    field: keyof SeatOwner,
+    seat_id: string,
+    field: keyof Passenger,
     value: string | boolean
   ) => {
-    setSeatOwners((prev) =>
-      prev.map((owner) =>
-        owner.id === id ? { ...owner, [field]: value } : owner
-      )
-    );
+    setSeatOwners((prev) => {
+      const updatedSeatOwners = prev.map((owner) =>
+        constructSeatId(owner) === seat_id ? { ...owner, [field]: value } : owner
+      );
+
+      // After updating seatOwners, set passengers with the updated list
+      setPassengers(updatedSeatOwners);
+
+      return updatedSeatOwners; // Return the updated state
+    });
   };
 
   const handleNavigation = (direction: "prev" | "next") => {
@@ -48,6 +44,8 @@ const SeatDetail = () => {
         ? Math.max(prevIndex - 1, 0)
         : Math.min(prevIndex + 1, seatOwners.length - 1)
     );
+
+
   };
 
   return (
@@ -74,8 +72,8 @@ const SeatDetail = () => {
             marginBottom: "16px",
           }}
         >
-          {seatOwners[currentSeatIndex].class} -{" "}
-          {seatOwners[currentSeatIndex].id}
+          {payload.flight_class} -{" "}
+          {constructSeatId(seatOwners[currentSeatIndex])}
         </Typography>
         <Box
           sx={{
@@ -87,11 +85,11 @@ const SeatDetail = () => {
           <TextField
             fullWidth
             label="First Name*"
-            value={seatOwners[currentSeatIndex].firstName}
+            value={seatOwners[currentSeatIndex].first_name}
             onChange={(e) =>
               handleInputChange(
-                seatOwners[currentSeatIndex].id,
-                "firstName",
+                constructSeatId(seatOwners[currentSeatIndex]),
+                "first_name",
                 e.target.value
               )
             }
@@ -101,11 +99,11 @@ const SeatDetail = () => {
           <TextField
             fullWidth
             label="Last Name*"
-            value={seatOwners[currentSeatIndex].lastName}
+            value={seatOwners[currentSeatIndex].last_name}
             onChange={(e) =>
               handleInputChange(
-                seatOwners[currentSeatIndex].id,
-                "lastName",
+                constructSeatId(seatOwners[currentSeatIndex]),
+                "last_name",
                 e.target.value
               )
             }
@@ -116,12 +114,12 @@ const SeatDetail = () => {
             fullWidth
             label="Gender*"
             select
-            value={seatOwners[currentSeatIndex].gender ? "Male" : "Female"}
+            value={seatOwners[currentSeatIndex].gender}
             onChange={(e) =>
               handleInputChange(
-                seatOwners[currentSeatIndex].id,
+                constructSeatId(seatOwners[currentSeatIndex]),
                 "gender",
-                e.target.value === "Male"
+                e.target.value
               )
             }
             variant="outlined"
@@ -135,11 +133,11 @@ const SeatDetail = () => {
             label="Date of Birth*"
             type="date"
             InputLabelProps={{ shrink: true }}
-            value={seatOwners[currentSeatIndex].dob}
+            value={seatOwners[currentSeatIndex].date_of_birth}
             onChange={(e) =>
               handleInputChange(
-                seatOwners[currentSeatIndex].id,
-                "dob",
+                constructSeatId(seatOwners[currentSeatIndex]),
+                "date_of_birth",
                 e.target.value
               )
             }
@@ -152,7 +150,7 @@ const SeatDetail = () => {
             value={seatOwners[currentSeatIndex].nationality}
             onChange={(e) =>
               handleInputChange(
-                seatOwners[currentSeatIndex].id,
+                constructSeatId(seatOwners[currentSeatIndex]),
                 "nationality",
                 e.target.value
               )
@@ -163,11 +161,39 @@ const SeatDetail = () => {
           <TextField
             fullWidth
             label="Phone Number*"
-            value={seatOwners[currentSeatIndex].phone}
+            value={seatOwners[currentSeatIndex].phone_number}
             onChange={(e) =>
               handleInputChange(
-                seatOwners[currentSeatIndex].id,
-                "phone",
+                constructSeatId(seatOwners[currentSeatIndex]),
+                "phone_number",
+                e.target.value
+              )
+            }
+            variant="outlined"
+            sx={textFieldStyles}
+          />
+          <TextField
+            fullWidth
+            label="Citizen Identification Number*"
+            value={seatOwners[currentSeatIndex].citizen_id}
+            onChange={(e) =>
+              handleInputChange(
+                constructSeatId(seatOwners[currentSeatIndex]),
+                "citizen_id",
+                e.target.value
+              )
+            }
+            variant="outlined"
+            sx={textFieldStyles}
+          />
+          <TextField
+            fullWidth
+            label="Passport Number*"
+            value={seatOwners[currentSeatIndex].passport_number}
+            onChange={(e) =>
+              handleInputChange(
+                constructSeatId(seatOwners[currentSeatIndex]),
+                "passport_number",
                 e.target.value
               )
             }
