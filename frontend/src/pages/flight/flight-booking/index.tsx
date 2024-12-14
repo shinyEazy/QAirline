@@ -69,10 +69,15 @@ const FlightBooking = () => {
     >
       <Header />
       <Box
-        sx={{ margin: "100px 80px" }}
+        sx={{
+          margin: "100px 80px",
+          backgroundImage: "url('https://freesvg.org/img/shokunin_World_Map.png')",  // Correct syntax for background image
+          backgroundPosition: "center",
+          opacity: 0.8, // Adjust opacity here
+
+        }}
         borderRadius="20px"
         boxShadow="0 0 10px 0 rgba(0, 0, 0, 0.4)"
-        bgcolor="white"
       >
         <Box
           bgcolor="rgb(19,118,177)"
@@ -247,7 +252,7 @@ const FlightBooking = () => {
       <Box bgcolor="white">
         <Footer />
       </Box>
-    </Box>
+    </Box >
   );
 };
 
