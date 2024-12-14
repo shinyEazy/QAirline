@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.core.security import role_checker
+from app.models import Gender
 from service.passenger import *
 from sqlalchemy.orm import Session
 from core.database import get_db
@@ -33,6 +34,8 @@ def create_passenger_end_point(
     Create a passenger
     """
 
+    if passenger.gender not in Gender.__members__:
+        raise HTTPException(status_code=400, detail="Must be either Male or Female")
     return create_passenger(passenger, db)
 
 
@@ -44,7 +47,8 @@ def update_passenger_end_point(
     Update a passenger
     """
     db_passenger = get_passenger(citizen_id, db)
-
+    if passenger.gender not in Gender.__members__:
+        raise HTTPException(status_code=400, detail="Must be either Male or Female")
     if not db_passenger:
         raise HTTPException(status_code=404, detail="Passenger not found")
 
@@ -69,6 +73,7 @@ def get_passenger_by_flight_end_point(
         )
 
     return db_passenger
+
 
 @router.delete("/{citizen_id}/{flight_id}")
 def delete_passenger_end_point(

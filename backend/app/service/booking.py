@@ -223,6 +223,7 @@ def check_valid_passenger_seats(
     passengers_in_flight = get_all_passenger_in_flight(booking.flight_id, db)
 
     for p in passengers_in_flight:
+        p = p["passenger"]
         if str(p.citizen_id) == passenger.citizen_id:
             raise HTTPException(
                 status_code=400,  # Use 400 for bad request
