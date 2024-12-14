@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 import { Flight } from "types/flight";
 import useBookingStore from "hooks/booking-hook";
 import { useFlightStore } from "hooks/flight-search-hook";
+import ReactLoading from "react-loading";
 
 interface SearchResultProps {
   flights: Flight[];
@@ -54,8 +55,22 @@ const SearchResult: React.FC<SearchResultProps> = ({
   return (
     <Box>
       {loading ? (
-        <Box display="flex" justifyContent="center" sx={{ marginTop: "40px" }}>
-          <CircularProgress sx={{ color: "#1e90ff" }} />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          sx={{ marginTop: "40px" }}
+        >
+          <ReactLoading
+            type={"bars"}
+            color={"#1e90ff"}
+            height={100}
+            width={100}
+          />
+          <Typography variant="h5" color="#1e90ff">
+            Please wait while we are loading the flights...
+          </Typography>
         </Box>
       ) : flights.length === 0 ? (
         <Typography
