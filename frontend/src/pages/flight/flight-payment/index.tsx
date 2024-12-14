@@ -19,12 +19,9 @@ const FlightPayment = () => {
     try {
       const payload = getPayload();
 
-      console.log(payload);
-
       const response = await createBooking(payload);
 
       // Handle the response, for example, log or store the booking details
-      console.log(response.data);
 
       // After successful POST, navigate to the home page
       navigate("/");

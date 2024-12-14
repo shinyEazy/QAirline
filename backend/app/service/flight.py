@@ -239,7 +239,7 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
     max_seat_col: int = seat_col_to_int(str(flight_seat.max_col_seat))
     # seat_row and seat_col are 1-based
     passengers_seats_in_flight_class = [
-        (conint(passenger.seat_row), seat_col_to_int(str(passenger.seat_col)))
+        (conint(passenger.seat_row) - 1, seat_col_to_int(str(passenger.seat_col)) - 1)
         for passenger in passengers_in_flight_class
     ]
 

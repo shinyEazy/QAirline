@@ -7,7 +7,6 @@ import userBookingPayload from "hooks/booking-hook";
 const StepFlightSeat = () => {
   const navigate = useNavigate();
   const { getPayload } = userBookingPayload();
-  console.log(getPayload());
   return (
     <Box
       sx={{

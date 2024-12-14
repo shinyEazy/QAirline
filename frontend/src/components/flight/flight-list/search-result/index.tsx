@@ -32,9 +32,8 @@ const SearchResult: React.FC<SearchResultProps> = ({ flights = [] }) => {
       return
     }
     setFlightId(flight.id);
-    console.log(flight.id);
     setSelectedFlight(flight);
-    // navigate("/flight/seat");
+    navigate("/flight/seat");
   };
 
   return (

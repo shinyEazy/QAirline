@@ -52,7 +52,7 @@ const FlightSeat = () => {
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return Array.from({ length }, (_, i) => alphabet[i % alphabet.length]);
       };
-      const generatedLetters = generateLetters(matrix[0][0].length - 2);
+      const generatedLetters = generateLetters(matrix[0][0].length - 1);
       setLetters(generatedLetters);
       const seatArray = [];
 
@@ -253,7 +253,7 @@ const FlightSeat = () => {
               <Box display="flex" flexDirection="column" gap={2}>
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item xs={1} />
-                  {letters.slice(0, letters.length / 2 + 1).map((label) => (
+                  {letters.slice(0, letters.length / 2).map((label) => (
                     <Grid
                       item
                       key={label}
