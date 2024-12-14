@@ -12,6 +12,7 @@ import {
   Passenger,
   updatePassengerSeat,
 } from "types/passenger";
+import Loading from "components/loading";
 
 interface PriceSummary {
   [className: string]: {
@@ -186,7 +187,7 @@ const FlightSeat = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading state
+    return <Loading />;
   }
 
   return (
