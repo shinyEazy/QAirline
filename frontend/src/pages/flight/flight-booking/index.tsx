@@ -42,35 +42,37 @@ const mockFlightData = [
 ];
 
 const FlightBooking = () => {
-  const [flightNumber, setFlightNumber] = useState(""); // State for flight number input
-  const [selectedFlight, setSelectedFlight] = useState<any>(null); // State to store the selected flight data
+  const [flightNumber, setFlightNumber] = useState("");
+  const [selectedFlight, setSelectedFlight] = useState<any>(null);
 
-  // Handle the change in flight number input (without triggering render)
   const handleFlightNumberChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setFlightNumber(event.target.value); // Update the flight number state
+    setFlightNumber(event.target.value);
   };
 
-  // Handle when the "Enter" key is pressed
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      // Find the flight when Enter is pressed
       const flight = mockFlightData.find(
         (flight) => flight.flightNumber === flightNumber
       );
-      setSelectedFlight(flight || null); // Set the selected flight if found, otherwise null
+      setSelectedFlight(flight || null);
     }
   };
 
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
+    <Box
+      display="flex"
+      flexDirection="column"
+      minHeight="100vh"
+      bgcolor="rgb(245,245,245)"
+    >
       <Header />
       <Box
-        sx={{ margin: "auto 80px" }}
+        sx={{ margin: "100px 80px" }}
         borderRadius="20px"
         boxShadow="0 0 10px 0 rgba(0, 0, 0, 0.4)"
-        bgcolor="rgb(245,245,245)"
+        bgcolor="white"
       >
         <Box
           bgcolor="rgb(19,118,177)"
@@ -85,7 +87,6 @@ const FlightBooking = () => {
         </Box>
         <Divider />
         <Box display="flex">
-          {/* 10% Section */}
           <Box
             flex="1"
             sx={{
@@ -100,8 +101,6 @@ const FlightBooking = () => {
           >
             <Typography fontSize="2rem">FLIGHT TICKET</Typography>
           </Box>
-
-          {/* 60% Section */}
           <Box flex="6" padding="20px">
             <Box display="flex" justifyContent="space-evenly" height="100%">
               <Box minWidth="250px" display="flex" flexDirection="column">
@@ -113,7 +112,7 @@ const FlightBooking = () => {
                     sx={{ maxWidth: "250px", marginTop: "10px" }}
                     value={flightNumber}
                     onChange={handleFlightNumberChange}
-                    onKeyDown={handleKeyDown} // Attach the key down event
+                    onKeyDown={handleKeyDown}
                   />
                 </Box>
                 <Box display="flex" flexDirection="column" marginTop="30%">
@@ -129,37 +128,57 @@ const FlightBooking = () => {
                   </Typography>
                 </Box>
               </Box>
-              <Box>
-                <Typography fontSize="1.2rem" fontWeight="bold">
-                  BOARDING TIME
-                </Typography>
-                <Typography
-                  fontSize="1.8rem"
-                  fontWeight="bold"
+              <Box display="flex" flexDirection="column">
+                <Box display="flex" gap="80px">
+                  <Box>
+                    <Typography fontSize="1.2rem" fontWeight="bold">
+                      BOARDING TIME
+                    </Typography>
+                    <Typography
+                      fontSize="1.8rem"
+                      fontWeight="bold"
+                      textAlign="center"
+                    >
+                      {selectedFlight ? selectedFlight.boardingTime : ""}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography fontSize="1.2rem" fontWeight="bold">
+                      ROW
+                    </Typography>
+                    <Typography
+                      fontSize="1.8rem"
+                      fontWeight="bold"
+                      textAlign="center"
+                    >
+                      {selectedFlight ? selectedFlight.row : ""}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography fontSize="1.2rem" fontWeight="bold">
+                      SEAT
+                    </Typography>
+                    <Typography fontSize="1.8rem" fontWeight="bold">
+                      {selectedFlight ? selectedFlight.seat : ""}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box
+                  alignItems="center"
+                  justifyContent="center"
                   textAlign="center"
+                  marginTop="40px"
                 >
-                  {selectedFlight ? selectedFlight.boardingTime : ""}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography fontSize="1.2rem" fontWeight="bold">
-                  ROW
-                </Typography>
-                <Typography
-                  fontSize="1.8rem"
-                  fontWeight="bold"
-                  textAlign="center"
-                >
-                  {selectedFlight ? selectedFlight.row : ""}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography fontSize="1.2rem" fontWeight="bold">
-                  SEAT
-                </Typography>
-                <Typography fontSize="1.8rem" fontWeight="bold">
-                  {selectedFlight ? selectedFlight.seat : ""}
-                </Typography>
+                  <FontAwesomeIcon
+                    icon={faPlane}
+                    style={{
+                      fontSize: "10rem",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                    }}
+                  />
+                </Box>
               </Box>
             </Box>
             <Box marginTop="80px"></Box>
@@ -174,8 +193,6 @@ const FlightBooking = () => {
               margin: "0 16px",
             }}
           />
-
-          {/* 30% Section */}
           <Box
             flex="3"
             padding="20px"
@@ -226,6 +243,9 @@ const FlightBooking = () => {
             </Typography>
           </Box>
         </Box>
+      </Box>
+      <Box bgcolor="white">
+        <Footer />
       </Box>
     </Box>
   );
