@@ -38,7 +38,9 @@ const FlightSearch: React.FC = () => {
   // const [isRoundTrip, setIsRoundTrip] = useState(false);
   // const location = useLocation();
   const navigate = useNavigate();
-  const [airports, setAirports] = useState<{ airport_id: number; city: string; airport_code: string }[]>([]);
+  const [airports, setAirports] = useState<
+    { airport_id: number; city: string; airport_code: string }[]
+  >([]);
   useEffect(() => {
     const fetchInitialAirports = async () => {
       try {
@@ -70,7 +72,7 @@ const FlightSearch: React.FC = () => {
     setShowReturnDate,
     setIsRoundTrip,
     setTripType,
-    setFlights
+    setFlights,
   } = useFlightSearchStore();
 
   useEffect(() => {
@@ -96,11 +98,10 @@ const FlightSearch: React.FC = () => {
       );
       const data = await response.json();
       setFlights(data);
-      navigate('/flight/list?${searchParams.toString()}');
+      navigate("/flight/list?${searchParams.toString()}");
     } catch (error) {
       console.error("Error fetching flights:", error);
     }
-
   };
   return (
     <Box
@@ -221,7 +222,6 @@ const FlightSearch: React.FC = () => {
               display="flex"
               alignItems="center"
               justifyContent="space-between"
-              margin="20px 0"
               gap="20px"
               sx={{
                 "@media (max-width:800px)": {
@@ -244,6 +244,12 @@ const FlightSearch: React.FC = () => {
                   value={departureCity || ""}
                   className="custom-select"
                   onChange={(e) => setDepartureCity(e.target.value)}
+                  style={{
+                    width: "300px",
+                    height: "40px",
+                    marginBottom: "0",
+                    marginTop: "0",
+                  }}
                 >
                   <option value="" disabled>
                     Select city
@@ -279,6 +285,12 @@ const FlightSearch: React.FC = () => {
                   value={arrivalCity || ""}
                   className="custom-select"
                   onChange={(e) => setArrivalCity(e.target.value)}
+                  style={{
+                    width: "300px",
+                    height: "40px",
+                    marginBottom: "0",
+                    marginTop: "0",
+                  }}
                 >
                   <option value="" disabled>
                     Select city
