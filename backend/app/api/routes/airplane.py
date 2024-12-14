@@ -65,6 +65,7 @@ async def delete_airplane_model_end_point(
     return delete_airplane_model(db, db_airplane_model)
 
 
+
 # Endpoints for Airplane
 
 

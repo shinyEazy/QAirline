@@ -18,6 +18,7 @@ import { createFlight } from "../../hooks/flight-hook";
 import { fetchAirplanes } from "../../hooks/flight-hook";
 import DatePicker from "react-datepicker";
 import { fetchAirport } from "hooks/airport-hook";
+import { createAirplane } from "hooks/airplane-hook";
 import AirplaneList from "../../components/admin/airplane-list";
 import AirportList from "../../components/admin/airport-list";
 
@@ -40,27 +41,30 @@ const AdminPage = () => {
     registration_number: "",
     flight_seats: [
       {
+        registration_number: "",
         flight_class: "Economy",
         class_multiplier: 1,
         child_multiplier: 0.5,
         max_row_seat: 20,
-        max_col_seat: "6",
+        max_col_seat: "A",
       },
       {
+        registration_number: "",
         flight_class: "Business",
         class_multiplier: 3,
         child_multiplier: 0.7,
         max_row_seat: 5,
-        max_col_seat: "4",
+        max_col_seat: "B"
       },
       {
+        registration_number: "",
         flight_class: "FirstClass",
         class_multiplier: 5,
         child_multiplier: 0.8,
         max_row_seat: 2,
-        max_col_seat: "3",
-      },
-    ],
+        max_col_seat: "C"
+      }
+    ]
   });
   const [newNews, setNewNews] = useState({
     imageUrl: "",
@@ -129,6 +133,7 @@ const AdminPage = () => {
       registration_number: "",
       flight_seats: [
         {
+          registration_number: "",
           flight_class: "",
           class_multiplier: 1,
           child_multiplier: 1,
@@ -154,11 +159,7 @@ const AdminPage = () => {
     setNewFlight({ ...newFlight, [field]: value });
   };
 
-  const handleAirplaneChange = (
-    field: string,
-    value: string | number,
-    seatIndex?: number
-  ) => {
+  const handleAirplaneChange = (field: string, value: any, seatIndex?: number) => {
     const updatedAirplane = { ...newAirplane };
 
     if (seatIndex !== undefined) {
@@ -204,7 +205,17 @@ const AdminPage = () => {
 
   const handleSaveAirplane = () => {
     console.log("New Airplane Data:", newAirplane);
-    // Logic to save the new airplane
+    try {
+      const payload = {
+        airplane_model_id: newAirplane.airplane_model_id,
+        registration_number: newAirplane.registration_number,
+        flight_seats: newAirplane.flight_seats
+      }
+      const createdAirplane = createAirplane(payload);
+      console.log("Airplane created successfully:", createdAirplane);
+    } catch (error) {
+      console.error("Failed to save airplane:", error);
+    }
     handleAirplaneModalClose();
   };
 
@@ -373,7 +384,7 @@ const AdminPage = () => {
           /> */}
           {/* <label htmlFor="departure">Departure:</label> */}
           <select
-            id="departure"
+            id="departure-city"
             value={newFlight.departure || ""}
             className="custom-select"
             onChange={(e) =>
@@ -392,7 +403,7 @@ const AdminPage = () => {
 
           {/* <label htmlFor="destination">Destination:</label> */}
           <select
-            id="destination"
+            id="destination-city"
             className="custom-select"
             value={newFlight.destination || ""}
             onChange={(e) =>
@@ -488,13 +499,10 @@ const AdminPage = () => {
         <DialogContent>
           <TextField
             label="Airplane Model ID"
-            type="number"
             fullWidth
             margin="dense"
-            value={newAirplane.airplane_model_id}
-            onChange={(e) =>
-              handleAirplaneChange("airplane_model_id", Number(e.target.value))
-            }
+            value={newAirplane.airplane_model_id || ""}
+            onChange={(e) => handleAirplaneChange("airplane_model_id", e.target.value)}
           />
           <TextField
             label="Airplane Registration Number"

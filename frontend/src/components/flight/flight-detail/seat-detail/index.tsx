@@ -47,7 +47,7 @@ const SeatDetail = () => {
 
 
   };
-
+  console.log('hello');
   return (
     <Box
       sx={{

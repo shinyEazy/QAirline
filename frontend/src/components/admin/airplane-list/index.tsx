@@ -14,57 +14,28 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import { fetchAirplane } from "hooks/airplane-hook";
 import { useState, useEffect } from "react";
-
-interface Airplane {
-  airplane_id: number;
-  airplane_model: string;
-  registration_number: string;
-  manufacturer: string;
-  capacity: number;
-}
-
-const mockAirplaneData: Airplane[] = [
-  {
-    airplane_id: 1,
-    airplane_model: "Boeing 737",
-    registration_number: "N12345",
-    manufacturer: "Boeing",
-    capacity: 200,
-  },
-  {
-    airplane_id: 2,
-    airplane_model: "Airbus A320",
-    registration_number: "A54321",
-    manufacturer: "Airbus",
-    capacity: 180,
-  },
-  {
-    airplane_id: 3,
-    airplane_model: "Boeing 747",
-    registration_number: "B98765",
-    manufacturer: "Boeing",
-    capacity: 400,
-  },
-  {
-    airplane_id: 4,
-    airplane_model: "Embraer E190",
-    registration_number: "E67890",
-    manufacturer: "Embraer",
-    capacity: 100,
-  },
-];
+import { Airplanes } from "types/airplane";
 
 const AirplaneList = () => {
-  const [airplaneData, setAirplaneData] = useState<Airplane[]>([]);
+  const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedAirplaneId, setSelectedAirplaneId] = useState<number | null>(
     null
   );
 
   useEffect(() => {
-    // Simulate fetching airplane data
-    setAirplaneData(mockAirplaneData);
+    const loadAirplane = async () => {
+      try {
+        const airplanes = await fetchAirplane();
+        setAirplaneData(airplanes);
+      } catch (err) {
+        console.error("Error fetching airports", err);
+      }
+    };
+
+    loadAirplane();
   }, []);
 
   const handleDeleteClick = (airplane_id: number) => {
@@ -194,7 +165,7 @@ const AirplaneList = () => {
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
                 >
-                  {airplane.capacity}
+                  {airplane.total_seats}
                 </TableCell>
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}

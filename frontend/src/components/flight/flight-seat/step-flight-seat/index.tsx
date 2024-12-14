@@ -2,9 +2,12 @@ import { Box, Typography, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import userBookingPayload from "hooks/booking-hook";
 
 const StepFlightSeat = () => {
   const navigate = useNavigate();
+  const { getPayload } = userBookingPayload();
+  console.log(getPayload());
   return (
     <Box
       sx={{
