@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 function Flight() {
   const location = useLocation();
 
-  if (location.pathname !== "/auth") {
+  if (location.pathname !== "/flight") {
     return <Outlet />;
   }
 

@@ -19,6 +19,8 @@ import FlightPayment from "pages/flight/flight-payment";
 import FlightBooking from "pages/flight/flight-booking";
 import NewsList from "pages/news/list";
 import News from "pages/news";
+import New from "pages/news/new";
+
 const routes = [
   {
     path: "/auth",
@@ -101,11 +103,15 @@ const routes = [
   },
   {
     path: "/news",
-    component: NewsList,
+    component: News,
     routes: [
       {
         path: "list",
         component: NewsList,
+      },
+      {
+        path: "new/:id",
+        component: New,
       },
     ],
   },

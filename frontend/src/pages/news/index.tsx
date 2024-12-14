@@ -1,7 +1,14 @@
+import { Outlet, useLocation } from "react-router-dom";
 import { Box } from "@mui/material";
 
-const News = () => {
-  return <Box>News</Box>;
-};
+function News() {
+  const location = useLocation();
+
+  if (location.pathname !== "/news") {
+    return <Outlet />;
+  }
+
+  return <Box></Box>;
+}
 
 export default News;

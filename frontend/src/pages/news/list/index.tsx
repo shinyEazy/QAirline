@@ -138,14 +138,14 @@ const NewsList = () => {
   return (
     <Box>
       <Header />
-      <Box sx={{ bgcolor: "rgb(234, 234, 234)" }}>
+      <Box sx={{ bgcolor: "rgb(242,244,247)" }}>
         <Box
           display="flex"
           alignItems="center"
           gap="10px"
           margin="auto"
           padding="20px 0"
-          bgcolor="rgb(234, 234, 234)"
+          bgcolor="rgb(242,244,247)"
         >
           <Box
             sx={{
@@ -227,6 +227,9 @@ const NewsList = () => {
                   }}
                 >
                   <img
+                    onClick={() =>
+                      navigate(`/news/new/${paginatedNews[0]?.id}`)
+                    }
                     src={paginatedNews[0]?.imageUrl}
                     alt={paginatedNews[0]?.title}
                     style={{
@@ -246,10 +249,23 @@ const NewsList = () => {
                   />
                 </Box>
                 <Box mt={2}>
-                  <Typography variant="h5" sx={titleStyle}>
+                  <Typography
+                    onClick={() =>
+                      navigate(`/news/new/${paginatedNews[0]?.id}`)
+                    }
+                    variant="h5"
+                    sx={titleStyle}
+                  >
                     {paginatedNews[0]?.title}{" "}
                   </Typography>
-                  <Typography variant="h6" color="primary" sx={readMoreStyle}>
+                  <Typography
+                    onClick={() =>
+                      navigate(`/news/new/${paginatedNews[0]?.id}`)
+                    }
+                    variant="h6"
+                    color="primary"
+                    sx={readMoreStyle}
+                  >
                     Read More
                   </Typography>
                 </Box>
