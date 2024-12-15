@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import useBookingStore from "hooks/booking-hook";
 import axios from "../../../hooks/axios-config";
 import { toast } from "react-toastify";
+import { SignalCellularNullRounded } from "@mui/icons-material";
 
 const FlightDetail = () => {
   const navigate = useNavigate();
@@ -26,14 +27,19 @@ const FlightDetail = () => {
     const payload = getPayload();
     console.log(payload);
     const passengers = payload.passengers;
-    console.log(passengers);
     for (let i = 0; i < passengers.length; i++) {
       const passenger = passengers[i];
+      console.log(passenger);
       if (
+        passenger.first_name === null ||
         passenger.first_name === "" ||
+        passenger.last_name === null ||
         passenger.last_name === "" ||
+        passenger.gender === null ||
         passenger.gender === "" ||
+        passenger.date_of_birth === null ||
         passenger.date_of_birth === "" ||
+        passenger.nationality === null ||
         passenger.nationality === ""
       ) {
         toast.error(
