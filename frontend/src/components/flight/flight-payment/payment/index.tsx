@@ -8,7 +8,9 @@ import {
   Collapse,
 } from "@mui/material";
 import { useState } from "react";
-import useBookingStore from "hooks/booking-hook"
+import useBookingStore from "hooks/booking-hook";
+import { useEffect } from "react";
+
 const Payment = () => {
   const [paymentOption, setPaymentOption] = useState("payLater");
   const [bookerEmail, setBookerEmailField] = useState("");
@@ -17,12 +19,15 @@ const Payment = () => {
     setPaymentOption((event.target as HTMLInputElement).value);
   };
 
-  const handleBookerEmailField = (bookerEmail) => {
+  const handleBookerEmailField = (bookerEmail: string) => {
     setBookerEmailField(bookerEmail);
-
     setBookerEmail(bookerEmail);
+  };
 
-  }
+  useEffect(() => {
+    setBookerEmail("");
+    setBookerEmailField("");
+  }, []);
 
   return (
     <Box
@@ -80,13 +85,11 @@ const Payment = () => {
           fullWidth
           label="Booker Email*"
           value={bookerEmail}
-          onChange={(e) =>
-            handleBookerEmailField(e.target.value)
-          }
+          onChange={(e) => handleBookerEmailField(e.target.value)}
           variant="outlined"
         />
       </Box>
-    </Box >
+    </Box>
   );
 };
 

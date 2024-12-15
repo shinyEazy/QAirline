@@ -24,6 +24,8 @@ import { Flight } from "types/flight";
 // }
 import { useFlightSearchStore } from "hooks/flight-search-hook";
 import { fetchAirport } from "hooks/airport-hook";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FlightSearch: React.FC = () => {
   // const [departureCity, setDepartureCity] = useState("");
@@ -89,7 +91,11 @@ const FlightSearch: React.FC = () => {
   }, [tripType]);
 
   const handleSearch = async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
+
+    // Clear previous toast messages
+    toast.dismiss();
+
     const searchParams = new URLSearchParams({
       departure_city: departureCity,
       arrival_city: arrivalCity,
@@ -97,8 +103,8 @@ const FlightSearch: React.FC = () => {
     });
 
     if (departureCity === "" || arrivalCity === "") {
-      alert("Please select departure and arrival cities");
-      setLoading(false); // Stop loading if there's an error
+      toast.error("Please select departure and arrival cities");
+      setLoading(false);
       return;
     }
 
@@ -115,13 +121,15 @@ const FlightSearch: React.FC = () => {
         const data = await response.json();
         setFlights(data);
         navigate(`/flight/list?${searchParams.toString()}`);
+        toast.success("Flights fetched successfully!");
       } else {
         setFlights([]);
         navigate(`/flight/list`);
+        toast.info("No flights found for your search criteria.");
       }
     } catch (error) {
       console.error("Error fetching flights:", error);
-      alert("An unexpected error occurred. Please try again later.");
+      toast.error("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -227,12 +235,12 @@ const FlightSearch: React.FC = () => {
             flexWrap="wrap"
             sx={{
               flexDirection: {
-                xs: "column", // Extra small screens
-                md: "row", // Medium screens (default row for larger screens)
+                xs: "column",
+                md: "row",
               },
               "@media (max-width:1000px)": {
                 flexDirection: "column",
-                gap: "20px", // Adjust spacing for stacked layout
+                gap: "20px",
               },
               "@media (max-width:800px)": {
                 flexDirection: "column",
