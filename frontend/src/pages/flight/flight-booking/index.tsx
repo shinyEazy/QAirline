@@ -318,7 +318,7 @@ const FlightBooking = () => {
                   >
                     <Typography
                       fontSize="2rem"
-                      sx={{ letterSpacing: "0.3rem" }}
+                      sx={{ letterSpacing: "0.5rem" }}
                     >
                       FLIGHT TICKET
                     </Typography>
