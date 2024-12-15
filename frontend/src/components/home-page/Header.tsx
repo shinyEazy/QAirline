@@ -357,7 +357,10 @@ const Header = () => {
         backgroundColor: "#ffffff",
         top: 0,
         zIndex: 1100,
-        padding: { xs: "10px 20px", sm: "10px 80px" },
+        padding: { sm: "10px 80px" },
+        "@media (max-width: 800px)": {
+          padding: "10px 20px",
+        },
       }}
     >
       {/* Logo */}
