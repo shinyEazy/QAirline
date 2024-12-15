@@ -138,4 +138,22 @@ def cancel_booking_end_point(booking_id, db: Session = Depends(get_db)):
     return {"message": "Successfully cancelled the flight"}
 
 
-# helper functions
+@router.get("/info/{booking_id}")
+def get_booking_info_end_point(booking_id: str, db: Session = Depends(get_db)):
+    db_booking = get_booking(booking_id, db)
+
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="No booking with identifier exists")
+
+    booking_info = get_booking_info(db_booking, db)
+    if not booking_info:
+        raise HTTPException(
+            status_code=404, detail="No flight was found with that booking identifier"
+        )
+
+    return booking_info
+
+
+@router.get("/", dependencies=[Depends(role_checker(["admin"]))])
+def get_all_bookings_end_point(db: Session = Depends(get_db)):
+    return get_all_bookings(db)

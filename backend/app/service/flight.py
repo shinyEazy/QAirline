@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from service.airport import get_city_by_airport_id
 from sqlalchemy.orm import joinedload
 from fastapi import HTTPException

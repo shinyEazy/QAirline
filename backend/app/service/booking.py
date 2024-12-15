@@ -1,9 +1,8 @@
 from sqlalchemy.exc import NoResultFound
 from app.schemas import BookingBase, BookingUpdate, BookingCreate
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
-
+from sqlalchemy.orm import Session, aliased
 from app.service.email import send_email
 from .crud_utils import *
 from app.models import Booking, Passenger
@@ -13,7 +12,7 @@ from service.flight import delete_flight, get_all_passenger_in_flight
 from service.passenger import create_passenger, delete_passengers
 from service.flight_seat import get_flight_seat_by_flight_id_and_class
 from typing import List
-from app.models import FlightSeats, Flight, User
+from app.models import FlightSeats, Flight, User, Airport
 from app.service.service_utils import conint, seat_col_to_int
 from app.core.security import generate_booking_id_hash
 
@@ -28,7 +27,7 @@ def get_bookings_by_flight_id(flight_id: int, db: Session) -> List[Booking]:
     return db_booking
 
 
-def get_booking(booking_id: int, db: Session) -> Booking:
+def get_booking(booking_id: str, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'SELECT * FROM table booking where booking.booking_id = booking_id'
     """
@@ -124,6 +123,90 @@ def cancel_booking(db_booking: Booking, db: Session):
 
     return {
         "message": f"Booking id {db_booking.booking_id} has been successfully cancelled"
+    }
+
+
+def get_all_bookings(db: Session) -> List[Booking]:
+    return get_all(Booking, db)
+
+
+def get_booking_info(db_booking: Booking, db: Session) -> dict:
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    # Alias for departure and arrival airports
+    departure_airport = aliased(Airport)
+    arrival_airport = aliased(Airport)
+
+    # Query to fetch flight details with airport information
+    result = (
+        db.query(
+            Flight,
+            departure_airport.city.label("departure_city"),
+            departure_airport.name.label("departure_airport_name"),
+            arrival_airport.city.label("arrival_city"),
+            arrival_airport.name.label("arrival_airport_name"),
+        )
+        .join(Booking, Booking.flight_id == Flight.flight_id)  # Join with Booking
+        .join(
+            departure_airport,
+            Flight.departure_airport_id == departure_airport.airport_id,
+        )  # Join with departure airport
+        .join(
+            arrival_airport, Flight.destination_airport_id == arrival_airport.airport_id
+        )  # Join with arrival airport
+        .filter(Booking.booking_id == db_booking.booking_id)
+        .first()
+    )
+
+    if not result:
+        raise HTTPException(
+            status_code=404, detail="Flight not found for this booking ID"
+        )
+
+    # Destructure the result
+    (
+        flight,
+        departure_city,
+        departure_airport_name,
+        arrival_city,
+        arrival_airport_name,
+    ) = result
+
+    # Calculate flight duration, checking for delays
+    if flight.actual_departure_time and flight.actual_arrival_time:
+        duration: timedelta = flight.actual_arrival_time - flight.actual_departure_time
+        departure_time = flight.actual_departure_time.strftime("%H:%M")
+        arrival_time = flight.actual_arrival_time.strftime("%H:%M")
+    else:
+        duration: timedelta = (
+            flight.estimated_arrival_time - flight.estimated_departure_time
+        )
+        departure_time = flight.estimated_departure_time.strftime("%H:%M")
+        arrival_time = flight.estimated_arrival_time.strftime("%H:%M")
+
+    # Format the duration
+    hours, remainder = divmod(duration.total_seconds(), 3600)
+    minutes = remainder // 60
+    formatted_duration = f"{int(hours)} hours {int(minutes)} minutes"
+
+    passengers = get_passengers_in_booking(db_booking, db)
+
+    # Construct the response dictionary
+    return {
+        "id": flight.flight_id,
+        "class": db_booking.flight_class,
+        "cancelled": db_booking.cancelled,
+        "flightNumber": flight.flight_number,  # Replace with actual data if available
+        "departureTime": departure_time,
+        "arrivalTime": arrival_time,
+        "departure_city": departure_city,
+        "departure_airport": departure_airport_name,
+        "arrival_city": arrival_city,
+        "arrival_airport": arrival_airport_name,
+        "flightDate": flight.estimated_departure_time.strftime("%A, %d %B"),
+        "duration": formatted_duration,  # Replace with actual calculation
+        "status": flight.status,
+        "passengers": passengers,
     }
 
 
