@@ -93,6 +93,16 @@ def get_flights_by_departure_time_and_cities(
         minutes = remainder // 60
         formatted_duration = f"{int(hours)} hours {int(minutes)} minutes"
 
+        # Calculate the available seats
+        flight_seat_matrix = []
+        total_available_seats = 0
+        for flight_class in FlightClass:
+            seat_matrix = get_flight_seats_matrix(
+                flight_id=flight.flight_id, flight_class=flight_class, db=db
+            )
+            available_seats = count_available_seat(seat_matrix)
+            total_available_seats += available_seats
+            flight_seat_matrix.append([flight_class.value, available_seats])
         print(flight.flight_number, "BUIDUCANH")
         result.append(
             {
@@ -103,7 +113,7 @@ def get_flights_by_departure_time_and_cities(
                 "to": arr_airport.city,
                 "departure_airport_code": dep_airport.airport_code,
                 "arrival_airport_code": arr_airport.airport_code,
-                "seatsLeft": 666,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "seatsLeft": total_available_seats,
                 "flightNumber": str(
                     flight.flight_number
                 ),  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
@@ -114,7 +124,8 @@ def get_flights_by_departure_time_and_cities(
                 "departureAirport": f"{dep_airport.name}, {dep_airport.city}",
                 "arrivalDetailTime": arrival_time,
                 "arrivalAirport": f"{arr_airport.name}, {arr_airport.city}",
-                "duration": formatted_duration,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "duration": formatted_duration, 
+                "flight_seat_matrix": flight_seat_matrix,
             }
         )
     return result
@@ -282,3 +293,12 @@ def get_flight_price(flight_id: int, flight_class: str, db: Session) -> float:
     flight_seats = get_flight_seat_by_flight_id_and_class(db, flight_id, flight_class)
 
     return flight_seats.class_multiplier * flight.flight_price
+
+def count_available_seat(seat_matrix: list[list[bool]]) -> int:
+    """
+    Count the number of available seats in a given seat matrix
+    """
+    available_seats = 0
+    for row in seat_matrix:
+        available_seats += row.count(False)
+    return available_seats

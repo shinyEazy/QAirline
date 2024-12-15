@@ -41,7 +41,7 @@ const FlightSeat = () => {
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const fetchedMatrix = await fetchFlightSeats(1);
+        const fetchedMatrix = await fetchFlightSeats(getPayload().flight_id);
         setMatrix(fetchedMatrix);
       } catch (error) {
         console.error("Error fetching flight seats:", error);
@@ -62,7 +62,16 @@ const FlightSeat = () => {
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         return Array.from({ length }, (_, i) => alphabet[i % alphabet.length]);
       };
-      const generatedLetters = generateLetters(matrix[0][0].length - 1);
+      // const generatedLetters = generateLetters(matrix[1][0].length - 1);
+      console.log(matrix[1][1][0].length);
+      let generatedLetters;
+      if (selectedClass === "Economy") {
+        generatedLetters = generateLetters(matrix[0][1][0].length);
+      } else if (selectedClass === "Business") {
+        generatedLetters = generateLetters(matrix[1][1][0].length);
+      } else if (selectedClass === "First Class") {
+        generatedLetters = generateLetters(matrix[2][1][0].length);
+      }
       setLetters(generatedLetters);
       const seatArray = [];
 
@@ -86,7 +95,7 @@ const FlightSeat = () => {
 
       setSeats(seatArray); // 3D array: [ [ [row1], [row2] ], [ [row1], [row2] ] ]
     }
-  }, [matrix]);
+  }, [matrix, selectedClass]);
 
   const seatRows = useMemo(() => {
     // Flatten and filter only rows belonging to the selected class

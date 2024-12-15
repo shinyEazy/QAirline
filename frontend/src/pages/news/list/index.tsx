@@ -11,7 +11,7 @@ const newsItems = [
     id: 1,
     title: "Update on Bamboo Club Login System Upgrade",
     imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+      "https://huongnghiep.hocmai.vn/wp-content/uploads/2023/01/Hoc-phi-DH-Cong-nghe-HN.jpg",
   },
   {
     id: 2,
@@ -30,26 +30,26 @@ const newsItems = [
     id: 4,
     title: "Vote for Bamboo Airways at the World Travel Awards 2024",
     imageUrl:
-      "https://www.bambooairways.com/documents/d/global/449853545_484792347399617_8667786688385885570_n-jpg",
+      "/images/plane.jpeg",
   },
   {
     id: 5,
     title: "Update on Bamboo Club Login System Upgrade",
     imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1884578&t=2",
+      "https://huongnghiep.hocmai.vn/wp-content/uploads/2023/01/Hoc-phi-DH-Cong-nghe-HN.jpg",
   },
   {
     id: 6,
     title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
     imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+      "/images/cucda.jpeg",
   },
   {
     id: 7,
     title:
       "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
     imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+      "/images/ducanh.jpeg",
   },
   {
     id: 8,

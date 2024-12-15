@@ -54,7 +54,7 @@ const AdminPage = () => {
         class_multiplier: 3,
         child_multiplier: 0.7,
         max_row_seat: 5,
-        max_col_seat: "B"
+        max_col_seat: "B",
       },
       {
         registration_number: "",
@@ -62,9 +62,9 @@ const AdminPage = () => {
         class_multiplier: 5,
         child_multiplier: 0.8,
         max_row_seat: 2,
-        max_col_seat: "C"
-      }
-    ]
+        max_col_seat: "C",
+      },
+    ],
   });
   const [newNews, setNewNews] = useState({
     imageUrl: "",
@@ -159,7 +159,11 @@ const AdminPage = () => {
     setNewFlight({ ...newFlight, [field]: value });
   };
 
-  const handleAirplaneChange = (field: string, value: any, seatIndex?: number) => {
+  const handleAirplaneChange = (
+    field: string,
+    value: any,
+    seatIndex?: number
+  ) => {
     const updatedAirplane = { ...newAirplane };
 
     if (seatIndex !== undefined) {
@@ -209,8 +213,8 @@ const AdminPage = () => {
       const payload = {
         airplane_model_id: newAirplane.airplane_model_id,
         registration_number: newAirplane.registration_number,
-        flight_seats: newAirplane.flight_seats
-      }
+        flight_seats: newAirplane.flight_seats,
+      };
       const createdAirplane = createAirplane(payload);
       console.log("Airplane created successfully:", createdAirplane);
     } catch (error) {
@@ -502,7 +506,9 @@ const AdminPage = () => {
             fullWidth
             margin="dense"
             value={newAirplane.airplane_model_id || ""}
-            onChange={(e) => handleAirplaneChange("airplane_model_id", e.target.value)}
+            onChange={(e) =>
+              handleAirplaneChange("airplane_model_id", e.target.value)
+            }
           />
           <TextField
             label="Airplane Registration Number"
@@ -583,18 +589,45 @@ const AdminPage = () => {
             Save
           </Button>
         </DialogActions>
-      </Dialog>{" "}
+      </Dialog>
       {/* Add News Modal */}
       <Dialog open={newsModalOpen} onClose={handleNewsModalClose} fullWidth>
         <DialogTitle>Add New News</DialogTitle>
         <DialogContent>
-          <TextField
-            label="Image URL"
-            fullWidth
-            margin="dense"
-            value={newNews.imageUrl}
-            onChange={(e) => handleNewsChange("imageUrl", e.target.value)}
+          <input
+            accept="image/*"
+            type="file"
+            style={{ display: "none" }}
+            id="image-upload"
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  handleNewsChange("imageUrl", reader.result as string); // Save the base64 image data
+                };
+                reader.readAsDataURL(e.target.files[0]);
+              }
+            }}
           />
+          <label htmlFor="image-upload">
+            <Button
+              variant="contained"
+              component="span"
+              color="primary"
+              fullWidth
+            >
+              Upload Image
+            </Button>
+          </label>
+          {newNews.imageUrl && (
+            <div style={{ textAlign: "center", marginTop: "10px" }}>
+              <img
+                src={newNews.imageUrl}
+                alt="Preview"
+                style={{ maxWidth: "100%", maxHeight: "200px" }}
+              />
+            </div>
+          )}
           <TextField
             label="Title"
             fullWidth
