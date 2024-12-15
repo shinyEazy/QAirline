@@ -17,6 +17,15 @@ const SeatDetail = () => {
   );
   const [currentSeatIndex, setCurrentSeatIndex] = useState(0);
 
+  const isValidDate = (date: string) => {
+    const parsedDate = new Date(date);
+    const today = new Date();
+    return (
+      !isNaN(parsedDate.getTime()) &&
+      parsedDate < today && // Date is in the past
+      today.getFullYear() - parsedDate.getFullYear() <= 120 // Reasonable age check
+    );
+  };
   const constructSeatId = (seatOwner: Passenger) =>
     `${seatOwner.seat_col}${seatOwner.seat_row}`;
 
@@ -44,7 +53,15 @@ const SeatDetail = () => {
       "date_of_birth",
       "nationality",
     ];
-    return requiredFields.every((field) => passenger[field]);
+
+    const allFieldsFilled = requiredFields.every((field) => passenger[field])
+    if (!allFieldsFilled) return false;
+
+    if (!isValidDate(passenger.date_of_birth)) {
+      toast.error("Please provide a valid date of birth");
+      return false;
+    }
+    return true;
   };
 
   const handleNavigation = (direction: "prev" | "next") => {
@@ -52,6 +69,7 @@ const SeatDetail = () => {
 
     if (direction === "next" && !validateFields(currentSeat)) {
       toast.error("Please fill all required fields before proceeding.");
+
       return;
     }
 
@@ -72,6 +90,7 @@ const SeatDetail = () => {
 
       // Initialize new seat if data doesn't exist yet
       if (direction === "next" && !validateFields(seatOwners[newIndex])) {
+
         setSeatOwners((prev) => {
           const updatedSeatOwners = [...prev];
           updatedSeatOwners[newIndex] = {
