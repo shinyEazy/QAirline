@@ -172,7 +172,37 @@ const Header = () => {
       <IconButton onClick={toggleDrawer}>
         {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
       </IconButton>
-      <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
+      <Drawer
+        anchor="left"
+        open={isDrawerOpen}
+        onClose={toggleDrawer}
+        sx={{
+          "& .MuiDrawer-paper": {
+            padding: "0 10px",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "auto",
+            "::-webkit-scrollbar": {
+              width: "8px",
+              height: "8px",
+            },
+            "::-webkit-scrollbar-track": {
+              background: "#f0f0f0",
+              borderRadius: "8px",
+            },
+            "::-webkit-scrollbar-thumb": {
+              background: "#888",
+              borderRadius: "8px",
+            },
+            "::-webkit-scrollbar-thumb:hover": {
+              background: "#555",
+            },
+            "::-webkit-scrollbar-corner": {
+              background: "#f0f0f0",
+            },
+          },
+        }}
+      >
         <List
           sx={{
             width: "250px",
