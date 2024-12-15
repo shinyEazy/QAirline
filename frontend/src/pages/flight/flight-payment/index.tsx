@@ -16,11 +16,20 @@ const FlightPayment = () => {
   const location = useLocation();
   const { getPayload } = useBookingStore();
 
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim());
+  };
   const submitBooking = async () => {
     const payload = getPayload();
 
     if (!payload.booker_email) {
       toast.error("Please enter your email before submitting the booking.");
+      return;
+    }
+    if (!isValidEmail(payload.booker_email)) {
+      toast.error("Please provide a valid email address");
       return;
     }
 
