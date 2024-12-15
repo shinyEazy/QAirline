@@ -191,6 +191,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
                   },
                 }}
               >
+                <Typography>Remaining seats: {flight.seatsLeft}</Typography>
                 <Typography>Flight number: {flight.flightNumber}</Typography>
               </Box>
 

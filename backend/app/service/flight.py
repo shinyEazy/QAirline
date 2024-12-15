@@ -282,3 +282,12 @@ def get_flight_price(flight_id: int, flight_class: str, db: Session) -> float:
     flight_seats = get_flight_seat_by_flight_id_and_class(db, flight_id, flight_class)
 
     return flight_seats.class_multiplier * flight.flight_price
+
+def count_available_seat(seat_matrix: list[list[bool]]) -> int:
+    """
+    Count the number of available seats in a given seat matrix
+    """
+    available_seats = 0
+    for row in seat_matrix:
+        available_seats += row.count(False)
+    return available_seats

@@ -286,48 +286,48 @@ INSERT INTO flight_seats (
 ('N789BA', 'Business', 1.5, 0.9, 10, 'F'), -- 10 (chia hết cho 5)
 ('N789BA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('G-XWBA', 'Economy', 1.0, 0.8, 162, 'R'), -- 18 (chia hết cho 3)
-('G-XWBA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
-('G-XWBA', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
+('G-XWBA', 'Economy', 1.0, 0.8, 30, 'G'), -- 18 (chia hết cho 3)
+('G-XWBA', 'Business', 1.5, 0.9, 20, 'F'), -- 8 (chẵn)
+('G-XWBA', 'First Class', 2.0, 1.0, 18, 'D'), -- 6 (chia hết cho 3)
 
-('F-HZBA', 'Economy', 1.0, 0.8, 210, 'U'), -- 30 (chia hết cho 5)
-('F-HZBA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('F-HZBA', 'Economy', 1.0, 0.8, 21, 'H'), -- 30 (chia hết cho 5)
+('F-HZBA', 'Business', 1.5, 0.9, 36, 'F'), -- 12 (chia hết cho 3)
 ('F-HZBA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('D-ABYC', 'Economy', 1.0, 0.8, 190, 'R'), -- 18 (chia hết cho 3)
-('D-ABYC', 'Business', 1.5, 0.9, 40, 'J'), -- 10 (chia hết cho 5)
+('D-ABYC', 'Economy', 1.0, 0.8, 90, 'H'), -- 18 (chia hết cho 3)
+('D-ABYC', 'Business', 1.5, 0.9, 40, 'F'), -- 10 (chia hết cho 5)
 ('D-ABYC', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-('C-FZBA', 'Economy', 1.0, 0.8, 220, 'V'), -- 22 (chẵn)
-('C-FZBA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
+('C-FZBA', 'Economy', 1.0, 0.8, 80, 'H'), -- 22 (chẵn)
+('C-FZBA', 'Business', 1.5, 0.9, 32, 'G'), -- 8 (chẵn)
 ('C-FZBA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('JA123A', 'Economy', 1.0, 0.8, 180, 'R'), -- 18 (chia hết cho 3)
-('JA123A', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('JA123A', 'Economy', 1.0, 0.8, 80, 'F'), -- 18 (chia hết cho 3)
+('JA123A', 'Business', 1.5, 0.9, 36, 'F'), -- 12 (chia hết cho 3)
 ('JA123A', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-('VH-ZNA', 'Economy', 1.0, 0.8, 210, 'U'), -- 30 (chia hết cho 5)
-('VH-ZNA', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
+('VH-ZNA', 'Economy', 1.0, 0.8, 80, 'F'), -- 30 (chia hết cho 5)
+('VH-ZNA', 'Business', 1.5, 0.9, 32, 'F'), -- 8 (chẵn)
 ('VH-ZNA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('9V-SKA', 'Economy', 1.0, 0.8, 180, 'R'), -- 18 (chia hết cho 3)
-('9V-SKA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
-('9V-SKA', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
+('9V-SKA', 'Economy', 1.0, 0.8, 80, 'F'), -- 18 (chia hết cho 3)
+('9V-SKA', 'Business', 1.5, 0.9, 36, 'F'), -- 12 (chia hết cho 3)
+('9V-SKA', 'First Class', 2.0, 1.0, 8, 'D'), -- 6 (chia hết cho 3)
 
-('HS-TKA', 'Economy', 1.0, 0.8, 200, 'T'), -- 20 (chẵn)
-('HS-TKA', 'Business', 1.5, 0.9, 40, 'J'), -- 10 (chia hết cho 5)
-('HS-TKA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
+('HS-TKA', 'Economy', 1.0, 0.8, 70, 'F'), -- 20 (chẵn)
+('HS-TKA', 'Business', 1.5, 0.9, 40, 'F'), -- 10 (chia hết cho 5)
+('HS-TKA', 'First Class', 2.0, 1.0, 10, 'D'), -- 6 (chia hết cho 3)
 
-('B-2088', 'Economy', 1.0, 0.8, 162, 'R'), -- 18 (chia hết cho 3)
+('B-2088', 'Economy', 1.0, 0.8, 62, 'G'), -- 18 (chia hết cho 3)
 ('B-2088', 'Business', 1.5, 0.9, 32, 'H'), -- 8 (chẵn)
-('B-2088', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
+('B-2088', 'First Class', 2.0, 1.0, 8, 'D'), -- 6 (chia hết cho 3)
 
-('CC-BGA', 'Economy', 1.0, 0.8, 220, 'V'), -- 22 (chẵn)
-('CC-BGA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('CC-BGA', 'Economy', 1.0, 0.8, 60, 'G'), -- 22 (chẵn)
+('CC-BGA', 'Business', 1.5, 0.9, 36, 'G'), -- 12 (chia hết cho 3)
 ('CC-BGA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('XA-ZAA', 'Economy', 1.0, 0.8, 180, 'R'), -- 18 (chia hết cho 3)
-('XA-ZAA', 'Business', 1.5, 0.9, 36, 'L'), -- 12 (chia hết cho 3)
+('XA-ZAA', 'Economy', 1.0, 0.8, 80, 'G'), -- 18 (chia hết cho 3)
+('XA-ZAA', 'Business', 1.5, 0.9, 36, 'H'), -- 12 (chia hết cho 3)
 ('XA-ZAA', 'First Class', 2.0, 1.0, 8, 'F'); -- 6 (chia hết cho 3)
 
 INSERT INTO users (firstname, lastname, email, username, password, role) VALUES
