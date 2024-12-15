@@ -9,74 +9,130 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  InputAdornment,
-  IconButton,
 } from "@mui/material";
 import Header from "components/home-page/Header";
-import Footer from "components/home-page/Footer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlane } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 import { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+type Passenger = {
+  booking_id: string;
+  passenger_id: number;
+  passport_number: string;
+  gender: string;
+  first_name: string;
+  nationality: string;
+  seat_row: number;
+  citizen_id: string;
+  phone_number: string;
+  last_name: string;
+  date_of_birth: string;
+  seat_col: string;
+};
+
+type Flight = {
+  id: number;
+  class: string;
+  cancelled: boolean;
+  flightNumber: string;
+  departureTime: string;
+  arrivalTime: string;
+  departure_city: string;
+  departure_airport: string;
+  arrival_city: string;
+  arrival_airport: string;
+  flightDate: string;
+  duration: string;
+  status: string;
+  payment_status: string;
+  passengers: Passenger[];
+};
 
 const mockFlightData = [
   {
-    flightNumber: "AAB1187",
-    boardingTime: "12:00",
-    row: "3",
-    seat: "10B",
-    passengerName: "John Doe",
-    from: "New York (JFK)",
-    to: "Los Angeles (LAX)",
-    date: "2024-12-20",
-    ticketClass: "Business",
-    paymentStatus: "Paid",
+    id: 1,
+    class: "Economy",
+    cancelled: false,
+    flightNumber: "QA001",
+    departureTime: "10:15",
+    arrivalTime: "13:10",
+    departure_city: "San Francisco",
+    departure_airport: "San Francisco International Airport",
+    arrival_city: "Miami",
+    arrival_airport: "Miami International Airport",
+    flightDate: "Sunday, 15 December",
+    duration: "4 hours 55 minutes",
+    status: "Landed",
+    payment_status: "Pending",
+    passengers: [
+      {
+        booking_id: "8F8407",
+        passenger_id: 1,
+        passport_number: "X12345678",
+        gender: "Male",
+        first_name: "John",
+        nationality: "USA",
+        seat_row: 12,
+        citizen_id: "001204023599",
+        phone_number: "+1 555 789 1234",
+        last_name: "Doe",
+        date_of_birth: "1990-05-10",
+        seat_col: "A",
+      },
+      {
+        booking_id: "8F8407",
+        passenger_id: 2,
+        passport_number: "X87654321",
+        gender: "Female",
+        first_name: "Jane",
+        nationality: "USA",
+        seat_row: 12,
+        citizen_id: "001204023600",
+        phone_number: "+1 555 123 4567",
+        last_name: "Doe",
+        date_of_birth: "1992-03-15",
+        seat_col: "B",
+      },
+    ],
   },
   {
-    flightNumber: "AAB1188",
-    boardingTime: "14:00",
-    row: "5",
-    seat: "12A",
-    passengerName: "Jane Smith",
-    from: "San Francisco (SFO)",
-    to: "Chicago (ORD)",
-    date: "2024-12-21",
-    ticketClass: "Economy",
-    paymentStatus: "Unpaid",
-  },
-  {
-    flightNumber: "AAB1189",
-    boardingTime: "16:00",
-    row: "2",
-    seat: "1C",
-    passengerName: "Alice Brown",
-    from: "Miami (MIA)",
-    to: "Houston (IAH)",
-    date: "2024-12-22",
-    ticketClass: "First Class",
-    paymentStatus: "Paid",
+    id: 2,
+    class: "Business",
+    cancelled: false,
+    flightNumber: "DL145",
+    departureTime: "08:30",
+    arrivalTime: "12:45",
+    departure_city: "New York",
+    departure_airport: "John F. Kennedy International Airport",
+    arrival_city: "London",
+    arrival_airport: "Heathrow Airport",
+    flightDate: "Monday, 16 December",
+    duration: "6 hours 15 minutes",
+    status: "Scheduled",
+    payment_status: "Paid",
+    passengers: [
+      {
+        booking_id: "B145X1",
+        passenger_id: 1,
+        passport_number: "Y98765432",
+        gender: "Male",
+        first_name: "James",
+        nationality: "UK",
+        seat_row: 5,
+        citizen_id: "002589743210",
+        phone_number: "+44 20 7946 0958",
+        last_name: "Smith",
+        date_of_birth: "1985-11-21",
+        seat_col: "A",
+      },
+    ],
   },
 ];
 
 const FlightBooking = () => {
-  const [flightNumber, setFlightNumber] = useState("");
-  const [selectedFlight, setSelectedFlight] = useState<any>(null);
   const [openDialog, setOpenDialog] = useState(false);
-
-  const handleFlightNumberChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFlightNumber(event.target.value);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      const flight = mockFlightData.find(
-        (flight) => flight.flightNumber === flightNumber
-      );
-      setSelectedFlight(flight || null);
-    }
-  };
 
   const handleCancelClick = () => {
     setOpenDialog(true);
@@ -85,10 +141,56 @@ const FlightBooking = () => {
   const handleDialogClose = (confirm: boolean) => {
     setOpenDialog(false);
     if (confirm) {
-      // Logic to cancel the ticket
       console.log("Ticket has been canceled.");
-      setSelectedFlight(null);
     }
+  };
+
+  const [bookingID, setBookingID] = useState("");
+  const [selectedBooking, setSelectedBooking] = useState<Flight | null>(null);
+  const [passengers, setPassengers] = useState<Passenger[]>([]);
+
+  const handleSearch = () => {
+    const booking = mockFlightData.find((flight) =>
+      flight.passengers.some((p) => p.booking_id === bookingID)
+    );
+
+    if (booking) {
+      toast.success("Booking found.");
+      setSelectedBooking(booking);
+      setPassengers(booking.passengers);
+    } else {
+      toast.error("Booking not found.");
+      setSelectedBooking(null);
+      setPassengers([]);
+    }
+
+    console.log("Matched booking:", booking);
+    console.log("Matched passengers:", booking ? booking.passengers : []);
+  };
+
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    appendDots: (dots: any) =>
+      selectedBooking ? (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-20px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ul style={{ margin: 0, padding: 0 }}>{dots}</ul>
+        </div>
+      ) : (
+        <div />
+      ),
   };
 
   return (
@@ -100,288 +202,344 @@ const FlightBooking = () => {
     >
       <Header />
       <Box
-        sx={{
-          margin: "40px 80px",
-          backgroundImage:
-            "url('https://freesvg.org/img/shokunin_World_Map.png')", // Correct syntax for background image
-          backgroundPosition: "center",
-          opacity: 0.8, // Adjust opacity here
-        }}
-        borderRadius="20px"
-        boxShadow="0 0 10px 0 rgba(0, 0, 0, 0.4)"
+        bgcolor="white"
+        width="600px"
+        margin="20px auto "
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+        gap="16px"
+        padding="16px"
+        border="1px solid #ddd"
+        borderRadius="8px"
+        marginTop="20px"
+        boxShadow="rgba(0, 0, 0, 0.1) 0px 4px 12px"
       >
-        <Box
-          bgcolor="rgb(19,118,177)"
-          borderRadius="20px 20px 0 0 "
-          color="white"
-          padding="10px 0 10px 100px"
-        >
-          <Typography fontSize="1.8rem" display="flex" alignItems="center">
-            <Box display="flex" alignItems="center">
-              <i
-                className="fa-thin fa-ticket-airline"
-                style={{
-                  height: "100%",
-                  marginRight: "8px",
-                  color: "white",
-                  fontSize: "2.4rem",
-                  alignItems: "center",
-                  textAlign: "center",
-                  justifyContent: "center",
-                }}
-              ></i>
-            </Box>
-            BOARDING PASS
+        <Box flexGrow={1} display="flex">
+          <Typography sx={{ fontSize: "1rem", fontWeight: 500, color: "#333" }}>
+            BOOKING ID
           </Typography>
         </Box>
-        <Divider />
-        <Box display="flex">
-          <Box
-            flex="1"
+        <Box display="flex" gap="20px">
+          <TextField
+            value={bookingID}
+            onChange={(e) => setBookingID(e.target.value)}
+            placeholder="A1B2C3"
             sx={{
-              padding: " 0",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-              display: "flex",
-              transform: "rotate(180deg)",
-              writingMode: "vertical-lr",
-            }}
-          >
-            <Typography fontSize="2rem" sx={{ letterSpacing: "0.3rem" }}>
-              FLIGHT TICKET
-            </Typography>
-          </Box>
-          <Box flex="6" padding="20px">
-            <Box display="flex" justifyContent="space-between" height="100%">
-              <Box
-                minWidth="250px"
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-              >
-                <Box display="flex" flexDirection="column">
-                  <Typography fontSize="1.2rem" fontWeight="bold">
-                    FLIGHT
-                  </Typography>
-                  <TextField
-                    sx={{ maxWidth: "250px", marginTop: "10px" }}
-                    value={flightNumber}
-                    onChange={handleFlightNumberChange}
-                    onKeyDown={handleKeyDown}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => {
-                              const flight = mockFlightData.find(
-                                (flight) => flight.flightNumber === flightNumber
-                              );
-                              setSelectedFlight(flight || null);
-                            }}
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Box>
-                <Box display="flex" flexDirection="column">
-                  <Typography fontSize="1.2rem" fontWeight="bold">
-                    FROM: {selectedFlight ? selectedFlight.from : ""}
-                  </Typography>
-                  <Typography
-                    fontSize="1.2rem"
-                    fontWeight="bold"
-                    marginTop="10px"
-                  >
-                    DATE: {selectedFlight ? selectedFlight.date : ""}
-                  </Typography>
-                </Box>
-                <Box display="flex">
-                  <Typography
-                    fontSize="1.2rem"
-                    fontWeight="bold"
-                    display="flex"
-                    alignItems="center"
-                    gap="10px"
-                  >
-                    PAYMENT STATUS:{" "}
-                    <span
-                      style={{
-                        color:
-                          selectedFlight?.paymentStatus === "Paid"
-                            ? "green"
-                            : "red",
-                      }}
-                    >
-                      {selectedFlight ? selectedFlight.paymentStatus : ""}
-                    </span>
-                    {selectedFlight &&
-                      selectedFlight.paymentStatus !== "Paid" && (
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          onClick={() => {
-                            const updatedFlight = {
-                              ...selectedFlight,
-                              paymentStatus: "Paid",
-                            };
-                            setSelectedFlight(updatedFlight);
-                            // Optional: Update the mockFlightData if needed
-                            const flightIndex = mockFlightData.findIndex(
-                              (flight) =>
-                                flight.flightNumber ===
-                                selectedFlight.flightNumber
-                            );
-                            if (flightIndex !== -1) {
-                              mockFlightData[flightIndex] = updatedFlight;
-                            }
-                          }}
-                        >
-                          Pay Now
-                        </Button>
-                      )}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-              >
-                <Box display="flex" gap="80px">
-                  <Box>
-                    <Typography fontSize="1.2rem" fontWeight="bold">
-                      BOARDING TIME
-                    </Typography>
-                    <Typography
-                      fontSize="1.8rem"
-                      fontWeight="bold"
-                      textAlign="center"
-                    >
-                      {selectedFlight ? selectedFlight.boardingTime : ""}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography fontSize="1.2rem" fontWeight="bold">
-                      ROW
-                    </Typography>
-                    <Typography
-                      fontSize="1.8rem"
-                      fontWeight="bold"
-                      textAlign="center"
-                    >
-                      {selectedFlight ? selectedFlight.row : ""}
-                    </Typography>
-                  </Box>
-                  <Box>
-                    <Typography fontSize="1.2rem" fontWeight="bold">
-                      SEAT
-                    </Typography>
-                    <Typography fontSize="1.8rem" fontWeight="bold">
-                      {selectedFlight ? selectedFlight.seat : ""}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box
-                  alignItems="center"
-                  justifyContent="center"
-                  textAlign="center"
-                >
-                  <i
-                    className="fa-thin fa-plane-departure"
-                    style={{ fontSize: "13rem" }}
-                  ></i>
-                </Box>
-              </Box>
-            </Box>
-            <Box marginTop="80px"></Box>
-          </Box>
-          <Box
-            sx={{
-              width: "3px",
-              backgroundImage:
-                "linear-gradient(to bottom, black 50%, transparent 50%)",
-              backgroundSize: "2px 10px",
-              backgroundRepeat: "repeat-y",
-              margin: "0 16px",
+              width: "100%",
+              "& .MuiInputBase-root": {
+                borderColor: "#ddd",
+              },
+              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "#1e90ff",
+                  boxShadow: "0 0 8px rgba(30, 144, 255, 0.6)",
+                },
             }}
           />
-          <Box
-            flex="3"
-            padding="20px"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            gap="40px"
+          <Button
+            onClick={handleSearch}
+            disableRipple
+            sx={{
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              borderRadius: "12px",
+              padding: "8px 60px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": {
+                backgroundColor: "#2177cb",
+              },
+            }}
           >
-            <Box
-              display="flex"
-              gap="10px"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Box>
-                <Typography fontSize="1.2rem" fontWeight="bold">
-                  SEAT
-                </Typography>
-                <Typography fontSize="1.8rem" fontWeight="bold">
-                  {selectedFlight ? selectedFlight.seat : ""}
-                </Typography>
-              </Box>
-              <Typography fontSize="1.8rem" sx={{ opacity: "0.6" }}>
-                {selectedFlight ? selectedFlight.ticketClass : ""}
-              </Typography>
-            </Box>
-            <Box display="flex" flexDirection="column" gap="10px">
-              <Typography fontSize="1.2rem" fontWeight="bold">
-                FROM: {selectedFlight ? selectedFlight.from : ""}
-              </Typography>
-              <Typography fontSize="1.2rem" fontWeight="bold">
-                PASSENGER NAME:{" "}
-                {selectedFlight ? selectedFlight.passengerName : ""}
-              </Typography>
-              <Typography fontSize="1.2rem" fontWeight="bold">
-                TO: {selectedFlight ? selectedFlight.to : ""}
-              </Typography>
-              <Typography fontSize="1.2rem" fontWeight="bold">
-                DATE: {selectedFlight ? selectedFlight.date : ""}
-              </Typography>
-            </Box>
-            <Typography
-              fontSize="1.5rem"
-              textAlign="center"
-              sx={{ opacity: "0.6", letterSpacing: "0.5rem" }}
-            >
-              FLIGHT TICKET
-            </Typography>
-          </Box>
+            Search
+          </Button>
         </Box>
       </Box>
-      <Box
-        justifyContent="center"
-        alignItems="center"
-        display="flex"
-        marginBottom="40px"
-      >
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleCancelClick}
-          sx={{
-            padding: "4px 10px",
-            visibility: selectedFlight ? "visible" : "hidden",
-          }}
+      <Box sx={{ overflow: "hidden", paddingBottom: "20px" }}>
+        <Slider {...settings}>
+          {passengers.length > 0 ? (
+            passengers.map((passenger, index) => (
+              <Box
+                sx={{
+                  margin: "0 calc((100% - 1400px) / 2) 20px",
+                  maxWidth: "1400px",
+                  width: "100%",
+                  backgroundImage:
+                    "url('https://freesvg.org/img/shokunin_World_Map.png')",
+                  backgroundPosition: "center",
+                  opacity: 0.8,
+                  borderRadius: "20px",
+                  boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.6)",
+                }}
+              >
+                <Box
+                  bgcolor="rgb(19,118,177)"
+                  borderRadius="20px 20px 0 0 "
+                  color="white"
+                  padding="10px 0 10px 100px"
+                >
+                  <Typography
+                    fontSize="1.8rem"
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Box display="flex" alignItems="center">
+                      <i
+                        className="fa-thin fa-ticket-airline"
+                        style={{
+                          height: "100%",
+                          marginRight: "8px",
+                          color: "white",
+                          fontSize: "2.4rem",
+                          alignItems: "center",
+                          textAlign: "center",
+                          justifyContent: "center",
+                        }}
+                      ></i>
+                    </Box>
+                    BOARDING PASS
+                  </Typography>
+                </Box>
+                <Divider />
+                <Box display="flex">
+                  <Box
+                    flex="1"
+                    sx={{
+                      padding: " 0",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      display: "flex",
+                      transform: "rotate(180deg)",
+                      writingMode: "vertical-lr",
+                    }}
+                  >
+                    <Typography
+                      fontSize="2rem"
+                      sx={{ letterSpacing: "0.5rem" }}
+                    >
+                      FLIGHT TICKET
+                    </Typography>
+                  </Box>
+                  <Box flex="6" padding="20px">
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      height="100%"
+                    >
+                      <Box
+                        minWidth="250px"
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="space-between"
+                      >
+                        <Box display="flex" flexDirection="column">
+                          <Typography
+                            fontSize="1.2rem"
+                            fontWeight="bold"
+                            textAlign="center"
+                          >
+                            FLIGHT
+                          </Typography>
+                          <Typography
+                            fontSize="1.8rem"
+                            fontWeight="bold"
+                            textAlign="center"
+                          >
+                            {selectedBooking?.flightNumber}
+                          </Typography>
+                        </Box>
+                        <Box display="flex" flexDirection="column">
+                          <Typography fontSize="1.2rem" fontWeight="bold">
+                            FROM: {selectedBooking?.departure_city}
+                          </Typography>
+                          <Typography
+                            fontSize="1.2rem"
+                            fontWeight="bold"
+                            marginTop="10px"
+                          >
+                            DATE: {selectedBooking?.flightDate}
+                          </Typography>
+                        </Box>
+                        <Box display="flex">
+                          <Typography
+                            fontSize="1.2rem"
+                            fontWeight="bold"
+                            display="flex"
+                            alignItems="center"
+                            gap="10px"
+                          >
+                            PAYMENT STATUS:{" "}
+                            <span
+                              style={{
+                                color:
+                                  selectedBooking?.payment_status === "Paid"
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {selectedBooking
+                                ? selectedBooking.payment_status
+                                : ""}
+                            </span>
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="space-between"
+                      >
+                        <Box display="flex" gap="80px">
+                          <Box>
+                            <Typography fontSize="1.2rem" fontWeight="bold">
+                              BOARDING TIME
+                            </Typography>
+                            <Typography
+                              fontSize="1.8rem"
+                              fontWeight="bold"
+                              textAlign="center"
+                            >
+                              {selectedBooking?.departureTime}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography fontSize="1.2rem" fontWeight="bold">
+                              ARRIVAL CITY
+                            </Typography>
+                            <Typography
+                              fontSize="1.8rem"
+                              fontWeight="bold"
+                              textAlign="center"
+                            >
+                              {selectedBooking?.arrival_city}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography fontSize="1.2rem" fontWeight="bold">
+                              SEAT
+                            </Typography>
+                            <Typography fontSize="1.8rem" fontWeight="bold">
+                              {passenger.seat_col}
+                              {passenger.seat_row}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box
+                          alignItems="center"
+                          justifyContent="center"
+                          textAlign="center"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {/* <i
+                          className="fa-thin fa-plane-departure"
+                          style={{ fontSize: "10rem" }}
+                        ></i> */}
+                          <img
+                            src="/logo3.png"
+                            height="196px"
+                            width="auto"
+                          ></img>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box marginTop="80px"></Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "3px",
+                      backgroundImage:
+                        "linear-gradient(to bottom, black 50%, transparent 50%)",
+                      backgroundSize: "2px 10px",
+                      backgroundRepeat: "repeat-y",
+                      margin: "0 16px",
+                    }}
+                  />
+                  <Box
+                    flex="3"
+                    padding="20px"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="space-between"
+                    gap="40px"
+                  >
+                    <Box
+                      display="flex"
+                      gap="10px"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Box>
+                        <Typography fontSize="1.2rem" fontWeight="bold">
+                          SEAT
+                        </Typography>
+                        <Typography fontSize="1.8rem" fontWeight="bold">
+                          {passenger.seat_col}
+                          {passenger.seat_row}
+                        </Typography>
+                      </Box>
+                      <Typography fontSize="1.8rem" sx={{ opacity: "0.6" }}>
+                        {selectedBooking?.class}
+                      </Typography>
+                    </Box>
+                    <Box display="flex" flexDirection="column" gap="10px">
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        FROM: {selectedBooking?.departure_city}
+                      </Typography>
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        PASSENGER NAME: {passenger.first_name}{" "}
+                        {passenger.last_name}
+                      </Typography>
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        TO: {selectedBooking?.arrival_city}
+                      </Typography>
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        DATE: {selectedBooking?.flightDate}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      fontSize="1.5rem"
+                      textAlign="center"
+                      sx={{ opacity: "0.6", letterSpacing: "0.5rem" }}
+                    >
+                      FLIGHT TICKET
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <Box></Box>
+          )}
+        </Slider>
+      </Box>
+
+      {selectedBooking && (
+        <Box
+          justifyContent="center"
+          alignItems="center"
+          display="flex"
+          marginTop="8px"
         >
-          Cancel Ticket
-        </Button>
-      </Box>
-      <Box bgcolor="white">
-        <Footer />
-      </Box>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleCancelClick}
+            sx={{
+              padding: "4px 10px",
+            }}
+          >
+            Cancel Booking
+          </Button>
+        </Box>
+      )}
+
       <Dialog
         open={openDialog}
         onClose={() => handleDialogClose(false)}
