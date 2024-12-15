@@ -58,6 +58,11 @@ const News = () => {
         gap: "20px",
         bgcolor: "white",
         boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        "@media (max-width: 1000px)": {
+          padding: "10px 20px",
+          margin: "60px 20px 40px",
+          gap: "8px",
+        },
       }}
     >
       <Box display="flex" alignItems="center" gap="10px">
