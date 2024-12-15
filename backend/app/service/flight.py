@@ -73,7 +73,27 @@ def get_flights_by_departure_time_and_cities(
     if not flights:
         raise HTTPException(status_code=404, detail="No flights found")
     result = []
+
     for flight, dep_airport, arr_airport in flights:
+        if flight.actual_departure_time and flight.actual_arrival_time:
+            duration: timedelta = (
+                flight.actual_arrival_time - flight.actual_departure_time
+            )
+            departure_time = flight.actual_departure_time.strftime("%H:%M")
+            arrival_time = flight.actual_arrival_time.strftime("%H:%M")
+        else:
+            duration: timedelta = (
+                flight.estimated_arrival_time - flight.estimated_departure_time
+            )
+            departure_time = flight.estimated_departure_time.strftime("%H:%M")
+            arrival_time = flight.estimated_arrival_time.strftime("%H:%M")
+
+        # Format the duration
+        hours, remainder = divmod(duration.total_seconds(), 3600)
+        minutes = remainder // 60
+        formatted_duration = f"{int(hours)} hours {int(minutes)} minutes"
+
+        print(flight.flight_number, "BUIDUCANH")
         result.append(
             {
                 "id": flight.flight_id,
@@ -84,17 +104,17 @@ def get_flights_by_departure_time_and_cities(
                 "departure_airport_code": dep_airport.airport_code,
                 "arrival_airport_code": arr_airport.airport_code,
                 "seatsLeft": 666,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
-                "flightNumber": "VN 7239",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
-                "price": "$100 - $200",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "flightNumber": str(
+                    flight.flight_number
+                ),  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "price": flight.flight_price,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
                 "flightDate": flight.estimated_departure_time.strftime("%A, %d %B"),
                 "flightRoute": f"{dep_airport.city} - {arr_airport.city}",
-                "departureDetailTime": flight.estimated_departure_time.strftime(
-                    "%H:%M %p"
-                ),
+                "departureDetailTime": departure_time,
                 "departureAirport": f"{dep_airport.name}, {dep_airport.city}",
-                "arrivalDetailTime": flight.estimated_arrival_time.strftime("%H:%M %p"),
+                "arrivalDetailTime": arrival_time,
                 "arrivalAirport": f"{arr_airport.name}, {arr_airport.city}",
-                "duration": "2 hours 10 minutes",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "duration": formatted_duration,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
             }
         )
     return result

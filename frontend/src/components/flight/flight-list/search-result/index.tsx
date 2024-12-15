@@ -191,8 +191,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
                   },
                 }}
               >
-                <Typography>Remaining tickets: {flight.seatsLeft}</Typography>
-                <Typography>Flight number: {flight.id}</Typography>
+                <Typography>Flight number: {flight.flightNumber}</Typography>
               </Box>
 
               {/* Price and Book Now Button Section */}
@@ -215,7 +214,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
                 }}
               >
                 <Typography fontSize="1rem" sx={{ fontWeight: 500 }}>
-                  Price: {flight.price}
+                  Price: {flight.price}$
                 </Typography>
                 <Button
                   onClick={() => {
