@@ -194,7 +194,6 @@ const SearchResult: React.FC<SearchResultProps> = ({
                 <Typography>Remaining seats: {flight.seatsLeft}</Typography>
                 <Typography>Flight number: {flight.flightNumber}</Typography>
               </Box>
-
               {/* Price and Book Now Button Section */}
               <Box
                 sx={{
@@ -273,10 +272,16 @@ const SearchResult: React.FC<SearchResultProps> = ({
                   display="flex"
                   flexDirection="column"
                   justifyContent="center"
+                  sx={{ textAlign: "left" }}
                 >
                   <Typography variant="h6" color="primary">
-                    {flight.flightRoute}
+                    Available seats:
                   </Typography>
+                  {(flight.flight_seat_matrix || []).map(([seatClass, availableSeats], index) => (
+                    <Typography key={index} fontSize="1rem" color="text.secondary">
+                      {seatClass} - {availableSeats}
+                    </Typography>
+                  ))}
                 </Box>
                 <Box>
                   <Box

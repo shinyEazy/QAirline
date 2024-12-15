@@ -269,7 +269,10 @@ INSERT INTO flight (
 ('QA009', 'HS-TKA', '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 305.75, 'Scheduled'),
 ('QA010', 'B-2088', '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 320.00, 'Scheduled'),
 ('QA011', 'CC-BGA', '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 275.00, 'Landed'),
-('QA012', 'XA-ZAA', '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 350.50, 'On Time');
+('QA012', 'XA-ZAA', '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 350.50, 'On Time'),
+('QA013', 'G-XWBA', '2024-12-15 08:00:00', NULL, '2024-12-15 11:00:00', NULL, 1, 2, 340.00, 'Scheduled'),
+('QA014', 'F-HZBA', '2024-12-15 12:00:00', NULL, '2024-12-15 15:00:00', NULL, 1, 2, 360.00, 'Scheduled'),
+('QA015', 'D-ABYC', '2024-12-15 18:00:00', NULL, '2024-12-15 21:00:00', NULL, 1, 2, 370.00, 'Scheduled');
 
 
 
@@ -294,27 +297,27 @@ INSERT INTO flight_seats (
 ('F-HZBA', 'Business', 1.5, 0.9, 36, 'F'), -- 12 (chia hết cho 3)
 ('F-HZBA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('D-ABYC', 'Economy', 1.0, 0.8, 90, 'H'), -- 18 (chia hết cho 3)
+('D-ABYC', 'Economy', 1.0, 0.8, 70, 'H'), -- 18 (chia hết cho 3)
 ('D-ABYC', 'Business', 1.5, 0.9, 40, 'F'), -- 10 (chia hết cho 5)
 ('D-ABYC', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-('C-FZBA', 'Economy', 1.0, 0.8, 80, 'H'), -- 22 (chẵn)
+('C-FZBA', 'Economy', 1.0, 0.8, 70, 'H'), -- 22 (chẵn)
 ('C-FZBA', 'Business', 1.5, 0.9, 32, 'G'), -- 8 (chẵn)
 ('C-FZBA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('JA123A', 'Economy', 1.0, 0.8, 80, 'F'), -- 18 (chia hết cho 3)
+('JA123A', 'Economy', 1.0, 0.8, 50, 'F'), -- 18 (chia hết cho 3)
 ('JA123A', 'Business', 1.5, 0.9, 36, 'F'), -- 12 (chia hết cho 3)
 ('JA123A', 'First Class', 2.0, 1.0, 8, 'F'), -- 6 (chia hết cho 3)
 
-('VH-ZNA', 'Economy', 1.0, 0.8, 80, 'F'), -- 30 (chia hết cho 5)
+('VH-ZNA', 'Economy', 1.0, 0.8, 60, 'F'), -- 30 (chia hết cho 5)
 ('VH-ZNA', 'Business', 1.5, 0.9, 32, 'F'), -- 8 (chẵn)
 ('VH-ZNA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('9V-SKA', 'Economy', 1.0, 0.8, 80, 'F'), -- 18 (chia hết cho 3)
+('9V-SKA', 'Economy', 1.0, 0.8, 60, 'F'), -- 18 (chia hết cho 3)
 ('9V-SKA', 'Business', 1.5, 0.9, 36, 'F'), -- 12 (chia hết cho 3)
 ('9V-SKA', 'First Class', 2.0, 1.0, 8, 'D'), -- 6 (chia hết cho 3)
 
-('HS-TKA', 'Economy', 1.0, 0.8, 70, 'F'), -- 20 (chẵn)
+('HS-TKA', 'Economy', 1.0, 0.8, 50, 'F'), -- 20 (chẵn)
 ('HS-TKA', 'Business', 1.5, 0.9, 40, 'F'), -- 10 (chia hết cho 5)
 ('HS-TKA', 'First Class', 2.0, 1.0, 10, 'D'), -- 6 (chia hết cho 3)
 
@@ -326,7 +329,7 @@ INSERT INTO flight_seats (
 ('CC-BGA', 'Business', 1.5, 0.9, 36, 'G'), -- 12 (chia hết cho 3)
 ('CC-BGA', 'First Class', 2.0, 1.0, 10, 'F'), -- 6 (chia hết cho 3)
 
-('XA-ZAA', 'Economy', 1.0, 0.8, 80, 'G'), -- 18 (chia hết cho 3)
+('XA-ZAA', 'Economy', 1.0, 0.8, 60, 'G'), -- 18 (chia hết cho 3)
 ('XA-ZAA', 'Business', 1.5, 0.9, 36, 'H'), -- 12 (chia hết cho 3)
 ('XA-ZAA', 'First Class', 2.0, 1.0, 8, 'F'); -- 6 (chia hết cho 3)
 
