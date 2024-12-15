@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import useBookingStore from "hooks/booking-hook";
 import axios from "../../../hooks/axios-config";
+import { toast } from "react-toastify";
 
 const FlightDetail = () => {
   const navigate = useNavigate();
@@ -18,10 +19,30 @@ const FlightDetail = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
+
   const { getPayload } = useBookingStore();
+
   const handleNext = async () => {
+    const payload = getPayload();
+    console.log(payload);
+    const passengers = payload.passengers;
+    console.log(passengers);
+    for (let i = 0; i < passengers.length; i++) {
+      const passenger = passengers[i];
+      if (
+        passenger.first_name === "" ||
+        passenger.last_name === "" ||
+        passenger.gender === "" ||
+        passenger.date_of_birth === "" ||
+        passenger.nationality === ""
+      ) {
+        toast.error(
+          `Please fill in seat ${passenger.seat_col}${passenger.seat_row} information`
+        );
+        return;
+      }
+    }
     navigate("/flight/payment");
-    // const payload = getPayload();
     // try {
     //   const response = await axios.post("/api/booking/", payload);
     //   const data = response.data;

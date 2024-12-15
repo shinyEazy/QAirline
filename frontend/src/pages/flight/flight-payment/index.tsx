@@ -9,26 +9,31 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import useBookingStore, { createBooking } from "hooks/booking-hook";
+import { toast } from "react-toastify";
 
 const FlightPayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { getPayload } = useBookingStore();
+
   const submitBooking = async () => {
+    const payload = getPayload();
+
+    if (!payload.booker_email) {
+      toast.error("Please enter your email before submitting the booking.");
+      return;
+    }
+
+    console.log(payload.booker_email);
     try {
-      const payload = getPayload();
-
+      await createBooking(payload);
       navigate("/");
-
-      setLoading(true);
-      const response = await createBooking(payload);
-
-      // Handle the response, for example, log or store the booking details
-
+      toast.success("Booking submitted successfully.");
     } catch (error) {
       console.error("Error in submitting booking", error);
     }
   };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);

@@ -5,6 +5,7 @@ import { store } from "./store/store";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import "./styles.css";
+import { ToastContainer } from "react-toastify";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -20,7 +21,17 @@ root.render(
   // <ThemeProvider theme={theme}>
   //   <CssBaseline />
   <Provider store={store}>
-    <App />
+    <App />d
+    <ToastContainer
+      position="top-right"
+      autoClose={8000}
+      hideProgressBar={false}
+      newestOnTop={true}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss={false}
+      pauseOnHover={false}
+    />
   </Provider>
   // </ThemeProvider>
 );
