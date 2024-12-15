@@ -11,9 +11,11 @@ import {
   DialogActions,
 } from "@mui/material";
 import Header from "components/home-page/Header";
-import Footer from "components/home-page/Footer";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 type Passenger = {
   booking_id: string;
@@ -166,6 +168,31 @@ const FlightBooking = () => {
     console.log("Matched passengers:", booking ? booking.passengers : []);
   };
 
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    appendDots: (dots: any) =>
+      selectedBooking ? (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-20px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ul style={{ margin: 0, padding: 0 }}>{dots}</ul>
+        </div>
+      ) : (
+        <div />
+      ),
+  };
+
   return (
     <Box
       display="flex"
@@ -177,7 +204,7 @@ const FlightBooking = () => {
       <Box
         bgcolor="white"
         width="600px"
-        margin="auto"
+        margin="20px auto "
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
@@ -197,7 +224,7 @@ const FlightBooking = () => {
           <TextField
             value={bookingID}
             onChange={(e) => setBookingID(e.target.value)}
-            placeholder="123XXXX"
+            placeholder="A1B2C3"
             sx={{
               width: "100%",
               "& .MuiInputBase-root": {
@@ -230,263 +257,287 @@ const FlightBooking = () => {
           </Button>
         </Box>
       </Box>
-
-      {passengers.length > 0 ? (
-        passengers.map((passenger, index) => (
-          <Box>
-            <Box
-              sx={{
-                margin: "40px 80px",
-                backgroundImage:
-                  "url('https://freesvg.org/img/shokunin_World_Map.png')",
-                backgroundPosition: "center",
-                opacity: 0.8,
-              }}
-              borderRadius="20px"
-              boxShadow="0 0 10px 0 rgba(0, 0, 0, 0.4)"
-            >
+      <Box sx={{ overflow: "hidden", paddingBottom: "20px" }}>
+        <Slider {...settings}>
+          {passengers.length > 0 ? (
+            passengers.map((passenger, index) => (
               <Box
-                bgcolor="rgb(19,118,177)"
-                borderRadius="20px 20px 0 0 "
-                color="white"
-                padding="10px 0 10px 100px"
+                sx={{
+                  margin: "0 calc((100% - 1400px) / 2) 20px",
+                  maxWidth: "1400px",
+                  width: "100%",
+                  backgroundImage:
+                    "url('https://freesvg.org/img/shokunin_World_Map.png')",
+                  backgroundPosition: "center",
+                  opacity: 0.8,
+                  borderRadius: "20px",
+                  boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.6)",
+                }}
               >
-                <Typography
-                  fontSize="1.8rem"
-                  display="flex"
-                  alignItems="center"
-                >
-                  <Box display="flex" alignItems="center">
-                    <i
-                      className="fa-thin fa-ticket-airline"
-                      style={{
-                        height: "100%",
-                        marginRight: "8px",
-                        color: "white",
-                        fontSize: "2.4rem",
-                        alignItems: "center",
-                        textAlign: "center",
-                        justifyContent: "center",
-                      }}
-                    ></i>
-                  </Box>
-                  BOARDING PASS
-                </Typography>
-              </Box>
-              <Divider />
-              <Box display="flex">
                 <Box
-                  flex="1"
-                  sx={{
-                    padding: " 0",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    textAlign: "center",
-                    display: "flex",
-                    transform: "rotate(180deg)",
-                    writingMode: "vertical-lr",
-                  }}
+                  bgcolor="rgb(19,118,177)"
+                  borderRadius="20px 20px 0 0 "
+                  color="white"
+                  padding="10px 0 10px 100px"
                 >
-                  <Typography fontSize="2rem" sx={{ letterSpacing: "0.3rem" }}>
-                    FLIGHT TICKET
+                  <Typography
+                    fontSize="1.8rem"
+                    display="flex"
+                    alignItems="center"
+                  >
+                    <Box display="flex" alignItems="center">
+                      <i
+                        className="fa-thin fa-ticket-airline"
+                        style={{
+                          height: "100%",
+                          marginRight: "8px",
+                          color: "white",
+                          fontSize: "2.4rem",
+                          alignItems: "center",
+                          textAlign: "center",
+                          justifyContent: "center",
+                        }}
+                      ></i>
+                    </Box>
+                    BOARDING PASS
                   </Typography>
                 </Box>
-                <Box flex="6" padding="20px">
+                <Divider />
+                <Box display="flex">
                   <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    height="100%"
+                    flex="1"
+                    sx={{
+                      padding: " 0",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      display: "flex",
+                      transform: "rotate(180deg)",
+                      writingMode: "vertical-lr",
+                    }}
                   >
-                    <Box
-                      minWidth="250px"
-                      display="flex"
-                      flexDirection="column"
-                      justifyContent="space-between"
+                    <Typography
+                      fontSize="2rem"
+                      sx={{ letterSpacing: "0.3rem" }}
                     >
-                      <Box display="flex" flexDirection="column">
-                        <Typography
-                          fontSize="1.2rem"
-                          fontWeight="bold"
-                          textAlign="center"
-                        >
-                          FLIGHT
-                        </Typography>
-                        <Typography
-                          fontSize="1.8rem"
-                          fontWeight="bold"
-                          textAlign="center"
-                        >
-                          {selectedBooking?.flightNumber}
-                        </Typography>
-                      </Box>
-                      <Box display="flex" flexDirection="column">
-                        <Typography fontSize="1.2rem" fontWeight="bold">
-                          FROM: {selectedBooking?.departure_city}
-                        </Typography>
-                        <Typography
-                          fontSize="1.2rem"
-                          fontWeight="bold"
-                          marginTop="10px"
-                        >
-                          DATE: {selectedBooking?.flightDate}
-                        </Typography>
-                      </Box>
-                      <Box display="flex">
-                        <Typography
-                          fontSize="1.2rem"
-                          fontWeight="bold"
-                          display="flex"
-                          alignItems="center"
-                          gap="10px"
-                        >
-                          PAYMENT STATUS:{" "}
-                          <span
-                            style={{
-                              color:
-                                selectedBooking?.payment_status === "Paid"
-                                  ? "green"
-                                  : "red",
-                            }}
+                      FLIGHT TICKET
+                    </Typography>
+                  </Box>
+                  <Box flex="6" padding="20px">
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      height="100%"
+                    >
+                      <Box
+                        minWidth="250px"
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="space-between"
+                      >
+                        <Box display="flex" flexDirection="column">
+                          <Typography
+                            fontSize="1.2rem"
+                            fontWeight="bold"
+                            textAlign="center"
                           >
-                            {selectedBooking
-                              ? selectedBooking.payment_status
-                              : ""}
-                          </span>
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      justifyContent="space-between"
-                    >
-                      <Box display="flex" gap="80px">
-                        <Box>
-                          <Typography fontSize="1.2rem" fontWeight="bold">
-                            BOARDING TIME
+                            FLIGHT
                           </Typography>
                           <Typography
                             fontSize="1.8rem"
                             fontWeight="bold"
                             textAlign="center"
                           >
-                            {selectedBooking?.departureTime}
+                            {selectedBooking?.flightNumber}
                           </Typography>
                         </Box>
-                        <Box>
+                        <Box display="flex" flexDirection="column">
                           <Typography fontSize="1.2rem" fontWeight="bold">
-                            ARRIVAL CITY
+                            FROM: {selectedBooking?.departure_city}
                           </Typography>
                           <Typography
-                            fontSize="1.8rem"
+                            fontSize="1.2rem"
                             fontWeight="bold"
-                            textAlign="center"
+                            marginTop="10px"
                           >
-                            {selectedBooking?.arrival_city}
+                            DATE: {selectedBooking?.flightDate}
                           </Typography>
                         </Box>
-                        <Box>
-                          <Typography fontSize="1.2rem" fontWeight="bold">
-                            SEAT
-                          </Typography>
-                          <Typography fontSize="1.8rem" fontWeight="bold">
-                            {passenger.seat_col}
-                            {passenger.seat_row}
+                        <Box display="flex">
+                          <Typography
+                            fontSize="1.2rem"
+                            fontWeight="bold"
+                            display="flex"
+                            alignItems="center"
+                            gap="10px"
+                          >
+                            PAYMENT STATUS:{" "}
+                            <span
+                              style={{
+                                color:
+                                  selectedBooking?.payment_status === "Paid"
+                                    ? "green"
+                                    : "red",
+                              }}
+                            >
+                              {selectedBooking
+                                ? selectedBooking.payment_status
+                                : ""}
+                            </span>
                           </Typography>
                         </Box>
                       </Box>
                       <Box
-                        alignItems="center"
-                        justifyContent="center"
-                        textAlign="center"
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="space-between"
                       >
-                        <i
+                        <Box display="flex" gap="80px">
+                          <Box>
+                            <Typography fontSize="1.2rem" fontWeight="bold">
+                              BOARDING TIME
+                            </Typography>
+                            <Typography
+                              fontSize="1.8rem"
+                              fontWeight="bold"
+                              textAlign="center"
+                            >
+                              {selectedBooking?.departureTime}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography fontSize="1.2rem" fontWeight="bold">
+                              ARRIVAL CITY
+                            </Typography>
+                            <Typography
+                              fontSize="1.8rem"
+                              fontWeight="bold"
+                              textAlign="center"
+                            >
+                              {selectedBooking?.arrival_city}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <Typography fontSize="1.2rem" fontWeight="bold">
+                              SEAT
+                            </Typography>
+                            <Typography fontSize="1.8rem" fontWeight="bold">
+                              {passenger.seat_col}
+                              {passenger.seat_row}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Box
+                          alignItems="center"
+                          justifyContent="center"
+                          textAlign="center"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {/* <i
                           className="fa-thin fa-plane-departure"
-                          style={{ fontSize: "13rem" }}
-                        ></i>
+                          style={{ fontSize: "10rem" }}
+                        ></i> */}
+                          <img
+                            src="/logo3.png"
+                            height="196px"
+                            width="auto"
+                          ></img>
+                        </Box>
                       </Box>
                     </Box>
+                    <Box marginTop="80px"></Box>
                   </Box>
-                  <Box marginTop="80px"></Box>
-                </Box>
-                <Box
-                  sx={{
-                    width: "3px",
-                    backgroundImage:
-                      "linear-gradient(to bottom, black 50%, transparent 50%)",
-                    backgroundSize: "2px 10px",
-                    backgroundRepeat: "repeat-y",
-                    margin: "0 16px",
-                  }}
-                />
-                <Box
-                  flex="3"
-                  padding="20px"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="space-between"
-                  gap="40px"
-                >
                   <Box
+                    sx={{
+                      width: "3px",
+                      backgroundImage:
+                        "linear-gradient(to bottom, black 50%, transparent 50%)",
+                      backgroundSize: "2px 10px",
+                      backgroundRepeat: "repeat-y",
+                      margin: "0 16px",
+                    }}
+                  />
+                  <Box
+                    flex="3"
+                    padding="20px"
                     display="flex"
-                    gap="10px"
-                    alignItems="center"
+                    flexDirection="column"
                     justifyContent="space-between"
+                    gap="40px"
                   >
-                    <Box>
-                      <Typography fontSize="1.2rem" fontWeight="bold">
-                        SEAT
-                      </Typography>
-                      <Typography fontSize="1.8rem" fontWeight="bold">
-                        {passenger.seat_col}
-                        {passenger.seat_row}
+                    <Box
+                      display="flex"
+                      gap="10px"
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Box>
+                        <Typography fontSize="1.2rem" fontWeight="bold">
+                          SEAT
+                        </Typography>
+                        <Typography fontSize="1.8rem" fontWeight="bold">
+                          {passenger.seat_col}
+                          {passenger.seat_row}
+                        </Typography>
+                      </Box>
+                      <Typography fontSize="1.8rem" sx={{ opacity: "0.6" }}>
+                        {selectedBooking?.class}
                       </Typography>
                     </Box>
-                    <Typography fontSize="1.8rem" sx={{ opacity: "0.6" }}>
-                      {selectedBooking?.class}
+                    <Box display="flex" flexDirection="column" gap="10px">
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        FROM: {selectedBooking?.departure_city}
+                      </Typography>
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        PASSENGER NAME: {passenger.first_name}{" "}
+                        {passenger.last_name}
+                      </Typography>
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        TO: {selectedBooking?.arrival_city}
+                      </Typography>
+                      <Typography fontSize="1.2rem" fontWeight="bold">
+                        DATE: {selectedBooking?.flightDate}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      fontSize="1.5rem"
+                      textAlign="center"
+                      sx={{ opacity: "0.6", letterSpacing: "0.5rem" }}
+                    >
+                      FLIGHT TICKET
                     </Typography>
                   </Box>
-                  <Box display="flex" flexDirection="column" gap="10px">
-                    <Typography fontSize="1.2rem" fontWeight="bold">
-                      FROM: {selectedBooking?.departure_city}
-                    </Typography>
-                    <Typography fontSize="1.2rem" fontWeight="bold">
-                      PASSENGER NAME: {passenger.first_name}{" "}
-                      {passenger.last_name}
-                    </Typography>
-                    <Typography fontSize="1.2rem" fontWeight="bold">
-                      TO: {selectedBooking?.arrival_city}
-                    </Typography>
-                    <Typography fontSize="1.2rem" fontWeight="bold">
-                      DATE: {selectedBooking?.flightDate}
-                    </Typography>
-                  </Box>
-                  <Typography
-                    fontSize="1.5rem"
-                    textAlign="center"
-                    sx={{ opacity: "0.6", letterSpacing: "0.5rem" }}
-                  >
-                    FLIGHT TICKET
-                  </Typography>
                 </Box>
               </Box>
-            </Box>
-            <Box justifyContent="center" alignItems="center" display="flex">
-              <Button
-                variant="contained"
-                color="error"
-                onClick={handleCancelClick}
-                sx={{
-                  padding: "4px 10px",
-                }}
-              >
-                Cancel Ticket
-              </Button>
-            </Box>
-          </Box>
-        ))
-      ) : (
-        <Box></Box>
+            ))
+          ) : (
+            <Box></Box>
+          )}
+        </Slider>
+      </Box>
+
+      {selectedBooking && (
+        <Box
+          justifyContent="center"
+          alignItems="center"
+          display="flex"
+          marginTop="8px"
+        >
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleCancelClick}
+            sx={{
+              padding: "4px 10px",
+            }}
+          >
+            Cancel Booking
+          </Button>
+        </Box>
       )}
 
       <Dialog
