@@ -110,7 +110,7 @@ def cancel_booking(db_booking: Booking, db: Session):
     if not flight:
         raise HTTPException(
             status_code=400,
-            detail="Cancelation cannot be after the flight's estimated departure time.",
+            detail="Cancellation cannot be after the flight's estimated departure time.",
         )
 
     # get then delete passengers from flight

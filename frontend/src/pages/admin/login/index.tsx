@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { handleUserAuthentication } from "hooks/auth-hook";
 const AdminLogin = () => {
   const navigate = useNavigate();
-  console.log("hhhhhhhhhh");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleLoginSubmission = async () => {
@@ -60,7 +59,6 @@ const AdminLogin = () => {
               },
             }}
           />
-
           <TextField
             fullWidth
             label="Password"
@@ -79,6 +77,7 @@ const AdminLogin = () => {
               },
             }}
           />
+
           <Box display="flex" justifyContent="center" width="100%">
             <Button
               onClick={handleLoginSubmission}
