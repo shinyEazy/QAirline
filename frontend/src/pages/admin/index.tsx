@@ -21,6 +21,7 @@ import { fetchAirport } from "hooks/airport-hook";
 import { createAirplane } from "hooks/airplane-hook";
 import AirplaneList from "../../components/admin/airplane-list";
 import AirportList from "../../components/admin/airport-list";
+import { useNavigate } from "react-router-dom";
 
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
@@ -233,7 +234,11 @@ const AdminPage = () => {
   };
 
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/admin/login');
+  }
   return (
     <Box overflow="hidden">
       <Box padding={2} justifyContent="center" width="100vw">
@@ -306,6 +311,7 @@ const AdminPage = () => {
             Statistical
           </Button>
           <Button
+            onClick={handleLogout}
             sx={{
               backgroundColor: "#1e90ff",
               color: "white",
