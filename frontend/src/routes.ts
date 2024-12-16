@@ -42,18 +42,17 @@ const routes = [
   },
   {
     path: "/admin",
-    // component: AdminAuthWrapper,
-    component: AdminPage,
+    component: AdminAuthWrapper,
     routes: [
       {
         path: "",
         component: AdminPage,
       },
-      {
-        path: "login",
-        component: AdminLogin,
-      },
     ],
+  },
+  {
+    path: "/admin/login",
+    component: AdminLogin,
   },
   {
     path: "/user/:id",
