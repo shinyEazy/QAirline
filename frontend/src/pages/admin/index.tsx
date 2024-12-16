@@ -239,7 +239,11 @@ const AdminPage = () => {
   };
 
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/admin/login');
+  }
   return (
     <Box overflow="hidden">
       <Box padding={2} justifyContent="center" width="100vw">
@@ -315,6 +319,7 @@ const AdminPage = () => {
             Statistical
           </Button>
           <Button
+            onClick={handleLogout}
             sx={{
               backgroundColor: "#1e90ff",
               color: "white",

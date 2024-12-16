@@ -107,7 +107,6 @@ export async function fetchbookingInfo(booking_id: string) {
     return response.data;
   } catch (error) {
     console.error("Request error", error);
-    throw error;
   }
 }
 
