@@ -131,7 +131,7 @@ const Footer = () => {
               fontSize="1.2rem"
               style={{ marginRight: "8px" }}
             />
-            123 Main Street, Anytown, USA.
+            144 Xuan Thuy, Hanoi
           </Typography>
           <Typography
             color="rgb(77, 115, 252)"
@@ -146,15 +146,15 @@ const Footer = () => {
               icon={faPhone}
               fontSize="1.2rem"
               color="black"
-            />{" "}
-            +1 234 567 890
+            />
+            +84 0989.xxx.xxx
           </Typography>
           <Typography marginBottom="20px" alignItems="center" display="flex">
             <FontAwesomeIcon
               style={{ marginRight: "8px" }}
               icon={faEnvelope}
               fontSize="1.2rem"
-            />{" "}
+            />
             email@example.com
           </Typography>
           <Typography marginBottom="8px">Follow Us!</Typography>

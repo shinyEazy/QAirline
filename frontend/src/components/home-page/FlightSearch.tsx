@@ -130,6 +130,11 @@ const FlightSearch: React.FC = () => {
     }
   };
 
+  const swapCities = () => {
+    setDepartureCity(arrivalCity);
+    setArrivalCity(departureCity);
+  };
+
   return (
     <Box
       sx={{
@@ -352,6 +357,7 @@ const FlightSearch: React.FC = () => {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = "#1e90ff";
                 }}
+                onClick={swapCities}
               />
               <Box flex={1}>
                 <Typography
@@ -646,6 +652,7 @@ const FlightSearch: React.FC = () => {
           {/* Search Button */}
           <Box display="flex" justifyContent="center">
             <Button
+              disableRipple
               sx={{
                 width: "40%",
                 backgroundColor: "#1e90ff",

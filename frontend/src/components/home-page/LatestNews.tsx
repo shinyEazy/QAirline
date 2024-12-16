@@ -10,6 +10,9 @@ const LatestNews = () => {
         borderRadius: "20px",
         padding: "40px 80px",
         color: "black",
+        "@media(max-width: 1000px)": {
+          padding: "20px 20px 40px",
+        },
       }}
     >
       <Box
