@@ -1,4 +1,5 @@
 from sqlalchemy.exc import NoResultFound
+from starlette.status import HTTP_400_BAD_REQUEST
 from app.schemas import BookingBase, BookingUpdate, BookingCreate
 from datetime import datetime, timedelta
 from fastapi import HTTPException
@@ -105,6 +106,11 @@ def cancel_booking(db_booking: Booking, db: Session):
     Update the specified 'Booking' cancelled field by booking_id in the database to True.
     """
 
+    if bool(db_booking.cancelled):
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="Booking has already been cancelled",
+        )
     flight = get_flight_compared_current_time(db_booking, db)
 
     if not flight:
@@ -116,7 +122,7 @@ def cancel_booking(db_booking: Booking, db: Session):
     # get then delete passengers from flight
     passengers = get_passengers_in_booking(db_booking, db)
 
-    delete_passengers(passengers, db)
+    # delete_passengers(passengers, db)
 
     db_booking.cancelled = True  # type: ignore
     db.commit()
