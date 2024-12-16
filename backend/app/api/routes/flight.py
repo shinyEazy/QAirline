@@ -51,7 +51,7 @@ async def update_flight_end_point(
                 status_code=400,
                 detail="Actual departure time cannot be earlier than estimated departure time",
             )
-    return update_flight(db, db_flight, flight)
+    return await update_flight(db, db_flight, flight)
 
 
 @router.delete("/{flight_id}", dependencies=[Depends(role_checker(["admin"]))])

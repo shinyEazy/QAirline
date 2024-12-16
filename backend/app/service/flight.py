@@ -133,7 +133,20 @@ def get_flights_by_departure_time_and_cities(
     return result
 
 
-def update_flight(db: Session, db_flight: Flight, flight: FlightUpdate) -> Flight:
+async def update_flight(db: Session, db_flight: Flight, flight: FlightUpdate) -> Flight:
+
+    print(flight.status, FlightStatus.Delayed.value, "INNER UPDATE FLIGHT")
+    if flight.status == FlightStatus.Delayed.value:
+        message = await delay_flight(
+            conint(db_flight.flight_id),
+            flight.actual_departure_time,
+            flight.actual_arrival_time,
+            db_flight,
+            db,
+        )
+
+        print(message, "INNER UPDATE FLIGHT")
+
     return update(db_flight, db, flight.model_dump())
 
 
@@ -201,11 +214,17 @@ def get_all_flights(db: Session):
     return result
 
 
-async def delay_flight(flight: FlightDelay, db_flight: Flight, db: Session):
+async def delay_flight(
+    flight_id,
+    actual_arrival_time,
+    actual_departure_time,
+    db_flight: Flight,
+    db: Session,
+):
     """
     Delays the flight
     """
-    user_emails = get_user_emails_in_flight(flight_id=flight.flight_id, db=db)
+    user_emails = get_user_emails_in_flight(flight_id=flight_id, db=db)
 
     recipents = [email for email in user_emails if is_valid_email(email)]
 
@@ -213,10 +232,10 @@ async def delay_flight(flight: FlightDelay, db_flight: Flight, db: Session):
         await send_email(
             recipents,
             f"Flight {db_flight.flight_number} delay",
-            f"Flight {db_flight.flight_number} has been delayed to {flight.actual_arrival_time}",
+            f"Flight {db_flight.flight_number} has been delayed to {actual_departure_time} to {actual_arrival_time}",
         )
 
-    return update(db_flight, db, flight.model_dump())
+    return "Delay successful"
 
 
 def get_user_emails_in_flight(flight_id: int, db: Session) -> List[str]:
@@ -306,4 +325,3 @@ def count_available_seat(seat_matrix: list[list[bool]]) -> int:
     for row in seat_matrix:
         available_seats += row.count(False)
     return available_seats
-

@@ -36,6 +36,7 @@ def create_passenger_end_point(
 
     if passenger.gender not in Gender.__members__:
         raise HTTPException(status_code=400, detail="Must be either Male or Female")
+
     return create_passenger(passenger, db)
 
 

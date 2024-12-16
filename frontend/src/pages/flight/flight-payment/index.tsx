@@ -32,13 +32,12 @@ const FlightPayment = () => {
       return;
     }
 
-    console.log(payload.booker_email);
     try {
-      await createBooking(payload);
       navigate("/");
+      await createBooking(payload);
       toast.success("Booking submitted successfully.");
     } catch (error) {
-      console.error("Error in submitting booking", error);
+      toast.error(error.response.data.detail);
     }
   };
 

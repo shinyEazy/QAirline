@@ -94,10 +94,8 @@ export async function createBooking(payload: BookingPayload) {
     useBookingStore.persist.clearStorage(); // Clears the persisted state
     return response.data
   } catch (error) {
-    console.error("Request payload:", payload);
-    console.error("Error response data:", error.response?.data);
-    console.error("Error status code:", error.response?.status);
     console.error("Error creating booking", error);
+    throw (error);
   }
 }
 

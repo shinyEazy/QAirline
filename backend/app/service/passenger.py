@@ -2,8 +2,7 @@ from typing import List
 
 from fastapi import HTTPException
 from app.schemas.passenger import PassengerCreate, PassengerUpdate, PassengerBase
-
-from app.models import Booking, Passenger, Flight
+from app.models import Booking, Passenger, Flight, Gender
 from sqlalchemy.orm import Session
 from .crud_utils import *
 
@@ -12,6 +11,9 @@ def create_passenger(passenger: PassengerCreate, db: Session) -> Passenger:
     """
     Equivalent to a SQL query that is 'INSERT INTO passengers values ()'
     """
+    if passenger.gender not in Gender.__members__:
+        raise HTTPException(status_code=400, detail="Must be either Male or Female")
+
     return create(Passenger, db, passenger.model_dump())
 
 
@@ -42,10 +44,12 @@ def get_passenger_by_flight(citizen_id: str, flight_id: int, db: Session) -> Pas
     )
     return db_passenger
 
+
 # def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
 #     booking_id = db.query(Booking.booking_id).filter(Booking.flight_id == flight_id).all()
 #     db_passengers = db.query(Passenger).filter(Passenger.booking_id.in_(booking_id)).all()
 #     return db_passengers
+
 
 def update_passenger(
     db_passenger: Passenger, passenger: PassengerUpdate, db: Session

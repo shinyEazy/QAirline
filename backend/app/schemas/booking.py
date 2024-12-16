@@ -11,6 +11,7 @@ class BookingBase(SchemaModel):
     flight_class: str  # Assuming `FlightClass` is an enum
     cancelled: Optional[bool] = False
     flight_id: int
+    # return_flight_id: int
 
 
 class BookingCreate(BookingBase):

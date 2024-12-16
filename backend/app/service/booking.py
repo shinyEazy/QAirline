@@ -59,6 +59,7 @@ async def create_booking(booking: BookingCreate, db: Session) -> Booking:
         flight_class=booking_data.flight_class,
         flight_id=booking_data.flight_id,
     )
+
     db_booking = create(Booking, db, current_dict)
 
     flight = get_flight_compared_current_time(db_booking, db)
@@ -68,6 +69,9 @@ async def create_booking(booking: BookingCreate, db: Session) -> Booking:
             status_code=400,
             detail="Booking date cannot be after the flight's estimated departure time.",
         )
+
+    # check return flight conditions
+    # get_return_flight(booking, flight, db)
 
     if booking.number_of_adults + booking.number_of_children <= 0:
         raise HTTPException(
@@ -83,6 +87,35 @@ async def create_booking(booking: BookingCreate, db: Session) -> Booking:
         f"Booking ID: {db_booking.booking_id}",
     )
     return db_booking
+
+
+# def get_return_flight(booking: BookingCreate, flight: Flight, db: Session):
+#
+#     if not booking.return_flight_id:
+#         return None
+#     # Check if return flight is provided and validate the return flight details
+#     # Retrieve the return flight with the necessary conditions
+#     return_flight = (
+#         db.query(Flight)
+#         .filter(
+#             Flight.flight_id == booking.return_flight_id,
+#             Flight.departure_airport_id
+#             == flight.destination_airport_id,  # Compare departure airports
+#             Flight.destination_airport_id
+#             == flight.departure_airport_id,  # Compare departure airports
+#             Flight.departure_time
+#             > flight.arrival_time,  # Ensure return flight departs after outbound arrival
+#         )
+#         .first()
+#     )
+#
+#     if not return_flight:
+#         raise HTTPException(
+#             status_code=400,
+#             detail="Return flight not found or does not meet required conditions.",
+#         )
+#
+#     return return_flight
 
 
 def update_booking(db_booking: Booking, booking: BookingUpdate, db: Session) -> Booking:
@@ -120,9 +153,6 @@ def cancel_booking(db_booking: Booking, db: Session):
         )
 
     # get then delete passengers from flight
-    passengers = get_passengers_in_booking(db_booking, db)
-
-    # delete_passengers(passengers, db)
 
     db_booking.cancelled = True  # type: ignore
     db.commit()
@@ -135,6 +165,10 @@ def cancel_booking(db_booking: Booking, db: Session):
 
 def get_all_bookings(db: Session) -> List[Booking]:
     return get_all(Booking, db)
+
+
+def get_roundtrip_booking_info(db_booking: Booking, db: Session) -> dict:
+    pass
 
 
 def get_booking_info(db_booking: Booking, db: Session) -> dict:
