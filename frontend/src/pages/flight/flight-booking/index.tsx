@@ -16,6 +16,8 @@ import { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ChevronRight from "@mui/icons-material/ChevronRight";
+import ChevronLeft from "@mui/icons-material/ChevronLeft";
 
 type Passenger = {
   booking_id: string;
@@ -168,6 +170,84 @@ const FlightBooking = () => {
     console.log("Matched passengers:", booking ? booking.passengers : []);
   };
 
+  const [isHoveredLeft, setIsHoveredLeft] = useState(false);
+
+  const CustomPrevArrow = (props: any) => {
+    const { className, style, onClick } = props;
+    return selectedBooking ? (
+      <>
+        <style>{`.slick-arrow.slick-prev::before { display: none !important; }`}</style>
+        <div
+          className={className}
+          style={{
+            ...style,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            left: "calc((100% - 90%) / 6)",
+            zIndex: 1,
+            width: "40px",
+            height: "40px",
+            backgroundColor: isHoveredLeft ? "#2177cb" : "#1e90ff",
+            borderRadius: "50%",
+            color: "white",
+            fontSize: "1.5rem",
+            cursor: "pointer",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.2)",
+          }}
+          onMouseEnter={() => setIsHoveredLeft(true)}
+          onMouseLeave={() => setIsHoveredLeft(false)}
+          onClick={onClick}
+        >
+          <ChevronLeft style={{ fontSize: "2.5rem" }} />
+        </div>
+      </>
+    ) : null;
+  };
+
+  const [isHoveredRight, setIsHoveredRight] = useState(false);
+
+  const CustomNextArrow = (props: any) => {
+    const { className, style, onClick } = props;
+
+    return selectedBooking ? (
+      <>
+        <style>
+          {`
+            .slick-arrow.slick-next::before {
+              display: none !important;
+            }
+          `}
+        </style>
+        <div
+          className={className}
+          style={{
+            ...style,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            right: "calc((100% - 90%) / 6)",
+            zIndex: 1,
+            width: "40px",
+            height: "40px",
+            backgroundColor: isHoveredRight ? "#2177cb" : "#1e90ff",
+            borderRadius: "50%",
+            color: "white",
+            fontSize: "1.5rem",
+            cursor: "pointer",
+            transition: "all 0.3s ease-in-out",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.2)",
+          }}
+          onMouseEnter={() => setIsHoveredRight(true)}
+          onMouseLeave={() => setIsHoveredRight(false)}
+          onClick={onClick}
+        >
+          <ChevronRight style={{ fontSize: "2.5rem" }} />
+        </div>
+      </>
+    ) : null;
+  };
+
   const settings = {
     dots: true,
     infinite: false,
@@ -191,6 +271,8 @@ const FlightBooking = () => {
       ) : (
         <div />
       ),
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
   };
 
   return (
@@ -263,9 +345,9 @@ const FlightBooking = () => {
             passengers.map((passenger, index) => (
               <Box
                 sx={{
-                  margin: "0 calc((100% - 1400px) / 2) 20px",
-                  maxWidth: "1400px",
-                  width: "100%",
+                  margin: "0 calc((100% - 90%) / 2) 20px",
+                  maxWidth: "90%",
+                  width: "90%",
                   backgroundImage:
                     "url('https://freesvg.org/img/shokunin_World_Map.png')",
                   backgroundPosition: "center",

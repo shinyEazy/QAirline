@@ -25,7 +25,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery("(max-width:900px)");
 
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -172,7 +172,37 @@ const Header = () => {
       <IconButton onClick={toggleDrawer}>
         {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
       </IconButton>
-      <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
+      <Drawer
+        anchor="left"
+        open={isDrawerOpen}
+        onClose={toggleDrawer}
+        sx={{
+          "& .MuiDrawer-paper": {
+            padding: "0 10px",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "auto",
+            "::-webkit-scrollbar": {
+              width: "8px",
+              height: "8px",
+            },
+            "::-webkit-scrollbar-track": {
+              background: "#f0f0f0",
+              borderRadius: "8px",
+            },
+            "::-webkit-scrollbar-thumb": {
+              background: "#888",
+              borderRadius: "8px",
+            },
+            "::-webkit-scrollbar-thumb:hover": {
+              background: "#555",
+            },
+            "::-webkit-scrollbar-corner": {
+              background: "#f0f0f0",
+            },
+          },
+        }}
+      >
         <List
           sx={{
             width: "250px",
@@ -357,7 +387,10 @@ const Header = () => {
         backgroundColor: "#ffffff",
         top: 0,
         zIndex: 1100,
-        padding: { xs: "10px 20px", sm: "10px 80px" },
+        padding: { sm: "10px 80px" },
+        "@media (max-width: 1000px)": {
+          padding: "10px 20px",
+        },
       }}
     >
       {/* Logo */}

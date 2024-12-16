@@ -208,6 +208,13 @@ const FlightSeat = () => {
           gap="40px"
           sx={{
             margin: "0px 80px 0px",
+            "@media(max-width:1200px)": {
+              margin: "20px 20px 0px",
+            },
+            "@media(max-width:1100px)": {
+              flexDirection: "column",
+              gap: "0",
+            },
           }}
         >
           <Box
@@ -459,58 +466,6 @@ const FlightSeat = () => {
                 </Box>
               </Box>
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <Button
-                onClick={() => navigate("/flight/list")}
-                fullWidth
-                sx={{
-                  marginTop: "40px",
-                  marginBottom: "40px",
-                  backgroundColor: "#1e90ff",
-                  borderRadius: "8px",
-                  color: "white",
-                  width: "150px",
-                  fontSize: "1rem",
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  padding: "10px 20px",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.3s ease",
-                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
-                }}
-              >
-                Back
-              </Button>
-              <Button
-                onClick={handleNext}
-                fullWidth
-                disabled={selectedSeats.length === 0}
-                sx={{
-                  marginTop: "40px",
-                  marginBottom: "40px",
-                  backgroundColor:
-                    selectedSeats.length > 0 ? "#1e90ff" : "#d3d3d3",
-                  borderRadius: "8px",
-                  color: selectedSeats.length > 0 ? "white" : "black",
-                  width: "150px",
-                  fontSize: "1rem",
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  padding: "10px 20px",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.3s ease",
-                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
-                }}
-              >
-                Next
-              </Button>
-            </Box>
           </Box>
 
           <Box
@@ -564,6 +519,61 @@ const FlightSeat = () => {
             </Box>
           </Box>
         </Box>
+      </Box>
+      <Box
+        padding="0px 80px 0px"
+        bgcolor="rgb(234,234,234)"
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          "@media(max-width:1200px)": {
+            padding: "0px 20px 0px",
+          },
+        }}
+      >
+        <Button
+          onClick={() => navigate("/flight/list")}
+          fullWidth
+          sx={{
+            marginTop: "40px",
+            marginBottom: "40px",
+            backgroundColor: "#1e90ff",
+            borderRadius: "8px",
+            color: "white",
+            width: "150px",
+            fontSize: "1rem",
+            textTransform: "none",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "all 0.3s ease",
+            "&:hover": { backgroundColor: "#2177cb", color: "white" },
+          }}
+        >
+          Back
+        </Button>
+        <Button
+          onClick={handleNext}
+          fullWidth
+          disabled={selectedSeats.length === 0}
+          sx={{
+            marginTop: "40px",
+            marginBottom: "40px",
+            backgroundColor: selectedSeats.length > 0 ? "#1e90ff" : "#d3d3d3",
+            borderRadius: "8px",
+            color: selectedSeats.length > 0 ? "white" : "black",
+            width: "150px",
+            fontSize: "1rem",
+            textTransform: "none",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "all 0.3s ease",
+            "&:hover": { backgroundColor: "#2177cb", color: "white" },
+          }}
+        >
+          Next
+        </Button>
       </Box>
       <Footer />
     </div>

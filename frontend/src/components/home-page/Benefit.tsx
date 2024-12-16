@@ -13,6 +13,12 @@ const Benefit = () => {
         borderRadius: "20px",
         margin: "40px 80px",
         color: "black",
+        "@media (max-width: 1000px)": {
+          margin: "20px",
+          overflow: "hidden",
+          flexDirection: "column",
+          gap: "20px",
+        },
       }}
       gap="40px"
     >
@@ -35,7 +41,7 @@ const Benefit = () => {
           <Typography fontSize="1.4rem" fontWeight="400">
             We are Now Available
           </Typography>
-          <Typography>Call +1 555 666 888 contact with us</Typography>
+          <Typography>Call 0989.xxx.xxx contact with us</Typography>
         </Box>
       </Box>
       <Box
@@ -56,7 +62,7 @@ const Benefit = () => {
           <Typography fontSize="1.4rem" fontWeight="400">
             International Flight
           </Typography>
-          <Typography>Call +1 555 666 888 contact with us</Typography>
+          <Typography>Call 0989.xxx.xxx contact with us</Typography>
         </Box>
       </Box>
       <Box
@@ -77,7 +83,7 @@ const Benefit = () => {
           <Typography fontSize="1.4rem" fontWeight="400">
             Check Refund
           </Typography>
-          <Typography>Call +1 555 666 888 contact with us</Typography>
+          <Typography>Call 0989.xxx.xxx contact with us</Typography>
         </Box>
       </Box>
     </Box>

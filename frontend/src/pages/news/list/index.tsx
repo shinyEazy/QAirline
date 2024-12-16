@@ -7,58 +7,56 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getAdverts } from "hooks/advert-hook";
 
-//const newsItems = [
-//  {
-//    id: 1,
-//    title: "Update on Bamboo Club Login System Upgrade",
-//    imageUrl:
-//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-//  },
-//  {
-//    id: 2,
-//    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-//    imageUrl:
-//      "https://www.bambooairways.com/image/journal/article?img_id=1931938&t=1.9",
-//  },
-//  {
-//    id: 3,
-//    title:
-//      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
-//    imageUrl:
-//      "https://www.bambooairways.com/image/journal/article?img_id=1912358&t=2.3",
-//  },
-//  {
-//    id: 4,
-//    title: "Vote for Bamboo Airways at the World Travel Awards 202",
-//    imageUrl:
-//      "https://www.bambooairways.com/documents/d/global/449853545_484792347399617_8667786688385885570_n-jpg",
-//  },
-//  {
-//    id: 5,
-//    title: "Update on Bamboo Club Login System Upgrade",
-//    imageUrl:
-//      "https://www.bambooairways.com/image/journal/article?img_id=1884578&t=2",
-//  },
-//  {
-//    id: 6,
-//    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-//    imageUrl:
-//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-//  },
-//  {
-//    id: 7,
-//    title:
-//      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
-//    imageUrl:
-//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-//  },
-//  {
-//    id: 8,
-//    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
-//    imageUrl:
-//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-//  },
-//];
+
+const newsItems = [
+  {
+    id: 1,
+    title: "Update on Bamboo Club Login System Upgrade",
+    imageUrl:
+      "https://huongnghiep.hocmai.vn/wp-content/uploads/2023/01/Hoc-phi-DH-Cong-nghe-HN.jpg",
+  },
+  {
+    id: 2,
+    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
+    imageUrl:
+      "https://www.bambooairways.com/image/journal/article?img_id=1931938&t=1.9",
+  },
+  {
+    id: 3,
+    title:
+      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
+    imageUrl:
+      "https://www.bambooairways.com/image/journal/article?img_id=1912358&t=2.3",
+  },
+  {
+    id: 4,
+    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
+    imageUrl: "/images/plane.jpeg",
+  },
+  {
+    id: 5,
+    title: "Update on Bamboo Club Login System Upgrade",
+    imageUrl:
+      "https://huongnghiep.hocmai.vn/wp-content/uploads/2023/01/Hoc-phi-DH-Cong-nghe-HN.jpg",
+  },
+  {
+    id: 6,
+    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
+    imageUrl: "/images/cucda.jpeg",
+  },
+  {
+    id: 7,
+    title:
+      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
+    imageUrl: "/images/ducanh.jpeg",
+  },
+  {
+    id: 8,
+    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
+    imageUrl:
+      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+  },
+];
 
 const readMoreStyle = {
   position: "relative",
@@ -166,8 +164,10 @@ const NewsList = () => {
               display: "flex",
               alignItems: "center",
               gap: "10px",
-              width: "1200px",
-              margin: "auto",
+              margin: "20px 80px 0",
+              "@media (max-width: 1000px)": {
+                margin: "0 20px 0",
+              },
             }}
           >
             <i
@@ -225,10 +225,24 @@ const NewsList = () => {
             </Typography>
           </Box>
         </Box>
-        <Box width="1200px" margin="auto">
+        <Box
+          margin="0 80px 20px"
+          sx={{
+            "@media (max-width: 1000px)": {
+              margin: "0 20px 0",
+            },
+          }}
+        >
           <Typography variant="h4">News</Typography>
         </Box>
-        <Box width="1200px" margin="auto" marginTop="20px">
+        <Box
+          margin="20px 80px 20px"
+          sx={{
+            "@media (max-width: 1000px)": {
+              margin: "20px 20px 0",
+            },
+          }}
+        >
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Box>
@@ -328,7 +342,7 @@ const NewsList = () => {
         </Box>
 
         {/* Pagination */}
-        <Box width="1200px" margin="auto" mt={3}>
+        <Box margin="20px 80px">
           <Divider />
           <Stack
             direction="row"

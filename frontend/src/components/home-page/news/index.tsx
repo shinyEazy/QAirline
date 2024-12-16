@@ -57,6 +57,11 @@ const News = () => {
         gap: "20px",
         bgcolor: "white",
         boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        "@media (max-width: 1000px)": {
+          padding: "10px 20px",
+          margin: "60px 20px 40px",
+          gap: "8px",
+        },
       }}
     >
       <Box display="flex" alignItems="center" gap="10px">
@@ -121,8 +126,9 @@ const News = () => {
           fontWeight: "600",
           bgcolor: "rgb(238,238,238)",
           borderRadius: "12px",
-          padding: "10px 20px",
+          padding: "10px 32px",
           transition: "all 0.3s ease",
+          whiteSpace: "nowrap",
           "&:hover": {
             bgcolor: "rgb(218,218,218)",
           },

@@ -1,22 +1,43 @@
 #departure {
-    font-size: 1.2rem;
-    border-radius: 0px;
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 0px 10px;
-    margin-bottom: 30px;
-
+  font-size: 1.2rem;
+  border-radius: 0px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 0px 10px;
+  height: 40px;
+  width: 100%;
+  align-items: center;
+  display: flex;
 }
 
 #departure:focus {
-    outline: none;
-    /* Remove default outline */
-    border-bottom: 1px solid #2177cb;
-    /* Change border color on focus */
+  outline: none;
+  border-bottom: 1px solid #2177cb;
+}
+
+#departure option {
+  padding: 10px;
+}
+
+#departure {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#departure::-webkit-scrollbar {
+  width: 8px;
+}
+
+#departure::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+#departure::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
 #departure option[value=""] {
-    padding-top: 50px;
-    /* Adjust this value as needed */
+  padding-top: 50px;
 }
