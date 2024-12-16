@@ -14,7 +14,8 @@ from app.schemas.advert import AdvertBase, AdvertCreate
 
 
 router = APIRouter(
-    prefix="/advert", tags=["Advert"], dependencies=[Depends(role_checker(["admin"]))]
+    prefix="/advert",
+    tags=["Advert"],
 )
 
 
@@ -34,7 +35,7 @@ def get_advert_end_point(advert_name: str, db: Session = Depends(get_db)):
     return db_ad
 
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(role_checker(["admin"]))])
 async def create_advert_end_point(
     file_upload: UploadFile = File(...),
     advert_name: str = Form(...),
@@ -58,7 +59,7 @@ async def create_advert_end_point(
     return {"message": "New advertisement has been created"}
 
 
-@router.put("/{advert_name}")
+@router.put("/{advert_name}", dependencies=[Depends(role_checker(["admin"]))])
 def update_advert_end_point(
     advert_name: str, advert: AdvertBase, db: Session = Depends(get_db)
 ):
@@ -86,7 +87,7 @@ def update_advert_end_point(
     return {"message": "Succesfully updated"}
 
 
-@router.delete("/{advert_name}")
+@router.delete("/{advert_name}", dependencies=[Depends(role_checker(["admin"]))])
 def delete_advert_end_point(advert_name: str, db: Session = Depends(get_db)):
     """
     API end point: Delete an advertisment
@@ -101,3 +102,14 @@ def delete_advert_end_point(advert_name: str, db: Session = Depends(get_db)):
     delete_advert(db_ad, db)
 
     return {"message": "Succesfully deleted"}
+
+
+@router.get("/")
+def get_all_adverts_end_point(db: Session = Depends(get_db)):
+    """
+    API end point: Get all adverts
+    """
+
+    db_ads = get_adverts(db)
+
+    return db_ads

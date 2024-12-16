@@ -19,7 +19,6 @@ def get_payment(payment_id: int, db: Session) -> Payment:
     return db_payment
 
 
-def get_payment_by_booking(booking_id: int, db: Session) -> Payment:
+def get_payment_by_booking(booking_id: str, db: Session) -> Payment:
     db_payment = db.query(Payment).filter(Payment.booking_id == booking_id).first()
     return db_payment
-
