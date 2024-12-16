@@ -16,7 +16,6 @@ const FlightPayment = () => {
   const location = useLocation();
   const { getPayload } = useBookingStore();
 
-
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email.trim());
@@ -56,6 +55,13 @@ const FlightPayment = () => {
           gap="40px"
           sx={{
             margin: "0px 80px 0px",
+            "@media(max-width:1200px)": {
+              margin: "20px 20px 0px",
+            },
+            "@media(max-width:1100px)": {
+              flexDirection: "column",
+              gap: "0",
+            },
           }}
         >
           <Box
@@ -66,69 +72,72 @@ const FlightPayment = () => {
           >
             <StepFlightPayment />
             <Payment />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <Button
-                onClick={() => navigate("/flight/detail")}
-                fullWidth
-                sx={{
-                  marginTop: "40px",
-                  marginBottom: "40px",
-                  backgroundColor: "#1e90ff",
-                  borderRadius: "8px",
-                  color: "white",
-                  width: "150px",
-                  fontSize: "1rem",
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  padding: "10px 20px",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.3s ease",
-                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
-                }}
-              >
-                Back
-              </Button>
-              <Button
-                onClick={submitBooking}
-                fullWidth
-                sx={{
-                  marginTop: "40px",
-                  marginBottom: "40px",
-                  backgroundColor: "#1e90ff",
-                  borderRadius: "8px",
-                  color: "white",
-                  width: "150px",
-                  fontSize: "1rem",
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  padding: "10px 20px",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.3s ease",
-                  "&:hover": { backgroundColor: "#2177cb", color: "white" },
-                }}
-              >
-                Submit
-              </Button>
-            </Box>
           </Box>
           <Box
             sx={{
               marginTop: "40px",
               flexBasis: "40%",
               minWidth: "250px",
-              marginBottom: "80px",
             }}
           >
             <FlightRoute />
             <Price />
           </Box>
         </Box>
+      </Box>
+      <Box
+        padding="0px 80px 0px"
+        bgcolor="rgb(234,234,234)"
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          "@media(max-width:1200px)": {
+            padding: "0px 20px 0px",
+          },
+        }}
+      >
+        <Button
+          onClick={() => navigate("/flight/detail")}
+          fullWidth
+          sx={{
+            marginTop: "40px",
+            marginBottom: "40px",
+            backgroundColor: "#1e90ff",
+            borderRadius: "8px",
+            color: "white",
+            width: "150px",
+            fontSize: "1rem",
+            textTransform: "none",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "all 0.3s ease",
+            "&:hover": { backgroundColor: "#2177cb", color: "white" },
+          }}
+        >
+          Back
+        </Button>
+        <Button
+          onClick={submitBooking}
+          fullWidth
+          sx={{
+            marginTop: "40px",
+            marginBottom: "40px",
+            backgroundColor: "#1e90ff",
+            borderRadius: "8px",
+            color: "white",
+            width: "150px",
+            fontSize: "1rem",
+            textTransform: "none",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "all 0.3s ease",
+            "&:hover": { backgroundColor: "#2177cb", color: "white" },
+          }}
+        >
+          Submit
+        </Button>
       </Box>
       <Footer />
     </Box>
