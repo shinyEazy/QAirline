@@ -15,7 +15,7 @@ from app.schemas.advert import AdvertBase, AdvertCreate
 
 router = APIRouter(
     prefix="/advert",
-    tags=["Advert"],
+    # tags=["Advert"],
 )
 
 

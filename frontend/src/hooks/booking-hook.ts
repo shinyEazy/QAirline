@@ -100,4 +100,24 @@ export async function createBooking(payload: BookingPayload) {
     console.error("Error creating booking", error);
   }
 }
+
+export async function fetchbookingInfo(booking_id: string) {
+  try {
+    const response = await axios.get(`/api/booking/info/${booking_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Request error", error);
+    throw error;
+  }
+}
+
+export async function cancelBooking(booking_id: string) {
+  try {
+    const response = await axios.post(`/api/booking/cancel/${booking_id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+
+}
 export default useBookingStore;

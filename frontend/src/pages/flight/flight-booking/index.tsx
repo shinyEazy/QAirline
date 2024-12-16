@@ -18,6 +18,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import ChevronLeft from "@mui/icons-material/ChevronLeft";
+import { cancelBooking, fetchbookingInfo } from "hooks/booking-hook";
 
 type Passenger = {
   booking_id: string;
@@ -136,25 +137,34 @@ const mockFlightData = [
 const FlightBooking = () => {
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleCancelClick = () => {
+  const handleCancelClick = async () => {
     setOpenDialog(true);
   };
 
-  const handleDialogClose = (confirm: boolean) => {
-    setOpenDialog(false);
-    if (confirm) {
-      console.log("Ticket has been canceled.");
+  const handleDialogClose = async (confirm: boolean) => {
+    let err = ""
+    try {
+      await cancelBooking(bookingID);
+    } catch (error) {
+      err = error.response.data.detail;
+    } finally {
+      setOpenDialog(false);
     }
+    if (err) {
+      console.log(err);
+      toast.error(err);
+    } else {
+      toast.success("Ticket has been canceled.");
+    }
+
   };
 
   const [bookingID, setBookingID] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<Flight | null>(null);
   const [passengers, setPassengers] = useState<Passenger[]>([]);
 
-  const handleSearch = () => {
-    const booking = mockFlightData.find((flight) =>
-      flight.passengers.some((p) => p.booking_id === bookingID)
-    );
+  const handleSearch = async () => {
+    const booking = await fetchbookingInfo(bookingID)
 
     if (booking) {
       toast.success("Booking found.");
@@ -313,10 +323,10 @@ const FlightBooking = () => {
                 borderColor: "#ddd",
               },
               "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "#1e90ff",
-                  boxShadow: "0 0 8px rgba(30, 144, 255, 0.6)",
-                },
+              {
+                borderColor: "#1e90ff",
+                boxShadow: "0 0 8px rgba(30, 144, 255, 0.6)",
+              },
             }}
           />
           <Button
