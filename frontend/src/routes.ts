@@ -20,6 +20,7 @@ import FlightBooking from "pages/flight/flight-booking";
 import NewsList from "pages/news/list";
 import News from "pages/news";
 import New from "pages/news/new";
+import AdminStatistical from "pages/admin/statistical";
 
 const routes = [
   {
@@ -47,6 +48,10 @@ const routes = [
       {
         path: "",
         component: AdminPage,
+      },
+      {
+        path: "statistical",
+        component: AdminStatistical,
       },
     ],
   },

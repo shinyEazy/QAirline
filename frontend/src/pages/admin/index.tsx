@@ -21,6 +21,7 @@ import { fetchAirport } from "hooks/airport-hook";
 import { createAirplane } from "hooks/airplane-hook";
 import AirplaneList from "../../components/admin/airplane-list";
 import AirportList from "../../components/admin/airport-list";
+import { useNavigate } from "react-router-dom";
 
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
@@ -36,6 +37,7 @@ const AdminPage = () => {
     arrivalTime: new Date(),
     price: 0.0,
   });
+
   const [newAirplane, setNewAirplane] = useState({
     airplane_model_id: 0,
     registration_number: "",
@@ -66,17 +68,21 @@ const AdminPage = () => {
       },
     ],
   });
+
   const [newNews, setNewNews] = useState({
     imageUrl: "",
     title: "",
     content: "",
   });
+
   const [airplaneSuggestions, setAirplaneSuggestions] = useState<
     { registration_number: string }[]
   >([]);
   const [airports, setAirports] = useState<
     { airport_id: number; city: string; airport_code: string }[]
   >([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchInitialAirports = async () => {
@@ -290,6 +296,9 @@ const AdminPage = () => {
             Add News
           </Button>
           <Button
+            onClick={() => {
+              navigate("/admin/statistical");
+            }}
             sx={{
               marginRight: "10px",
               backgroundColor: "#1e90ff",
