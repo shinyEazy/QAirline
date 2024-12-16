@@ -21,7 +21,7 @@ const AdminLogin = () => {
     } catch (err) {
       console.error("Error authenticating user", err);
     }
-  }
+  };
   return (
     <Box margin="auto" height="100vh">
       <Box
@@ -33,9 +33,9 @@ const AdminLogin = () => {
         bgcolor="white"
         justifyContent="center"
         alignItems="center"
-      // sx={{
-      //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
-      // }}
+        // sx={{
+        //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+        // }}
       >
         <Box component="form" noValidate maxWidth="450px">
           <Box display="flex" justifyContent="center" mb={2}>
@@ -64,7 +64,7 @@ const AdminLogin = () => {
             label="Password"
             variant="outlined"
             margin="normal"
-            // type={showPassword ? "text" : "password"}
+            type="password"
             onChange={(e) => setPassword(e.target.value)}
             sx={{
               margin: "10px auto 20px",
