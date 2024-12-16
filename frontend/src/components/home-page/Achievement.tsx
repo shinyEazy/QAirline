@@ -13,6 +13,9 @@ const Achievement = () => {
         margin: "20px 80px",
         color: "black",
         gap: "40px",
+        "@media (max-width: 1000px)": {
+          margin: "20px",
+        },
       }}
     >
       <Box sx={{ flex: "1" }} bgcolor="white">
@@ -27,7 +30,16 @@ const Achievement = () => {
           for easy basketball and football. In the earth sometimes or as mass
           sometimes cartoon element author.
         </Typography>
-        <Box display="flex" marginTop="32px" gap="40px">
+        <Box
+          display="flex"
+          marginTop="32px"
+          gap="40px"
+          sx={{
+            "@media (max-width: 1000px)": {
+              gap: "10px",
+            },
+          }}
+        >
           <Box
             flex={1}
             padding="20px 32px"
@@ -37,6 +49,11 @@ const Achievement = () => {
             bgcolor="rgb(234,234,234)"
             borderRadius="8px"
             justifyContent="space-between"
+            sx={{
+              "@media (max-width: 1000px)": {
+                padding: "10px",
+              },
+            }}
           >
             <Box>
               <Typography
@@ -45,7 +62,7 @@ const Achievement = () => {
                 fontSize="1.9rem"
                 lineHeight="28px"
               >
-                12870 +
+                1287+
               </Typography>
               <Typography fontSize="1.1rem">Happy Customers</Typography>
             </Box>
@@ -64,6 +81,11 @@ const Achievement = () => {
             bgcolor="rgb(234,234,234)"
             borderRadius="8px"
             justifyContent="space-between"
+            sx={{
+              "@media (max-width: 1000px)": {
+                padding: "10px",
+              },
+            }}
           >
             <Box>
               <Typography
@@ -98,6 +120,7 @@ const Achievement = () => {
               justifyContent: "center",
               textTransform: "none",
               padding: "8px 20px",
+              textWrap: "nowrap",
               "&:hover": {
                 backgroundColor: "#3B5FC1",
               },
@@ -107,11 +130,12 @@ const Achievement = () => {
           </Button>
         </Box>
       </Box>
-      <Box sx={{ flex: "1" }} width="50%" bgcolor="white">
+      <Box sx={{ flex: "1" }} bgcolor="white">
         <img
           src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/images/achievement-image.png"
           style={{
             objectFit: "cover",
+            objectPosition: "right",
             height: "100%",
             width: "100%",
             borderRadius: "20px",

@@ -72,6 +72,9 @@ const LatestFlight = () => {
         borderRadius: "20px",
         padding: "40px 80px",
         color: "black",
+        "@media (max-width: 1000px)": {
+          padding: "20px",
+        },
       }}
     >
       <Box
@@ -182,6 +185,7 @@ const LatestFlight = () => {
                     borderRadius: "12px",
                     padding: "8px 16px",
                     fontSize: "0.9rem",
+                    textWrap: "nowrap",
                     "&:hover": {
                       backgroundColor: "#3B5FC1",
                     },

@@ -83,7 +83,7 @@ const News = () => {
         flexDirection="column"
       >
         <Typography fontSize="1rem" color="gray">
-          {currentNews.advert_name}
+          {/* {currentNews.advert_name} */}
         </Typography>
         <Link
           href="#"
@@ -93,7 +93,7 @@ const News = () => {
           fontWeight="500"
           sx={{ flexGrow: 1 }}
         >
-          {currentNews.text}
+          {/* {currentNews.text} */}
         </Link>
       </Box>
 

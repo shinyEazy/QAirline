@@ -60,14 +60,14 @@ const Header = () => {
         { label: "About", path: "/about" },
         { label: "Contact", path: "/contact" },
         { label: "Privacy Policy", path: "/privacy-policy" },
-        { label: "Login", path: "/auth/login" },
-        { label: "Sign Up", path: "/auth/signup" },
+        // { label: "Login", path: "/auth/login" },
+        // { label: "Sign Up", path: "/auth/signup" },
       ],
     },
     {
       label: "News",
       subItems: [
-        { label: "News Listing", path: "/news-listing" },
+        { label: "News Listing", path: "/news/list" },
         { label: "News Detail", path: "/news-detail" },
       ],
     },
@@ -130,8 +130,10 @@ const Header = () => {
             <Box
               sx={{
                 position: "absolute",
-                left: menu.label === "News" ? "auto" : 0,
-                right: menu.label === "News" ? 0 : "auto",
+                left:
+                  menu.label === "News" || menu.label === "Pages" ? "auto" : 0,
+                right:
+                  menu.label === "News" || menu.label === "Pages" ? 0 : "auto",
                 bgcolor: "rgb(230, 238, 245)",
                 borderRadius: "8px",
                 padding: "10px",

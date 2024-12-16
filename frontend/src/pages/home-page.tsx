@@ -32,9 +32,9 @@ const HomePage = () => {
           <News />
           <Benefit />
           <LatestFlight />
-          <GlobalTravel />
+          {/* <GlobalTravel /> */}
           <Achievement />
-          <Testimonial />
+          {/* <Testimonial /> */}
           <LatestNews />
         </Box>
         <Footer />
