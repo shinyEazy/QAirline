@@ -35,14 +35,26 @@ const Login = () => {
     setError(''); // Reset error message 
     try {
       await handleUserSignup(firstname, lastname, email, username, password); // Handle successful signup (e.g., show success message or redirect) 
-    } catch (err) { setError(err.message); }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    }
   };
 
   const handleLoginSubmission = async () => {
     setError('');
     try {
       await handleUserAuthentication(username, password);
-    } catch (err) { setError(err.message) }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    }
   }
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);

@@ -235,11 +235,8 @@ const AdminPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
   return (
-    <Box>
+    <Box overflow="hidden">
       <Box padding={2} justifyContent="center" width="100vw">
-        <Typography variant="h3" align="center" marginBottom={2}>
-          Admin Page
-        </Typography>
         <Box display="flex" justifyContent="center">
           <Button
             onClick={handleAirplaneModalOpen}
@@ -278,6 +275,7 @@ const AdminPage = () => {
           <Button
             onClick={handleNewsModalOpen}
             sx={{
+              marginRight: "10px",
               backgroundColor: "#1e90ff",
               color: "white",
               textTransform: "none",
@@ -290,6 +288,37 @@ const AdminPage = () => {
             }}
           >
             Add News
+          </Button>
+          <Button
+            sx={{
+              marginRight: "10px",
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Statistical
+          </Button>
+          <Button
+            sx={{
+              backgroundColor: "#1e90ff",
+              color: "white",
+              textTransform: "none",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              "&:hover": { backgroundColor: "#2177cb" },
+            }}
+          >
+            Log out
           </Button>
         </Box>
       </Box>
