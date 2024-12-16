@@ -1,4 +1,4 @@
-import { Box, Tabs, Tab, Typography } from "@mui/material";
+import { Box, Tabs, Tab, Typography, Button } from "@mui/material";
 import { useState } from "react";
 import {
   BarChart,
@@ -12,6 +12,7 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
 
 const mockDay = [
   {
@@ -310,9 +311,32 @@ const AdminStatistical = () => {
     revenue: entry.revenue,
   }));
 
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
-      {/* Tabs */}
+      <Box width="100%">
+        <Button
+          onClick={() => navigate("/admin")}
+          sx={{
+            backgroundColor: "#1e90ff",
+            color: "white",
+            textTransform: "none",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            padding: "4px 40px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            "&:hover": { backgroundColor: "#2177cb" },
+            justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+            margin: "20px auto",
+          }}
+        >
+          Back
+        </Button>
+      </Box>
       <Tabs
         value={activeTab}
         onChange={handleTabChange}
@@ -325,8 +349,6 @@ const AdminStatistical = () => {
         <Tab value="month" label="Month" />
         <Tab value="year" label="Year" />
       </Tabs>
-
-      {/* Content */}
       <Box mt={4}>
         {activeTab === "day" && (
           <Box>

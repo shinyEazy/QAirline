@@ -82,8 +82,6 @@ const AdminPage = () => {
     { airport_id: number; city: string; airport_code: string }[]
   >([]);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchInitialAirports = async () => {
       try {
@@ -241,9 +239,9 @@ const AdminPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    navigate('/admin/login');
-  }
+    localStorage.removeItem("authToken");
+    navigate("/admin/login");
+  };
   return (
     <Box overflow="hidden">
       <Box padding={2} justifyContent="center" width="100vw">
