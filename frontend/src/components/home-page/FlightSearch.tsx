@@ -10,6 +10,8 @@ import {
   Typography,
   Divider,
   Checkbox,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -66,6 +68,15 @@ const FlightSearch: React.FC = () => {
     loading,
     setLoading,
   } = useFlightSearchStore();
+
+  const options = airports.map((airport) => ({
+    value: airport.city,
+    label: `${airport.city} (${airport.airport_code})`,
+  }));
+
+  const handleChange = (selectedOption) => {
+    setDepartureCity(selectedOption ? selectedOption.value : "");
+  };
 
   useEffect(() => {
     if (tripType === "roundtrip") {
@@ -244,26 +255,84 @@ const FlightSearch: React.FC = () => {
                 >
                   From
                 </Typography>
-                <select
+                <Select
+                  labelId="departure-label"
                   id="departure"
-                  value={departureCity || ""}
-                  className="custom-select"
+                  value={departureCity}
                   onChange={(e) => setDepartureCity(e.target.value)}
-                  style={{
-                    height: "40px",
+                  displayEmpty
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 200,
+                        overflow: "auto",
+                        "&::-webkit-scrollbar": {
+                          width: "8px", // Width of the scrollbar
+                          height: "8px", // Height of the scrollbar
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          background: "#f0f0f0",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: "#888",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb:hover": {
+                          background: "#555",
+                        },
+                        "&::-webkit-scrollbar-corner": {
+                          background: "#f0f0f0",
+                        },
+                      },
+                    },
+                  }}
+                  sx={{
+                    width: "100%",
+                    minHeight: "40px",
                     marginBottom: "0",
                     marginTop: "0",
+                    fontSize: "1rem",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    boxShadow: "none",
+                    "& .MuiOutlinedInput-root": {
+                      border: "none",
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                    "&:focus": {
+                      border: "none",
+                    },
                   }}
                 >
-                  <option value="" disabled>
+                  <MenuItem value="" disabled>
                     Select city
-                  </option>
+                  </MenuItem>
                   {airports.map((airport) => (
-                    <option key={airport.airport_id} value={airport.city}>
+                    <MenuItem
+                      key={airport.airport_id}
+                      value={airport.city}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "#1e90ff", // Highlight color on hover
+                          color: "#fff", // Text color on hover
+                        },
+                        "&.Mui-selected": {
+                          backgroundColor: "#1e90ff", // Background color for selected item
+                          color: "#fff", // Text color for selected item
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#1e90ff", // Background color for selected item
+                          color: "#fff", // Text color for selected item
+                        },
+                      }}
+                    >
                       {`${airport.city} (${airport.airport_code})`}
-                    </option>
+                    </MenuItem>
                   ))}
-                </select>
+                </Select>
               </Box>
               <FontAwesomeIcon
                 icon={faArrowRightArrowLeft}
@@ -293,26 +362,84 @@ const FlightSearch: React.FC = () => {
                 >
                   To
                 </Typography>
-                <select
+                <Select
+                  labelId="arrival-label"
                   id="departure"
                   value={arrivalCity || ""}
-                  className="custom-select"
                   onChange={(e) => setArrivalCity(e.target.value)}
-                  style={{
-                    height: "40px",
+                  displayEmpty
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 200,
+                        overflowY: "auto", // Enable scroll when content overflows
+                        "&::-webkit-scrollbar": {
+                          width: "8px", // Width of the scrollbar
+                          height: "8px", // Height of the scrollbar
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          background: "#f0f0f0",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: "#888",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb:hover": {
+                          background: "#555",
+                        },
+                        "&::-webkit-scrollbar-corner": {
+                          background: "#f0f0f0",
+                        },
+                      },
+                    },
+                  }}
+                  sx={{
+                    width: "100%",
+                    height: "40px", // Same height as your previous select
                     marginBottom: "0",
                     marginTop: "0",
+                    fontSize: "1rem",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    boxShadow: "none",
+                    "& .MuiOutlinedInput-root": {
+                      border: "none",
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                    "&:focus": {
+                      border: "none",
+                    },
                   }}
                 >
-                  <option value="" disabled>
+                  <MenuItem value="" disabled>
                     Select city
-                  </option>
+                  </MenuItem>
                   {airports.map((airport) => (
-                    <option key={airport.airport_id} value={airport.city}>
+                    <MenuItem
+                      key={airport.airport_id}
+                      value={airport.city}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "#1e90ff", // Highlight color on hover
+                          color: "#fff", // Text color on hover
+                        },
+                        "&.Mui-selected": {
+                          backgroundColor: "#1e90ff", // Background color for selected item
+                          color: "#fff", // Text color for selected item
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#1e90ff", // Background color for selected item
+                          color: "#fff", // Text color for selected item
+                        },
+                      }}
+                    >
                       {`${airport.city} (${airport.airport_code})`}
-                    </option>
+                    </MenuItem>
                   ))}
-                </select>
+                </Select>
               </Box>
             </Box>
             <Divider
