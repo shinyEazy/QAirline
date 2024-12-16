@@ -29,8 +29,7 @@ const newsItems = [
   {
     id: 4,
     title: "Vote for Bamboo Airways at the World Travel Awards 2024",
-    imageUrl:
-      "/images/plane.jpeg",
+    imageUrl: "/images/plane.jpeg",
   },
   {
     id: 5,
@@ -41,15 +40,13 @@ const newsItems = [
   {
     id: 6,
     title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-    imageUrl:
-      "/images/cucda.jpeg",
+    imageUrl: "/images/cucda.jpeg",
   },
   {
     id: 7,
     title:
       "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
-    imageUrl:
-      "/images/ducanh.jpeg",
+    imageUrl: "/images/ducanh.jpeg",
   },
   {
     id: 8,
@@ -152,8 +149,10 @@ const NewsList = () => {
               display: "flex",
               alignItems: "center",
               gap: "10px",
-              width: "1200px",
-              margin: "auto",
+              margin: "20px 80px 0",
+              "@media (max-width: 1000px)": {
+                margin: "0 20px 0",
+              },
             }}
           >
             <i
@@ -211,10 +210,24 @@ const NewsList = () => {
             </Typography>
           </Box>
         </Box>
-        <Box width="1200px" margin="auto">
+        <Box
+          margin="0 80px 20px"
+          sx={{
+            "@media (max-width: 1000px)": {
+              margin: "0 20px 0",
+            },
+          }}
+        >
           <Typography variant="h4">News</Typography>
         </Box>
-        <Box width="1200px" margin="auto" marginTop="20px">
+        <Box
+          margin="20px 80px 20px"
+          sx={{
+            "@media (max-width: 1000px)": {
+              margin: "20px 20px 0",
+            },
+          }}
+        >
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Box>
@@ -314,7 +327,7 @@ const NewsList = () => {
         </Box>
 
         {/* Pagination */}
-        <Box width="1200px" margin="auto" mt={3}>
+        <Box margin="20px 80px">
           <Divider />
           <Stack
             direction="row"

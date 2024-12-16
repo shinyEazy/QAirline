@@ -34,16 +34,26 @@ const New = ({ id, title, content, image }: NewProps) => {
   return (
     <Box>
       <Header />
-      <Box bgcolor="rgb(242,244,247)" paddingY={3}>
+      <Box bgcolor="rgb(242,244,247)">
         <Box
+          display="flex"
           alignItems="center"
           gap="10px"
+          margin="auto"
           padding="20px 0"
           bgcolor="rgb(242,244,247)"
-          width="80%"
-          margin="auto"
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              margin: "20px 80px 0",
+              "@media (max-width: 1000px)": {
+                margin: "0 20px 0",
+              },
+            }}
+          >
             <i
               onClick={() => navigate("/")}
               className="fa-solid fa-house"
@@ -112,14 +122,22 @@ const New = ({ id, title, content, image }: NewProps) => {
               {mockNew.title}
             </Typography>
           </Box>
-          <Box paddingBottom="40px">
-            <Typography variant="h4" marginTop="40px" color="#1976d2">
-              {mockNew.title}
-            </Typography>
-            <Typography fontSize="1.2rem" marginTop="20px">
-              {formatContent(mockNew.content)}
-            </Typography>
-          </Box>
+        </Box>
+        <Box
+          margin="0 80px 0"
+          paddingBottom="40px"
+          sx={{
+            "@media (max-width: 1000px)": {
+              margin: "0 20px 0",
+            },
+          }}
+        >
+          <Typography variant="h4" color="#1976d2">
+            {mockNew.title}
+          </Typography>
+          <Typography fontSize="1.2rem" marginTop="20px">
+            {formatContent(mockNew.content)}
+          </Typography>
         </Box>
       </Box>
       <Footer />
