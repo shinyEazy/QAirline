@@ -18,8 +18,12 @@ const FlightList = () => {
         gap="40px"
         sx={{
           margin: "20px 80px 80px",
+          "@media(max-width:100px)": {
+            margin: "20px",
+          },
           "@media (max-width:900px)": {
             flexDirection: "column",
+            marginTop: "60px",
             gap: "10px",
           },
         }}

@@ -267,8 +267,8 @@ const FlightSearch: React.FC = () => {
                         maxHeight: 200,
                         overflow: "auto",
                         "&::-webkit-scrollbar": {
-                          width: "8px", // Width of the scrollbar
-                          height: "8px", // Height of the scrollbar
+                          width: "8px",
+                          height: "8px",
                         },
                         "&::-webkit-scrollbar-track": {
                           background: "#f0f0f0",
@@ -316,16 +316,16 @@ const FlightSearch: React.FC = () => {
                       value={airport.city}
                       sx={{
                         "&:hover": {
-                          backgroundColor: "#1e90ff", // Highlight color on hover
-                          color: "#fff", // Text color on hover
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
                         },
                         "&.Mui-selected": {
-                          backgroundColor: "#1e90ff", // Background color for selected item
-                          color: "#fff", // Text color for selected item
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
                         },
                         "&.Mui-selected:hover": {
-                          backgroundColor: "#1e90ff", // Background color for selected item
-                          color: "#fff", // Text color for selected item
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
                         },
                       }}
                     >
@@ -372,10 +372,10 @@ const FlightSearch: React.FC = () => {
                     PaperProps: {
                       sx: {
                         maxHeight: 200,
-                        overflowY: "auto", // Enable scroll when content overflows
+                        overflowY: "auto",
                         "&::-webkit-scrollbar": {
-                          width: "8px", // Width of the scrollbar
-                          height: "8px", // Height of the scrollbar
+                          width: "8px",
+                          height: "8px",
                         },
                         "&::-webkit-scrollbar-track": {
                           background: "#f0f0f0",
@@ -396,7 +396,7 @@ const FlightSearch: React.FC = () => {
                   }}
                   sx={{
                     width: "100%",
-                    height: "40px", // Same height as your previous select
+                    height: "40px",
                     marginBottom: "0",
                     marginTop: "0",
                     fontSize: "1rem",
@@ -423,16 +423,16 @@ const FlightSearch: React.FC = () => {
                       value={airport.city}
                       sx={{
                         "&:hover": {
-                          backgroundColor: "#1e90ff", // Highlight color on hover
-                          color: "#fff", // Text color on hover
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
                         },
                         "&.Mui-selected": {
-                          backgroundColor: "#1e90ff", // Background color for selected item
-                          color: "#fff", // Text color for selected item
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
                         },
                         "&.Mui-selected:hover": {
-                          backgroundColor: "#1e90ff", // Background color for selected item
-                          color: "#fff", // Text color for selected item
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
                         },
                       }}
                     >
