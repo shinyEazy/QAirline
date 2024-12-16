@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  console.log("hhhhhhhhhh");
   return (
     <Box margin="auto" height="100vh">
       <Box
@@ -49,13 +48,12 @@ const AdminLogin = () => {
               },
             }}
           />
-
           <TextField
             fullWidth
             label="Password"
             variant="outlined"
             margin="normal"
-            // type={showPassword ? "text" : "password"}
+            type="password"
             sx={{
               margin: "10px auto 20px",
               "& .MuiOutlinedInput-root": {
@@ -67,6 +65,7 @@ const AdminLogin = () => {
               },
             }}
           />
+
           <Box display="flex" justifyContent="center" width="100%">
             <Button
               onClick={() => navigate("/admin")}
