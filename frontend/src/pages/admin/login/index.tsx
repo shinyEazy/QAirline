@@ -9,10 +9,20 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { handleUserAuthentication } from "hooks/auth-hook";
 const AdminLogin = () => {
   const navigate = useNavigate();
   console.log("hhhhhhhhhh");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLoginSubmission = async () => {
+    try {
+      await handleUserAuthentication(username, password);
+      navigate("/admin");
+    } catch (err) {
+      console.error("Error authenticating user", err);
+    }
+  }
   return (
     <Box margin="auto" height="100vh">
       <Box
@@ -24,9 +34,9 @@ const AdminLogin = () => {
         bgcolor="white"
         justifyContent="center"
         alignItems="center"
-        // sx={{
-        //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
-        // }}
+      // sx={{
+      //   background: "linear-gradient(to right, #b0c4de, #d3d3d3)",
+      // }}
       >
         <Box component="form" noValidate maxWidth="450px">
           <Box display="flex" justifyContent="center" mb={2}>
@@ -36,8 +46,9 @@ const AdminLogin = () => {
           </Box>
           <TextField
             fullWidth
-            label="Email"
+            label="Username"
             variant="outlined"
+            onChange={(e) => setUsername(e.target.value)}
             sx={{
               margin: "10px auto",
               "& .MuiOutlinedInput-root": {
@@ -56,6 +67,7 @@ const AdminLogin = () => {
             variant="outlined"
             margin="normal"
             // type={showPassword ? "text" : "password"}
+            onChange={(e) => setPassword(e.target.value)}
             sx={{
               margin: "10px auto 20px",
               "& .MuiOutlinedInput-root": {
@@ -69,7 +81,7 @@ const AdminLogin = () => {
           />
           <Box display="flex" justifyContent="center" width="100%">
             <Button
-              onClick={() => navigate("/admin")}
+              onClick={handleLoginSubmission}
               variant="contained"
               sx={{
                 marginTop: "20px",
