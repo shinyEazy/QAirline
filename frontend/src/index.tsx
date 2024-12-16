@@ -21,7 +21,7 @@ root.render(
   // <ThemeProvider theme={theme}>
   //   <CssBaseline />
   <Provider store={store}>
-    <App />d
+    <App />
     <ToastContainer
       position="top-right"
       autoClose={8000}

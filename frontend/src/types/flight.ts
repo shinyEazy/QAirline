@@ -16,4 +16,5 @@ export interface Flight {
     arrivalDetailTime: string;
     arrivalAirport: string;
     duration: string;
+    flight_seat_matrix: [string, number][];
 }

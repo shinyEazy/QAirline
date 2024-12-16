@@ -11,7 +11,6 @@ import { useEffect } from "react";
 import useBookingStore from "hooks/booking-hook";
 import axios from "../../../hooks/axios-config";
 import { toast } from "react-toastify";
-import { SignalCellularNullRounded } from "@mui/icons-material";
 
 const FlightDetail = () => {
   const navigate = useNavigate();

@@ -75,3 +75,13 @@ export async function fetchFlightSeats(flight_id: number) {
 
   }
 }
+
+// export async function getAvailableSeats(flight_id: number) {
+//   try {
+//     const response = await axios.get(`/api/flights/flight-seats-available/${flight_id}`);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching available seats", error);
+//     throw error;
+//   }
+// }
