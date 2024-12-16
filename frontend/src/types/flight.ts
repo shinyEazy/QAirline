@@ -8,7 +8,7 @@ export interface Flight {
     arrival_airport_code: string;
     seatsLeft: number;
     flightNumber: string;
-    price: string;
+    price: number;
     flightDate: string;
     flightRoute: string;
     departureDetailTime: string;

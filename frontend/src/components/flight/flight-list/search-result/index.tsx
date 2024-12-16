@@ -13,7 +13,7 @@ import { Flight } from "types/flight";
 import useBookingStore from "hooks/booking-hook";
 import { useFlightStore } from "hooks/flight-search-hook";
 import ReactLoading from "react-loading";
-
+import useFilterStore from "hooks/flight-fitler-hook";
 interface SearchResultProps {
   flights: Flight[];
   loading: boolean;
@@ -51,7 +51,49 @@ const SearchResult: React.FC<SearchResultProps> = ({
     setSelectedFlight(flight);
     navigate("/flight/seat");
   };
+  const selectedPrice = useFilterStore((state) => state.selectedPrice);
+  const selectedDepartureTime = useFilterStore((state) => state.selectedDepartureTime);
+  const selectedArrivalTime = useFilterStore((state) => state.selectedArrivalTime);
+  const isTimeInRange = (time: string, startTime: string, endTime: string): boolean => {
+    // Convert times to minutes for easy comparison
+    const timeToMinutes = (t: string) => {
+      const [hours, minutes] = t.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
 
+    const timeMinutes = timeToMinutes(time);
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = timeToMinutes(endTime);
+
+    return timeMinutes >= startMinutes && timeMinutes <= endMinutes;
+  };
+  const filterFlights = (flights: Flight[]) => {
+    return flights.filter((flight) => {
+      const isPriceValid = selectedPrice === -1 ? true : flight.price <= selectedPrice;
+      const isDepartureTimeValid =
+        !selectedDepartureTime || selectedDepartureTime === "00:00 - 23:59"
+          ? true
+          : isTimeInRange(
+            flight.departureTime,
+            selectedDepartureTime.split("-")[0],
+            selectedDepartureTime.split("-")[1]
+          );
+
+      const isArrivalTimeValid =
+        !selectedArrivalTime || selectedArrivalTime === "00:00 - 23:59"
+          ? true
+          : isTimeInRange(
+            flight.arrivalTime,
+            selectedArrivalTime.split("-")[0],
+            selectedArrivalTime.split("-")[1]
+          );
+
+
+      return isPriceValid && isDepartureTimeValid && isArrivalTimeValid;
+    });
+  };
+  const filteredFlights = filterFlights(flights);
+  console.log("filteredFlights", filteredFlights);
   return (
     <Box>
       {loading ? (
@@ -82,7 +124,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
           No flights found. Please try a different search.
         </Typography>
       ) : (
-        flights.map((flight) => (
+        filteredFlights.map((flight) => (
           <Box
             key={flight.id}
             sx={{
