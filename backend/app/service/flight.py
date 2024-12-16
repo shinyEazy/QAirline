@@ -26,6 +26,8 @@ from typing import List
 from app.service.email import is_valid_email, send_email
 from app.service.service_utils import seat_col_to_int, conint
 
+CANCELLED = True
+
 
 # CRUD for Flight
 def create_flight(db: Session, flight: FlightCreate) -> Flight:
@@ -124,7 +126,7 @@ def get_flights_by_departure_time_and_cities(
                 "departureAirport": f"{dep_airport.name}, {dep_airport.city}",
                 "arrivalDetailTime": arrival_time,
                 "arrivalAirport": f"{arr_airport.name}, {arr_airport.city}",
-                "duration": formatted_duration, 
+                "duration": formatted_duration,
                 "flight_seat_matrix": flight_seat_matrix,
             }
         )
@@ -257,6 +259,7 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
         .join(Booking, Passenger.booking_id == Booking.booking_id)
         .filter(Booking.flight_id == flight_id)
         .filter(Booking.flight_class == flight_class.value)
+        .filter(Booking.cancelled != CANCELLED)  # Exclude cancelled bookings
         .options(
             joinedload(Passenger.booking)
         )  # Optional: Eager loading for related data
@@ -294,6 +297,7 @@ def get_flight_price(flight_id: int, flight_class: str, db: Session) -> float:
 
     return flight_seats.class_multiplier * flight.flight_price
 
+
 def count_available_seat(seat_matrix: list[list[bool]]) -> int:
     """
     Count the number of available seats in a given seat matrix
@@ -302,3 +306,4 @@ def count_available_seat(seat_matrix: list[list[bool]]) -> int:
     for row in seat_matrix:
         available_seats += row.count(False)
     return available_seats
+

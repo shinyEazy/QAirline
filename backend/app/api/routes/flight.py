@@ -157,6 +157,7 @@ def get_flight_seats_matrix_end_point(flight_id: int, db: Session = Depends(get_
         )
     return flight_seats_matrix
 
+
 @router.get("/flight-seats-available/{flight_id}/")
 def get_available_flight_seats(flight_id: int, db: Session = Depends(get_db)):
     """
@@ -164,7 +165,9 @@ def get_available_flight_seats(flight_id: int, db: Session = Depends(get_db)):
     """
     flight_seat_matrix = []
     for flight_class in FlightClass:
-        seat_matrix = get_flight_seats_matrix(flight_id = flight_id,flight_class=flight_class, db=db)
+        seat_matrix = get_flight_seats_matrix(
+            flight_id=flight_id, flight_class=flight_class, db=db
+        )
         available_seats = count_available_seat(seat_matrix)
         flight_seat_matrix.append([flight_class.value, available_seats])
     return flight_seat_matrix
