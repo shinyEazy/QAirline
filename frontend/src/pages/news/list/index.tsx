@@ -5,59 +5,60 @@ import { useNavigate } from "react-router-dom";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { getAdverts } from "hooks/advert-hook";
 
-const newsItems = [
-  {
-    id: 1,
-    title: "Update on Bamboo Club Login System Upgrade",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-  },
-  {
-    id: 2,
-    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1931938&t=1.9",
-  },
-  {
-    id: 3,
-    title:
-      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1912358&t=2.3",
-  },
-  {
-    id: 4,
-    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
-    imageUrl:
-      "https://www.bambooairways.com/documents/d/global/449853545_484792347399617_8667786688385885570_n-jpg",
-  },
-  {
-    id: 5,
-    title: "Update on Bamboo Club Login System Upgrade",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1884578&t=2",
-  },
-  {
-    id: 6,
-    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-  },
-  {
-    id: 7,
-    title:
-      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-  },
-  {
-    id: 8,
-    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-  },
-];
+//const newsItems = [
+//  {
+//    id: 1,
+//    title: "Update on Bamboo Club Login System Upgrade",
+//    imageUrl:
+//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+//  },
+//  {
+//    id: 2,
+//    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
+//    imageUrl:
+//      "https://www.bambooairways.com/image/journal/article?img_id=1931938&t=1.9",
+//  },
+//  {
+//    id: 3,
+//    title:
+//      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
+//    imageUrl:
+//      "https://www.bambooairways.com/image/journal/article?img_id=1912358&t=2.3",
+//  },
+//  {
+//    id: 4,
+//    title: "Vote for Bamboo Airways at the World Travel Awards 202",
+//    imageUrl:
+//      "https://www.bambooairways.com/documents/d/global/449853545_484792347399617_8667786688385885570_n-jpg",
+//  },
+//  {
+//    id: 5,
+//    title: "Update on Bamboo Club Login System Upgrade",
+//    imageUrl:
+//      "https://www.bambooairways.com/image/journal/article?img_id=1884578&t=2",
+//  },
+//  {
+//    id: 6,
+//    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
+//    imageUrl:
+//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+//  },
+//  {
+//    id: 7,
+//    title:
+//      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
+//    imageUrl:
+//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+//  },
+//  {
+//    id: 8,
+//    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
+//    imageUrl:
+//      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
+//  },
+//];
 
 const readMoreStyle = {
   position: "relative",
@@ -108,8 +109,21 @@ const NewsList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState(1);
+  const [newsItems, setNewsItems] = useState([]);
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const fetchedNews = await getAdverts();
+        const sortedNews = fetchedNews.sort((a: any, b: any) => b.id - a.id); // Assuming news items have an 'id'
+        setNewsItems(sortedNews);
+      } catch (error) {
+        console.error("Error fetching news data", error);
+      }
+    };
 
-  const sortedNews = [...newsItems].sort((a, b) => b.id - a.id);
+    fetchNews();
+  }, []);
+  const sortedNews = [...newsItems].sort((a, b) => b.advert_name - a.advert_name);
   const totalPages = Math.ceil(newsItems.length / PAGE_SIZE);
 
   const paginatedNews = sortedNews.slice(
@@ -228,10 +242,10 @@ const NewsList = () => {
                 >
                   <img
                     onClick={() =>
-                      navigate(`/news/new/${paginatedNews[0]?.id}`)
+                      navigate(`/news/new/${paginatedNews[0]?.advert_name}`)
                     }
-                    src={paginatedNews[0]?.imageUrl}
-                    alt={paginatedNews[0]?.title}
+                    src={paginatedNews[0]?.media_link}
+                    alt={paginatedNews[0]?.advert_name}
                     style={{
                       height: "368px",
                       width: "100%",
@@ -251,16 +265,16 @@ const NewsList = () => {
                 <Box mt={2}>
                   <Typography
                     onClick={() =>
-                      navigate(`/news/new/${paginatedNews[0]?.id}`)
+                      navigate(`/news/new/${paginatedNews[0]?.advert_name}`)
                     }
                     variant="h5"
                     sx={titleStyle}
                   >
-                    {paginatedNews[0]?.title}{" "}
+                    {paginatedNews[0]?.advert_name}{" "}
                   </Typography>
                   <Typography
                     onClick={() =>
-                      navigate(`/news/new/${paginatedNews[0]?.id}`)
+                      navigate(`/news/new/${paginatedNews[0]?.advert_name}`)
                     }
                     variant="h6"
                     color="primary"
@@ -272,7 +286,7 @@ const NewsList = () => {
               </Box>
             </Grid>
             {paginatedNews.slice(1).map((news) => (
-              <Grid item xs={12} md={6} key={news.id}>
+              <Grid item xs={12} md={6} key={news.advert_name}>
                 <Box>
                   <Box
                     sx={{
@@ -283,8 +297,8 @@ const NewsList = () => {
                     }}
                   >
                     <img
-                      src={news.imageUrl}
-                      alt={news.title}
+                      src={news.media_link}
+                      alt={news.advert_name}
                       style={{
                         height: "368px",
                         width: "100%",
@@ -302,7 +316,7 @@ const NewsList = () => {
                     />
                   </Box>
                   <Typography variant="h5" sx={titleStyle} marginTop="16px">
-                    {news.title}
+                    {news.advert_name}
                   </Typography>
                   <Typography variant="h6" color="primary" sx={readMoreStyle}>
                     Read More

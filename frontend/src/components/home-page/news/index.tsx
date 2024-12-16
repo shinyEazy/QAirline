@@ -4,38 +4,33 @@ import {
   KeyboardArrowUp,
   KeyboardArrowDown,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const newsData = [
-  {
-    id: 1,
-    time: "21/11/2024",
-    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-    content:
-      "Explore daily flights to Don Mueang International Airport in Bangkok.",
-  },
-  {
-    id: 2,
-    time: "25/11/2024",
-    title: "New routes to Tokyo starting next month",
-    content: "Exciting news! Direct flights to Tokyo will begin in December.",
-  },
-  {
-    id: 3,
-    time: "30/11/2024",
-    title: "Special discount on flights to Paris this holiday season",
-    content:
-      "Enjoy a 20% discount on flights to Paris for your holiday travel plans.",
-  },
-];
-
+import { getAdverts } from "hooks/advert-hook";
 const News = () => {
   const navigate = useNavigate();
+  const [newsData, setNewsData] = useState([]);
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    const fetchNewsData = async () => {
+      try {
+        const fetchedNews = await getAdverts();
+        setNewsData(fetchedNews); // Update state with fetched news
+      } catch (err) {
+        console.error("Error fetching news data", err);
+        setError("Failed to load news. Please try again later.");
+      } finally {
+        setLoading(false); // Ensure loading state is updated
+      }
+    };
 
+    fetchNewsData();
+  }, []);
   const handleNavigate = (direction: "up" | "down") => {
     setCurrentNewsIndex((prevIndex: number) => {
+      if (newsData.length === 0) return prevIndex; // Prevent navigation if no data
       if (direction === "up") {
         return prevIndex === 0 ? newsData.length - 1 : prevIndex - 1;
       } else {
@@ -44,8 +39,12 @@ const News = () => {
     });
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   const currentNews = newsData[currentNewsIndex];
 
+  console.log(newsData);
   return (
     <Box
       sx={{
@@ -79,7 +78,7 @@ const News = () => {
         flexDirection="column"
       >
         <Typography fontSize="1rem" color="gray">
-          {currentNews.time}
+          {currentNews.advert_name}
         </Typography>
         <Link
           href="#"
@@ -89,7 +88,7 @@ const News = () => {
           fontWeight="500"
           sx={{ flexGrow: 1 }}
         >
-          {currentNews.title}
+          {currentNews.text}
         </Link>
       </Box>
 

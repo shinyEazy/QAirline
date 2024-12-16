@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, aliased
 from app.service.email import send_email
+from app.service.payment import get_payment_by_booking
 from .crud_utils import *
 from app.models import Booking, Passenger
 from typing import List
@@ -172,6 +173,13 @@ def get_booking_info(db_booking: Booking, db: Session) -> dict:
         arrival_airport_name,
     ) = result
 
+    db_payment = get_payment_by_booking(booking_id=str(db_booking.booking_id), db=db)
+
+    payment_status = "Paid"
+
+    if not db_payment:
+        payment_status = "Pending"
+
     # Calculate flight duration, checking for delays
     if flight.actual_departure_time and flight.actual_arrival_time:
         duration: timedelta = flight.actual_arrival_time - flight.actual_departure_time
@@ -206,6 +214,7 @@ def get_booking_info(db_booking: Booking, db: Session) -> dict:
         "flightDate": flight.estimated_departure_time.strftime("%A, %d %B"),
         "duration": formatted_duration,  # Replace with actual calculation
         "status": flight.status,
+        "payment_status": payment_status,
         "passengers": passengers,
     }
 

@@ -41,7 +41,7 @@ const FlightSeat = () => {
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const fetchedMatrix = await fetchFlightSeats(1);
+        const fetchedMatrix = await fetchFlightSeats(getPayload().flight_id);
         setMatrix(fetchedMatrix);
       } catch (error) {
         console.error("Error fetching flight seats:", error);
