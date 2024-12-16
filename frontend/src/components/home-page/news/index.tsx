@@ -127,8 +127,9 @@ const News = () => {
           fontWeight: "600",
           bgcolor: "rgb(238,238,238)",
           borderRadius: "12px",
-          padding: "10px 20px",
+          padding: "10px 32px",
           transition: "all 0.3s ease",
+          whiteSpace: "nowrap",
           "&:hover": {
             bgcolor: "rgb(218,218,218)",
           },

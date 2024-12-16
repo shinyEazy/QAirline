@@ -25,7 +25,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery("(max-width:900px)");
 
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -388,7 +388,7 @@ const Header = () => {
         top: 0,
         zIndex: 1100,
         padding: { sm: "10px 80px" },
-        "@media (max-width: 800px)": {
+        "@media (max-width: 1000px)": {
           padding: "10px 20px",
         },
       }}

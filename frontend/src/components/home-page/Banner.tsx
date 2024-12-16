@@ -74,7 +74,7 @@ const Banner = () => {
         margin: "60px 80px",
         color: "black",
         gap: "40px",
-        "@media (max-width: 800px)": {
+        "@media (max-width: 1000px)": {
           margin: "20px",
           overflow: "hidden",
         },
@@ -110,7 +110,7 @@ const CarouselItem = ({ image, isActive }) => {
           className="des"
           style={{
             fontFamily: "Roboto",
-            "@media (max-width: 800px)": {
+            "@media (max-width: 1000px)": {
               display: "none",
             },
           }}

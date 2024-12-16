@@ -19,27 +19,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
 import "./css/test.css";
 import { Flight } from "types/flight";
-// interface FlightSearchProps {
-//   setFlights: React.Dispatch<React.SetStateAction<Flight[]>>;
-// }
 import { useFlightSearchStore } from "hooks/flight-search-hook";
 import { fetchAirport } from "hooks/airport-hook";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const FlightSearch: React.FC = () => {
-  // const [departureCity, setDepartureCity] = useState("");
-  // const [arrivalCity, setArrivalCity] = useState("");
-  // const [departing, setDeparting] = useState(new Date());
-  // const [returning, setReturning] = useState(() => {
-  //   const today = new Date();
-  //   today.setDate(today.getDate() + 2);
-  //   return today;
-  // });
-  // const [showReturnDate, setShowReturnDate] = useState(false);
-  // const [tripType, setTripType] = useState("oneway");
-  // const [isRoundTrip, setIsRoundTrip] = useState(false);
-  // const location = useLocation();
   const navigate = useNavigate();
   const [airports, setAirports] = useState<
     { airport_id: number; city: string; airport_code: string }[]
@@ -93,7 +78,6 @@ const FlightSearch: React.FC = () => {
   const handleSearch = async () => {
     setLoading(true);
 
-    // Clear previous toast messages
     toast.dismiss();
 
     const searchParams = new URLSearchParams({
@@ -140,6 +124,9 @@ const FlightSearch: React.FC = () => {
       sx={{
         borderRadius: "20px",
         margin: "40px 80px",
+        "@media (max-width:1000px)": {
+          margin: "40px 20px 20px",
+        },
       }}
     >
       <Box bgcolor="#1e9faf" borderRadius="16px">
@@ -151,10 +138,6 @@ const FlightSearch: React.FC = () => {
             sx={{
               justifyContent: "flex-start",
               marginLeft: "12px",
-              "@media (max-width:800px)": {
-                flexDirection: "column",
-                gap: "10px",
-              },
             }}
           >
             <FormControlLabel
@@ -220,6 +203,7 @@ const FlightSearch: React.FC = () => {
             />
           </RadioGroup>
         </FormControl>
+
         {/* Input Fields */}
         <Box
           gap="10px"
@@ -234,35 +218,24 @@ const FlightSearch: React.FC = () => {
             alignItems="center"
             flexWrap="wrap"
             sx={{
-              flexDirection: {
-                xs: "column",
-                md: "row",
-              },
               "@media (max-width:1000px)": {
                 flexDirection: "column",
                 gap: "20px",
               },
-              "@media (max-width:800px)": {
-                flexDirection: "column",
-                gap: "0",
-              },
             }}
           >
             <Box
-              width="100%"
               flex={1}
               display="flex"
               alignItems="center"
-              justifyContent="space-between"
               gap="20px"
               sx={{
-                "@media (max-width:800px)": {
-                  flexDirection: "column",
-                  gap: "10px",
+                "@media (max-width:1000px)": {
+                  width: "100%",
                 },
               }}
             >
-              <Box>
+              <Box flex={1}>
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -277,7 +250,6 @@ const FlightSearch: React.FC = () => {
                   className="custom-select"
                   onChange={(e) => setDepartureCity(e.target.value)}
                   style={{
-                    width: "300px",
                     height: "40px",
                     marginBottom: "0",
                     marginTop: "0",
@@ -296,14 +268,23 @@ const FlightSearch: React.FC = () => {
               <FontAwesomeIcon
                 icon={faArrowRightArrowLeft}
                 style={{
-                  color: "rgba(0, 0, 0, 0.6)",
-                  fontSize: "0.8rem",
-                  border: "1px solid rgba(0, 0, 0, 0.6)",
+                  color: "white",
+                  fontSize: "1rem",
+                  border: "1px solid #1e90ff",
                   borderRadius: "50%",
-                  padding: "4px",
+                  padding: "8px",
+                  backgroundColor: "#1e90ff",
+                  transition: "all 0.3s ease-in-out",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#2177cb";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#1e90ff";
                 }}
               />
-              <Box>
+              <Box flex={1}>
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -318,7 +299,6 @@ const FlightSearch: React.FC = () => {
                   className="custom-select"
                   onChange={(e) => setArrivalCity(e.target.value)}
                   style={{
-                    width: "300px",
                     height: "40px",
                     marginBottom: "0",
                     marginTop: "0",
@@ -341,33 +321,18 @@ const FlightSearch: React.FC = () => {
               sx={{ mx: 2, backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             />
             <Box
-              width="100%"
               flex={1}
               display="flex"
-              justifyContent="space-between"
               sx={{
                 "@media (max-width:1350px)": {
-                  gap: "60px",
-                },
-                "@media (max-width:800px)": {
-                  flexDirection: "column",
                   gap: "20px",
-                  justifyContent: "center",
-                  alignItems: "center",
+                },
+                "@media (max-width:1000px)": {
+                  width: "100%",
                 },
               }}
             >
-              <Box
-                sx={{
-                  "@media (min-width:1400px)": {
-                    gap: "60px",
-                    flex: "1",
-                  },
-                  "@media (max-width:1350px)": {
-                    gap: "20px",
-                  },
-                }}
-              >
+              <Box flex={1} sx={{}}>
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -376,41 +341,56 @@ const FlightSearch: React.FC = () => {
                 >
                   Departure Date
                 </Typography>
-                <DatePicker
-                  selected={departing}
-                  onChange={(date) => {
-                    if (date) setDeparting(date); // Chỉ cập nhật nếu `date` không phải null
-                  }}
-                  dateFormat="MMM d, yyyy"
-                  customInput={
-                    <TextField
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: false,
-                        style: {
-                          backgroundColor: "transparent",
-                        },
-                      }}
-                      sx={{
-                        "& .MuiInput-root": {
-                          fontSize: "1.3rem",
-                          borderRadius: "10px",
-                          backgroundColor: "transparent",
-                        },
-                      }}
-                    />
-                  }
-                />
+                <Box flex={1}>
+                  <DatePicker
+                    selected={departing}
+                    onChange={(date) => {
+                      if (date) setDeparting(date);
+                    }}
+                    dateFormat="MMM d, yyyy"
+                    customInput={
+                      <TextField
+                        variant="standard"
+                        InputProps={{
+                          disableUnderline: false,
+                          style: {
+                            backgroundColor: "transparent",
+                          },
+                        }}
+                        sx={{
+                          width: "100%",
+                          "& .MuiInput-root": {
+                            fontSize: "1.3rem",
+                            borderRadius: "10px",
+                            backgroundColor: "transparent",
+                          },
+                          "@media (max-width:1000px)": {},
+                        }}
+                      />
+                    }
+                    wrapperClassName="datepicker-custom"
+                  />
+                  <style>
+                    {`
+  .datepicker-custom {
+    display: block !important;
+    width: 100% !important;
+  }
+`}
+                  </style>
+                </Box>
               </Box>
-
-              <Box
-                sx={{
-                  "@media (min-width:1400px)": {
-                    gap: "60px",
-                    flex: "1",
-                  },
+              <FontAwesomeIcon
+                icon={faArrowRightArrowLeft}
+                visibility="hidden"
+                style={{
+                  fontSize: "1rem",
+                  border: "1px solid #1e90ff",
+                  borderRadius: "50%",
+                  padding: "8px",
                 }}
-              >
+              />
+              <Box flex={1} sx={{}}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -504,6 +484,7 @@ const FlightSearch: React.FC = () => {
                       dateFormat="MMM d, yyyy"
                       customInput={
                         <TextField
+                          fullWidth
                           variant="standard"
                           InputProps={{
                             disableUnderline: false,
@@ -520,7 +501,16 @@ const FlightSearch: React.FC = () => {
                           }}
                         />
                       }
+                      wrapperClassName="datepicker-custom"
                     />
+                    <style>
+                      {`
+  .datepicker-custom {
+    display: block !important;
+    width: 100% !important;
+  }
+`}
+                    </style>
                   </Box>
                 )}
               </Box>
