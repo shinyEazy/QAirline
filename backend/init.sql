@@ -246,6 +246,7 @@ INSERT INTO airplane (airplane_model_id, registration_number) VALUES
 
 
 -- Insert Flight Data
+
 INSERT INTO flight (
     flight_number,
     registration_number, 
@@ -262,17 +263,17 @@ INSERT INTO flight (
 ('QA002', 'G-XWBA', '2024-06-16 14:00:00', '2024-06-16 14:00:00', '2024-06-16 22:00:00', NULL, 2, 3, 400.00, 'Delayed'),
 ('QA003', 'F-HZBA', '2024-12-10 08:00:00', '2024-12-10 08:10:00', '2024-12-10 09:30:00', NULL, 1, 2, 250.50, 'On Time'),
 ('QA004', 'D-ABYC', '2024-12-11 12:00:00', '2024-12-11 12:05:00', '2024-12-11 13:20:00', NULL, 2, 3, 260.00, 'On Time'),
-('QA005', 'C-FZBA', '2024-12-12 15:00:00', NULL, '2024-12-12 16:30:00', NULL, 3, 4, 280.75, 'Scheduled'),
-('QA006', 'JA123A', '2024-12-13 07:00:00', NULL, '2024-12-13 08:40:00', NULL, 4, 5, 300.00, 'Scheduled'),
+('QA005', 'C-FZBA', '2024-12-28 15:00:00', NULL, '2024-12-28 16:30:00', NULL, 3, 4, 280.75, 'Scheduled'),
+('QA006', 'JA123A', '2024-12-29 07:00:00', NULL, '2024-12-29 08:40:00', NULL, 4, 5, 300.00, 'Scheduled'),
 ('QA007', 'VH-ZNA', '2024-12-14 10:00:00', '2024-12-14 10:10:00', '2024-12-14 11:50:00', NULL, 5, 6, 275.25, 'On Time'),
 ('QA008', '9V-SKA', '2024-12-15 09:00:00', '2024-12-15 09:10:00', '2024-12-15 10:30:00', NULL, 6, 7, 290.50, 'On Time'),
-('QA009', 'HS-TKA', '2024-12-16 16:00:00', NULL, '2024-12-16 17:50:00', NULL, 7, 8, 305.75, 'Scheduled'),
-('QA010', 'B-2088', '2024-12-17 19:00:00', NULL, '2024-12-17 20:40:00', NULL, 8, 9, 320.00, 'Scheduled'),
+('QA009', 'HS-TKA', '2024-12-30 16:00:00', NULL, '2024-12-30 17:50:00', NULL, 7, 8, 305.75, 'Scheduled'),
+('QA010', 'B-2088', '2024-12-31 19:00:00', NULL, '2024-12-31 20:40:00', NULL, 8, 9, 320.00, 'Scheduled'),
 ('QA011', 'CC-BGA', '2024-12-18 05:30:00', '2024-12-18 05:35:00', '2024-12-18 07:10:00', NULL, 9, 10, 275.00, 'Landed'),
 ('QA012', 'XA-ZAA', '2024-12-19 14:00:00', '2024-12-19 14:10:00', '2024-12-19 15:50:00', NULL, 10, 1, 350.50, 'On Time'),
-('QA013', 'G-XWBA', '2024-12-15 08:00:00', NULL, '2024-12-15 11:00:00', NULL, 1, 2, 340.00, 'Scheduled'),
-('QA014', 'F-HZBA', '2024-12-15 12:00:00', NULL, '2024-12-15 15:00:00', NULL, 1, 2, 360.00, 'Scheduled'),
-('QA015', 'D-ABYC', '2024-12-15 18:00:00', NULL, '2024-12-15 21:00:00', NULL, 1, 2, 370.00, 'Scheduled');
+('QA013', 'G-XWBA', '2024-12-28 08:00:00', NULL, '2024-12-28 11:00:00', NULL, 1, 2, 340.00, 'Scheduled'),
+('QA014', 'F-HZBA', '2025-01-09 12:00:00', NULL, '2025-01-09 15:00:00', NULL, 1, 2, 360.00, 'Scheduled'),
+('QA015', 'D-ABYC', '2025-01-03 18:00:00', NULL, '2025-01-03 21:00:00', NULL, 1, 2, 370.00, 'Scheduled');
 
 
 
@@ -333,30 +334,47 @@ INSERT INTO flight_seats (
 ('XA-ZAA', 'Business', 1.5, 0.9, 36, 'H'), -- 12 (chia hết cho 3)
 ('XA-ZAA', 'First Class', 2.0, 1.0, 8, 'F'); -- 6 (chia hết cho 3)
 
-INSERT INTO users (firstname, lastname, email, username, password, role) VALUES
-('John', 'Doe', 'john.doe@example.com', 'johndoe', 'hashed_password_1', 'customer'),
-('Jane', 'Smith', 'jane.smith@example.com', 'janesmith', 'hashed_password_2', 'customer');
+-- INSERT INTO users (firstname, lastname, email, username, password, role) VALUES
+-- ('John', 'Doe', 'john.doe@example.com', 'johndoe', 'hashed_password_1', 'customer'),
+-- ('Jane', 'Smith', 'jane.smith@example.com', 'janesmith', 'hashed_password_2', 'customer');
 
-INSERT INTO booking (user_id, number_of_adults, number_of_children, flight_class, cancelled, flight_id) VALUES
-(2, 2, 0, 'Economy', FALSE, 1), 
-(2, 1, 1, 'Business', FALSE, 2),
-(2, 3, 0, 'Economy', FALSE, 3),
-(2, 2, 2, 'First Class', TRUE, 4), 
-(2, 1, 0, 'Economy', FALSE, 5); 
+INSERT INTO booking (booking_id, booker_email, number_of_adults, number_of_children, flight_class, cancelled, flight_id, booking_date) 
+VALUES
+('A1B2C3', 'user1@example.com', 2, 0, 'First Class', FALSE, 1, '2024-12-10 03:11:05'),
+('D4E5F6', 'user2@example.com', 1, 0, 'Business', TRUE, 5, '2024-12-20 04:11:05'),
+('G7H8I9', 'user3@example.com', 3, 0, 'First Class', FALSE, 1, '2024-12-10 04:11:05'),
+('J1K2L3', 'user4@example.com', 3, 0, 'Business', TRUE, 3, '2024-12-05 04:11:05'),
+('M4N5O6', 'user5@example.com', 3, 0, 'Economy', FALSE, 4, '2024-12-08 04:11:05'),
+('P7Q8R9', 'user6@example.com', 1, 0, 'Business', FALSE, 5, '2024-12-20 04:11:05'),
+('S1T2U3', 'user7@example.com', 4, 0, 'First Class', FALSE, 6, '2024-12-25 04:11:05'),
+('V4W5X6', 'user8@example.com', 1, 0, 'Business', FALSE, 7, '2024-12-10 04:11:05'),
+('Y7Z8A1', 'user9@example.com', 1, 0, 'First Class', FALSE, 8, '2024-12-25 04:11:05'),
+('B2C3D4', 'user10@example.com', 1, 0, 'Economy', FALSE, 9, '2024-12-25 04:11:05');
+
 
 INSERT INTO passengers (
     booking_id, citizen_id, passport_number, 
     gender, phone_number, first_name, last_name, 
     nationality, date_of_birth, seat_row, seat_col
 ) VALUES 
-(1, '001234567890', 'VN123456', 'Male', '0912345678', 'Nguyễn', 'Văn An', 'Vietnam', '1990-05-15', 1, 'A'),
-(1, '009876543210', 'VN654321', 'Female', '0987654321', 'Trần', 'Thị Bích', 'Vietnetnam', '1992-08-20', 1, 'B'),
-(2, '002345678901', 'VN234567', 'Male', '0923456789', 'Phạm', 'Văn Cường', 'Vietnam', '1985-11-30', 2, 'C'),
-(2, '008765432109', 'VN765432', 'Female', '0976543210', 'Lê', 'Thị Diệu', 'Vietietnam', '1988-03-25', 2, 'D'),
-(3, 'FR123456789', 'FR987654', 'Male', '+33612345678', 'Jean', 'Dupont', 'France', '1985-04-12', 5, 'A'),
-(3, 'FR987654321', 'FR123456', 'Female', '+33698765432', 'Marie', 'Laurent', 'France', '1990-09-23', 5, 'B'),
-(4, 'DE234567890', 'DE876543', 'Male', '+49160123456', 'Hans', 'Mueller', 'Germany', '1978-11-05', 6, 'C'),
-(4, 'DE876543210', 'DE345678', 'Female', '+491601234567', 'Anna', 'Schmidt', 'Germany', '1982-07-15',6, 'D'),
-(5, 'IT345678901', 'IT765432', 'Male', '+393912345678', 'Giovanni', 'Rossi', 'Italy', '1975-02-28', 7, 'E'),
-(5, 'IT765432109', 'IT456789', 'Female', '+393387654321', 'Sofia', 'Bianchi', 'Italy', '1988-06-10',7, 'F');
+('A1B2C3', '001234567890', 'VN123456', 'Male', '0912345678', 'Nguyễn', 'Văn An', 'Vietnam', '1990-05-15', 1, 'A'),
+('A1B2C3', '009876543210', 'VN654321', 'Female', '0987654321', 'Trần', 'Thị Bích', 'Vietnam', '1992-08-20', 1, 'B'),
+('D4E5F6', '002345678901', 'VN234567', 'Male', '0923456789', 'Phạm', 'Văn Cường', 'Vietnam', '1985-11-30', 2, 'C'),
+('G7H8I9', '008765432109', 'VN765432', 'Female', '0976543210', 'Lê', 'Thị Diệu', 'Vietnam', '1988-03-25', 2, 'D'),
+('G7H8I9', 'FR123456789', 'FR987654', 'Male', '+33612345678', 'Jean', 'Dupont', 'France', '1985-04-12', 5, 'A'),
+('G7H8I9', 'FR987654321', 'FR123456', 'Female', '+33698765432', 'Marie', 'Laurent', 'France', '1990-09-23', 5, 'B'),
+('J1K2L3', 'DE234567890', 'DE876543', 'Male', '+49160123456', 'Hans', 'Mueller', 'Germany', '1978-11-05', 6, 'C'),
+('J1K2L3', 'DE876543210', 'DE345678', 'Female', '+491601234567', 'Anna', 'Schmidt', 'Germany', '1982-07-15', 6, 'D'),
+('J1K2L3', 'IT345678901', 'IT765432', 'Male', '+393912345678', 'Giovanni', 'Rossi', 'Italy', '1975-02-28', 7, 'E'),
+('M4N5O6', 'IT765432109', 'IT456789', 'Female', '+393387654321', 'Sofia', 'Bianchi', 'Italy', '1988-06-10', 7, 'F'),
+('M4N5O6', 'US123456789', 'US987654', 'Male', '+1-212-555-1234', 'John', 'Smith', 'United States', '1980-06-15', 8, 'A'),
+('M4N5O6', 'US987654321', 'US654321', 'Female', '+1-310-555-5678', 'Emily', 'Johnson', 'United States', '1985-09-20', 8, 'B'),
+('P7Q8R9', 'CA234567890', 'CA876543', 'Male', '+1-416-555-9876', 'Michael', 'Brown', 'Canada', '1975-11-10', 9, 'C'),
+('S1T2U3', 'AU345678901', 'AU765432', 'Female', '+61-2-5555-1234', 'Sarah', 'Williams', 'Australia', '1988-03-25', 10, 'A'),
+('S1T2U3', 'AU987654321', 'AU456789', 'Male', '+61-3-5555-5678', 'James', 'Taylor', 'Australia', '1982-07-15', 10, 'B'),
+('S1T2U3', 'JP123456789', 'JP987654', 'Female', '+81-3-5555-9012', 'Yuki', 'Tanaka', 'Japan', '1990-09-30', 10, 'C'),
+('S1T2U3', 'JP987654321', 'JP654321', 'Male', '+81-6-5555-3456', 'Kenji', 'Sato', 'Japan', '1985-05-20', 10, 'D'),
+('V4W5X6', 'UK234567890', 'UK876543', 'Female', '+44-20-5555-7890', 'Emma', 'Wilson', 'United Kingdom', '1992-08-05', 11, 'A'),
+('Y7Z8A1', 'NZ345678901', 'NZ765432', 'Male', '+64-9-5555-2345', 'David', 'Lee', 'New Zealand', '1980-12-15', 12, 'A'),
+('B2C3D4', 'SG987654321', 'SG654321', 'Female', '+65-6-5555-6789', 'Lisa', 'Chen', 'Singapore', '1985-04-25', 13, 'A');
 

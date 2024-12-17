@@ -1,7 +1,7 @@
 import axios from './axios-config';
 
 // Fetch an advertisement by name
-export async function getAdvert(advert_name) {
+export async function getAdvert(advert_name: string) {
   try {
     const response = await axios.get(`/api/advert/${advert_name}`);
     return response.data;
@@ -12,9 +12,10 @@ export async function getAdvert(advert_name) {
 }
 
 // Create a new advertisement
-export async function createAdvert(fileUpload, advertName, text) {
+export async function createAdvert({ fileUpload, advertName, text }) {
   try {
     const formData = new FormData();
+    console.log(fileUpload);
     formData.append("file_upload", fileUpload);
     formData.append("advert_name", advertName);
     formData.append("text", text);
@@ -44,7 +45,7 @@ export async function updateAdvert(advertName, advertData) {
 }
 
 // Delete an advertisement
-export async function deleteAdvert(advertName) {
+export async function deleteAdvert(advertName: string) {
   try {
     const response = await axios.delete(`/api/advert/${advertName}`);
     return response.data;

@@ -22,6 +22,7 @@ import { createAirplane } from "hooks/airplane-hook";
 import AirplaneList from "../../components/admin/airplane-list";
 import AirportList from "../../components/admin/airport-list";
 import { useNavigate } from "react-router-dom";
+import { createAdvert } from "hooks/advert-hook";
 
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
@@ -70,6 +71,7 @@ const AdminPage = () => {
   });
 
   const [newNews, setNewNews] = useState({
+    imageFile: null as File | null,
     imageUrl: "",
     title: "",
     content: "",
@@ -153,6 +155,7 @@ const AdminPage = () => {
   const handleNewsModalClose = () => {
     setNewsModalOpen(false);
     setNewNews({
+      imageFile: null as File | null,
       imageUrl: "",
       title: "",
       content: "",
@@ -182,8 +185,12 @@ const AdminPage = () => {
     setNewAirplane({ ...newAirplane, [field]: value });
   };
 
-  const handleNewsChange = (field: string, value: string) => {
-    setNewNews({ ...newNews, [field]: value });
+  const handleNewsChange = (field: string, value: any) => {
+    console.log(`Updating ${field}:`, value);
+    setNewNews((prevNews) => ({
+      ...prevNews,
+      [field]: value
+    }));
   };
 
   const handleSaveFlight = async () => {
@@ -227,9 +234,23 @@ const AdminPage = () => {
     handleAirplaneModalClose();
   };
 
-  const handleSaveNews = () => {
+  const handleSaveNews = async () => {
     console.log("New News Data:", newNews);
-    handleNewsModalClose();
+    try {
+      console.log("image url", newNews.imageFile);
+      const createdNews = await createAdvert({
+        fileUpload: newNews.imageFile,
+        advertName: newNews.title,
+        text: newNews.content,
+      });
+
+      console.log("News created successfully:", createdNews);
+      handleNewsModalClose();
+    }
+    catch (error) {
+      console.error("Failed to save news:", error);
+    }
+
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -643,10 +664,13 @@ const AdminPage = () => {
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
                 const reader = new FileReader();
+                const file = e.target.files[0];
+                console.log("File:", file);
                 reader.onload = () => {
+                  handleNewsChange("imageFile", file);
                   handleNewsChange("imageUrl", reader.result as string); // Save the base64 image data
                 };
-                reader.readAsDataURL(e.target.files[0]);
+                reader.readAsDataURL(file);
               }
             }}
           />
