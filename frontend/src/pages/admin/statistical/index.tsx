@@ -1,5 +1,5 @@
 import { Box, Tabs, Tab, Typography, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -13,6 +13,7 @@ import {
   Line,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
+import { fetchStats } from "hooks/stats-hook";
 
 const mockDay = [
   {
@@ -277,41 +278,43 @@ const mockYear = [
 ];
 
 const AdminStatistical = () => {
-  const [activeTab, setActiveTab] = useState("day");
 
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("month");
+  const [stats, setStats] = useState(null)
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
 
-  const dataForChart = mockDay[0].two_hour_breakdown.map((entry) => ({
-    name: entry.time_range,
-    tickets_bought: entry.tickets_bought,
-    tickets_canceled: entry.tickets_canceled,
-    revenue: entry.revenue,
+  useEffect(() => {
+    const getStats = async () => {
+      const stats = await fetchStats();
+
+      setStats(stats);
+
+    }
+
+    getStats();
+  }, [])
+
+  if (!stats) {
+    return <p>Loading...</p>;
+  }
+  // Data transformation logic for charts
+  // Conditional check to ensure stats are loaded
+  const dataForChartMonth = Object.entries(stats.monthly).map(([week, value]) => ({
+    name: week.replace("_", " ").toUpperCase(),
+    tickets_bought: value, // Adjusted to use mock values
+    tickets_canceled: Math.floor(value * 0.1), // Example calculation for canceled tickets
+    revenue: value * 100, // Example revenue calculation
   }));
 
-  const dataForChartWeek = mockWeek[0].daily_breakdown.map((entry) => ({
-    name: entry.date,
-    tickets_bought: entry.tickets_bought,
-    tickets_canceled: entry.tickets_canceled,
-    revenue: entry.revenue,
+  const dataForChartYear = Object.entries(stats.yearly).map(([month, value]) => ({
+    name: month.replace("_", " ").toUpperCase(),
+    tickets_bought: value,
+    tickets_canceled: Math.floor(value * 0.1),
+    revenue: value * 100,
   }));
-
-  const dataForChartMonth = mockMonth[0].weekly_breakdown.map((entry) => ({
-    name: entry.week,
-    tickets_bought: entry.tickets_bought,
-    tickets_canceled: entry.tickets_canceled,
-    revenue: entry.revenue,
-  }));
-
-  const dataForChartYear = mockYear[0].monthly_breakdown.map((entry) => ({
-    name: entry.month,
-    tickets_bought: entry.tickets_bought,
-    tickets_canceled: entry.tickets_canceled,
-    revenue: entry.revenue,
-  }));
-
-  const navigate = useNavigate();
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
@@ -344,142 +347,10 @@ const AdminStatistical = () => {
         indicatorColor="primary"
         textColor="primary"
       >
-        <Tab value="day" label="Day" />
-        <Tab value="week" label="Week" />
         <Tab value="month" label="Month" />
         <Tab value="year" label="Year" />
       </Tabs>
       <Box mt={4}>
-        {activeTab === "day" && (
-          <Box>
-            <Box
-              margin="0 120px 40px"
-              border="1px solid gray"
-              borderRadius="20px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              padding="20px"
-              flexDirection="column"
-            >
-              <BarChart data={dataForChart} width={1200} height={300}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="tickets_bought" fill="green" barSize={20} />
-                <Bar dataKey="tickets_canceled" fill="red" barSize={20} />
-              </BarChart>
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{
-                  fontWeight: "bold",
-                  color: "text.primary",
-                }}
-              >
-                Tickets Sold and Canceled for the Day
-              </Typography>
-            </Box>
-            <Box
-              margin="0 120px 40px"
-              border="1px solid gray"
-              borderRadius="20px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              padding="20px"
-              flexDirection="column"
-            >
-              <LineChart data={dataForChart} width={1200} height={300}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="revenue" stroke="blue" />
-              </LineChart>
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{
-                  fontWeight: "bold",
-                  color: "text.primary",
-                }}
-              >
-                Revenue for the Day
-              </Typography>
-            </Box>
-          </Box>
-        )}
-
-        {activeTab === "week" && (
-          <Box>
-            {/* Bar Chart for Tickets Bought and Canceled */}
-            <Box
-              margin="0 120px 40px"
-              border="1px solid gray"
-              borderRadius="20px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              padding="20px"
-              flexDirection="column"
-            >
-              <BarChart data={dataForChartWeek} width={1200} height={300}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="tickets_bought" fill="green" barSize={20} />
-                <Bar dataKey="tickets_canceled" fill="red" barSize={20} />
-              </BarChart>
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{
-                  fontWeight: "bold",
-                  color: "text.primary",
-                }}
-              >
-                Tickets Sold and Canceled for the Week
-              </Typography>
-            </Box>
-
-            {/* Line Chart for Revenue */}
-            <Box
-              margin="0 120px 40px"
-              border="1px solid gray"
-              borderRadius="20px"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              padding="20px"
-              flexDirection="column"
-            >
-              <LineChart data={dataForChartWeek} width={1200} height={300}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="revenue" stroke="blue" />
-              </LineChart>
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{
-                  fontWeight: "bold",
-                  color: "text.primary",
-                }}
-              >
-                Revenue for the Week
-              </Typography>
-            </Box>
-          </Box>
-        )}
         {activeTab === "month" && (
           <Box>
             {/* Bar Chart for Tickets Bought and Canceled */}

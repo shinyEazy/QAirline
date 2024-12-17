@@ -3,20 +3,21 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from app.models import Passenger, Booking, Flight
 
-def get_ticket_count_by_period(db: Session, period: str = 'day'):
+
+def get_ticket_count_by_period(db: Session, period: str = "day"):
     """
     Calculate total ticket count for different time periods
-    
+
     :param db: Database session
     :param period: 'day', 'week', 'month', or 'year'
     :return: Total number of tickets
     """
     # Get the current date
     now = datetime.now()
-    
+
     # Base query to count passengers through bookings
     query = db.query(func.count(Passenger.passenger_id))
-    
+
     # Apply time-based filtering based on the period
     if period == 'day':
         # Trả về số vé theo từng giờ trong ngày
@@ -76,18 +77,20 @@ def get_ticket_count_by_period(db: Session, period: str = 'day'):
                 .join(Flight, Booking.flight_id == Flight.flight_id)
                 .filter(
                     Flight.estimated_departure_time >= week_start,
-                    Flight.estimated_departure_time < week_end
+                    Flight.estimated_departure_time < week_end,
                 )
                 .scalar()
             )
             weekly_counts[f"week_{week + 1}"] = count or 0
         return weekly_counts
-    
-    elif period == 'year':
+
+    elif period == "year":
         # Trả về tổng số vé cho từng tháng của năm
         result = {}
         for month in range(1, 13):
-            month_start = now.replace(month=month, day=1, hour=0, minute=0, second=0, microsecond=0)
+            month_start = now.replace(
+                month=month, day=1, hour=0, minute=0, second=0, microsecond=0
+            )
             if month == 12:
                 month_end = datetime(now.year + 1, 1, 1)
             else:
@@ -97,48 +100,53 @@ def get_ticket_count_by_period(db: Session, period: str = 'day'):
                 .join(Flight, Booking.flight_id == Flight.flight_id)
                 .filter(
                     Flight.estimated_departure_time >= month_start,
-                    Flight.estimated_departure_time < month_end
+                    Flight.estimated_departure_time < month_end,
                 )
                 .scalar()
             )
             result[f"month_{month}"] = count or 0
-        return result 
-    
+        return result
+
     else:
         raise ValueError("Invalid period. Choose 'day', 'week', 'month', or 'year'.")
-    
+
     # Execute and return the count
     return query.scalar()
+
 
 # Example usage functions
 def get_daily_ticket_count(db: Session):
     """Get total tickets for today"""
-    return get_ticket_count_by_period(db, 'day')
+    return get_ticket_count_by_period(db, "day")
+
 
 def get_weekly_ticket_count(db: Session):
     """Get total tickets for this week"""
-    return get_ticket_count_by_period(db, 'week')
+    return get_ticket_count_by_period(db, "week")
+
 
 def get_monthly_ticket_count(db: Session):
     """Get total tickets for this month"""
-    return get_ticket_count_by_period(db, 'month')
+    return get_ticket_count_by_period(db, "month")
+
 
 def get_yearly_ticket_count(db: Session):
     """Get total tickets for this year"""
-    return get_ticket_count_by_period(db, 'year')
+    return get_ticket_count_by_period(db, "year")
 
 
 def get_ticket_count_details(db: Session):
     """
     Get ticket counts for different time periods
-    
+
     :param db: Database session
     :return: Dictionary with ticket counts
     """
     print("Getting ticket count details")
     return {
-        'daily': get_daily_ticket_count(db),
-        'weekly': get_weekly_ticket_count(db),
-        'monthly': get_monthly_ticket_count(db),
-        'yearly': get_yearly_ticket_count(db)
+        "daily": get_daily_ticket_count(db),
+        "weekly": get_weekly_ticket_count(db),
+        "monthly": get_monthly_ticket_count(db),
+        "yearly": get_yearly_ticket_count(db),
     }
+

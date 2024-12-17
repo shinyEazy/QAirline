@@ -286,10 +286,10 @@ def get_users_booking(user_id: int, db: Session) -> List[Booking]:
     return bookings
 
 
-def calculate_price(booking: BookingCreate, db_booking: Booking, db: Session):
+def calculate_price(db_booking: Booking, db: Session):
     # Get flight seat information to determine the price
     flight_seat = get_flight_seat_by_flight_id_and_class(
-        db, booking.flight_id, booking.flight_class
+        db, conint(db_booking.flight_id), str(db_booking.flight_class)
     )
 
     price_per_adult = flight_seat.flight_price

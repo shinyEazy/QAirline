@@ -105,7 +105,10 @@ def get_all_passengers_end_point(db: Session = Depends(get_db)):
 
 
 @router.get("/ticket/count/{period}")
-def get_ticket_counts_end_point(
-    period: str , db: Session = Depends(get_db)
-): 
-     return get_ticket_count_by_period(db, period) 
+def get_ticket_counts_end_point(period: str, db: Session = Depends(get_db)):
+    return get_ticket_count_by_period(db, period)
+
+
+@router.get("/ticket/count/")
+def get_ticket_count_details_end_point(db: Session = Depends(get_db)):
+    return get_ticket_count_details(db)
