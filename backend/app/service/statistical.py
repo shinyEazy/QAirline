@@ -19,25 +19,43 @@ def get_ticket_count_by_period(db: Session, period: str = 'day'):
     
     # Apply time-based filtering based on the period
     if period == 'day':
-        start_time = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_time = start_time + timedelta(days=1)
-        query = query.join(Booking, Passenger.booking_id == Booking.booking_id)
-        query = query.join(Flight, Booking.flight_id == Flight.flight_id)
-        query = query.filter(
-            Flight.estimated_departure_time >= start_time,
-            Flight.estimated_departure_time < end_time
-        )
+        # Trả về số vé theo từng giờ trong ngày
+        hourly_counts = {}
+        for hour in range(24):
+            start_time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
+            end_time = start_time + timedelta(hours=1)
+            count = (
+                query.join(Booking, Passenger.booking_id == Booking.booking_id)
+                .join(Flight, Booking.flight_id == Flight.flight_id)
+                .filter(
+                    Flight.estimated_departure_time >= start_time,
+                    Flight.estimated_departure_time < end_time
+                )
+                .scalar()
+            )
+            hourly_counts[f"{hour}:00"] = count or 0
+        return hourly_counts
     
     elif period == 'week':
-        start_time = now - timedelta(days=now.weekday())
-        start_time = start_time.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_time = start_time + timedelta(days=7)
-        query = query.join(Booking, Passenger.booking_id == Booking.booking_id)
-        query = query.join(Flight, Booking.flight_id == Flight.flight_id)
-        query = query.filter(
-            Flight.estimated_departure_time >= start_time,
-            Flight.estimated_departure_time < end_time
-        )
+        # Trả về số vé theo từng ngày trong tuần
+        daily_counts = {}
+        start_of_week = now - timedelta(days=now.weekday())  # Thứ 2 đầu tuần
+        for i in range(7):
+            day_start = start_of_week + timedelta(days=i)
+            day_start = day_start.replace(hour=0, minute=0, second=0, microsecond=0)
+            day_end = day_start + timedelta(days=1)
+            count = (
+                query.join(Booking, Passenger.booking_id == Booking.booking_id)
+                .join(Flight, Booking.flight_id == Flight.flight_id)
+                .filter(
+                    Flight.estimated_departure_time >= day_start,
+                    Flight.estimated_departure_time < day_end
+                )
+                .scalar()
+            )
+            day_name = day_start.strftime("%A")
+            daily_counts[day_name] = count or 0
+        return daily_counts
     
     elif period == 'month':
         # Trả về tổng số vé theo từng tuần trong tháng
