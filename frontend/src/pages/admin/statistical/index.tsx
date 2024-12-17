@@ -302,6 +302,20 @@ const AdminStatistical = () => {
   }
   // Data transformation logic for charts
   // Conditional check to ensure stats are loaded
+  const dataForChartDay = Object.entries(stats.daily).map(([hours, value]) => ({
+    name: hours.toUpperCase(),
+    tickets_bought: value, // Adjusted to use mock values
+    tickets_canceled: Math.floor(value * 0.1), // Example calculation for canceled tickets
+    revenue: value * 100, // Example revenue calculation
+  }));
+
+  const dataForChartWeek = Object.entries(stats.weekly).map(([day, value]) => ({
+    name: day.replace("_", " ").toUpperCase(),
+    tickets_bought: value, // Adjusted to use mock values
+    tickets_canceled: Math.floor(value * 0.1), // Example calculation for canceled tickets
+    revenue: value * 100, // Example revenue calculation
+  }));
+
   const dataForChartMonth = Object.entries(stats.monthly).map(([week, value]) => ({
     name: week.replace("_", " ").toUpperCase(),
     tickets_bought: value, // Adjusted to use mock values
@@ -347,10 +361,140 @@ const AdminStatistical = () => {
         indicatorColor="primary"
         textColor="primary"
       >
+        <Tab value="day" label="Day" />
+        <Tab value="week" label="Week" />
         <Tab value="month" label="Month" />
         <Tab value="year" label="Year" />
       </Tabs>
       <Box mt={4}>
+        {activeTab === "day" && (
+          <Box>
+            <Box
+              margin="0 120px 40px"
+              border="1px solid gray"
+              borderRadius="20px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              padding="20px"
+              flexDirection="column"
+            >
+              <BarChart data={dataForChartDay} width={1200} height={300}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="tickets_bought" fill="green" barSize={20} />
+                <Bar dataKey="tickets_canceled" fill="red" barSize={20} />
+              </BarChart>
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                }}
+              >
+                Tickets Sold and Canceled for the Day
+              </Typography>
+            </Box>
+            <Box
+              margin="0 120px 40px"
+              border="1px solid gray"
+              borderRadius="20px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              padding="20px"
+              flexDirection="column"
+            >
+              <LineChart data={dataForChartWeek} width={1200} height={300}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="revenue" stroke="blue" />
+              </LineChart>
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                }}
+              >
+                Revenue for the Day
+              </Typography>
+            </Box>
+          </Box>
+        )}
+        {activeTab === "week" && (
+          <Box>
+            {/* Bar Chart for Tickets Bought and Canceled */}
+            <Box
+              margin="0 120px 40px"
+              border="1px solid gray"
+              borderRadius="20px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              padding="20px"
+              flexDirection="column"
+            >
+              <BarChart data={dataForChartWeek} width={1200} height={300}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="tickets_bought" fill="green" barSize={20} />
+                <Bar dataKey="tickets_canceled" fill="red" barSize={20} />
+              </BarChart>
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                }}
+              >
+                Tickets Sold and Canceled for the Week
+              </Typography>
+            </Box>
+            {/* Line Chart for Revenue */}
+            <Box
+              margin="0 120px 40px"
+              border="1px solid gray"
+              borderRadius="20px"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              padding="20px"
+              flexDirection="column"
+            >
+              <LineChart data={dataForChartWeek} width={1200} height={300}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="revenue" stroke="blue" />
+              </LineChart>
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.primary",
+                }}
+              >
+                Revenue for the Week
+              </Typography>
+            </Box>
+          </Box>
+        )}
         {activeTab === "month" && (
           <Box>
             {/* Bar Chart for Tickets Bought and Canceled */}
