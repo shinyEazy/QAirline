@@ -9,7 +9,7 @@ from pydantic import Field
 class PassengerBase(SchemaModel):
     citizen_id: str = Field(..., description="Unique citizen identifier")
     passport_number: Optional[str] = Field(None, description="Optional passport number")
-    gender: bool = Field(..., description="TRUE for male, FALSE for female")
+    gender: str = Field(..., description="Gender (Male or Female)")
     phone_number: str = Field(..., description="Passenger's phone number")
     first_name: str = Field(..., description="Passenger's first name")
     last_name: str = Field(..., description="Passenger's last name")
@@ -20,7 +20,7 @@ class PassengerBase(SchemaModel):
 
 
 class PassengerCreate(PassengerBase):
-    booking_id: int = Field(..., description="Associated booking ID")
+    booking_id: str = Field(..., description="Associated booking ID")
 
 
 class PassengerRead(PassengerBase):
@@ -29,7 +29,7 @@ class PassengerRead(PassengerBase):
 
 class PassengerUpdate(SchemaModel):
     passport_number: Optional[str] = Field(None, description="Optional passport number")
-    gender: bool = Field(..., description="TRUE for male, FALSE for female")
+    gender: str = Field(..., description="Gender (Male or Female)")
     phone_number: str = Field(..., description="Passenger's phone number")
     first_name: str = Field(..., description="Passenger's first name")
     last_name: str = Field(..., description="Passenger's last name")

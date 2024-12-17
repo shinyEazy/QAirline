@@ -1,18 +1,22 @@
 from sqlalchemy.exc import NoResultFound
+from starlette.status import HTTP_400_BAD_REQUEST
 from app.schemas import BookingBase, BookingUpdate, BookingCreate
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
+from app.service.email import send_email
+from app.service.payment import get_payment_by_booking
 from .crud_utils import *
 from app.models import Booking, Passenger
 from typing import List
 from schemas.passenger import PassengerBase, PassengerCreate
 from service.flight import delete_flight, get_all_passenger_in_flight
-from service.passenger import create_passenger, delete_passenger
+from service.passenger import create_passenger, delete_passengers
 from service.flight_seat import get_flight_seat_by_flight_id_and_class
 from typing import List
-from app.models import FlightSeats, Flight, User
+from app.models import FlightSeats, Flight, User, Airport
 from app.service.service_utils import conint, seat_col_to_int
+from app.core.security import generate_booking_id_hash
 
 
 def get_bookings_by_flight_id(flight_id: int, db: Session) -> List[Booking]:
@@ -25,7 +29,7 @@ def get_bookings_by_flight_id(flight_id: int, db: Session) -> List[Booking]:
     return db_booking
 
 
-def get_booking(booking_id: int, db: Session) -> Booking:
+def get_booking(booking_id: str, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'SELECT * FROM table booking where booking.booking_id = booking_id'
     """
@@ -35,19 +39,26 @@ def get_booking(booking_id: int, db: Session) -> Booking:
     return db_booking
 
 
-
-def create_booking(user: User, booking: BookingCreate, db: Session) -> Booking:
+async def create_booking(booking: BookingCreate, db: Session) -> Booking:
     """
     Equivalent to a SQL query that is 'INSERT INTO booking values ()'
     When creating the booking, we need to ensure that the passenger_id and flight_id are valid
     The flight_class enums in the data has already been validated by pydantic, but the format needs to be like this:
     'Economy' or 'Business' or 'First'
     """
+
     booking_data = BookingBase(**booking.model_dump(exclude={"passengers"}))
-    booking_data.user_id = user.user_id
+    # booking_data.user_id = user.user_id
 
     current_dict = booking_data.model_dump()
     current_dict["booking_date"] = datetime.now()
+    current_dict["booking_id"] = generate_booking_id_hash(
+        booker_email=booking_data.booker_email,
+        number_of_adults=booking_data.number_of_adults,
+        number_of_children=booking_data.number_of_children,
+        flight_class=booking_data.flight_class,
+        flight_id=booking_data.flight_id,
+    )
 
     db_booking = create(Booking, db, current_dict)
 
@@ -59,6 +70,9 @@ def create_booking(user: User, booking: BookingCreate, db: Session) -> Booking:
             detail="Booking date cannot be after the flight's estimated departure time.",
         )
 
+    # check return flight conditions
+    # get_return_flight(booking, flight, db)
+
     if booking.number_of_adults + booking.number_of_children <= 0:
         raise HTTPException(
             status_code=400,  # Bad Request
@@ -66,7 +80,42 @@ def create_booking(user: User, booking: BookingCreate, db: Session) -> Booking:
         )
 
     create_booking_passengers(booking, db_booking, db)
+
+    await send_email(
+        [booking.booker_email],
+        f"Your booking ID",
+        f"Booking ID: {db_booking.booking_id}",
+    )
     return db_booking
+
+
+# def get_return_flight(booking: BookingCreate, flight: Flight, db: Session):
+#
+#     if not booking.return_flight_id:
+#         return None
+#     # Check if return flight is provided and validate the return flight details
+#     # Retrieve the return flight with the necessary conditions
+#     return_flight = (
+#         db.query(Flight)
+#         .filter(
+#             Flight.flight_id == booking.return_flight_id,
+#             Flight.departure_airport_id
+#             == flight.destination_airport_id,  # Compare departure airports
+#             Flight.destination_airport_id
+#             == flight.departure_airport_id,  # Compare departure airports
+#             Flight.departure_time
+#             > flight.arrival_time,  # Ensure return flight departs after outbound arrival
+#         )
+#         .first()
+#     )
+#
+#     if not return_flight:
+#         raise HTTPException(
+#             status_code=400,
+#             detail="Return flight not found or does not meet required conditions.",
+#         )
+#
+#     return return_flight
 
 
 def update_booking(db_booking: Booking, booking: BookingUpdate, db: Session) -> Booking:
@@ -90,18 +139,20 @@ def cancel_booking(db_booking: Booking, db: Session):
     Update the specified 'Booking' cancelled field by booking_id in the database to True.
     """
 
+    if bool(db_booking.cancelled):
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="Booking has already been cancelled",
+        )
     flight = get_flight_compared_current_time(db_booking, db)
 
     if not flight:
         raise HTTPException(
             status_code=400,
-            detail="Cancelation cannot be after the flight's estimated departure time.",
+            detail="Cancellation cannot be after the flight's estimated departure time.",
         )
 
     # get then delete passengers from flight
-    passengers = get_passengers_in_booking(db_booking, db)
-
-    delete_passengers(passengers, db)
 
     db_booking.cancelled = True  # type: ignore
     db.commit()
@@ -109,6 +160,102 @@ def cancel_booking(db_booking: Booking, db: Session):
 
     return {
         "message": f"Booking id {db_booking.booking_id} has been successfully cancelled"
+    }
+
+
+def get_all_bookings(db: Session) -> List[Booking]:
+    return get_all(Booking, db)
+
+
+def get_roundtrip_booking_info(db_booking: Booking, db: Session) -> dict:
+    pass
+
+
+def get_booking_info(db_booking: Booking, db: Session) -> dict:
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    # Alias for departure and arrival airports
+    departure_airport = aliased(Airport)
+    arrival_airport = aliased(Airport)
+
+    # Query to fetch flight details with airport information
+    result = (
+        db.query(
+            Flight,
+            departure_airport.city.label("departure_city"),
+            departure_airport.name.label("departure_airport_name"),
+            arrival_airport.city.label("arrival_city"),
+            arrival_airport.name.label("arrival_airport_name"),
+        )
+        .join(Booking, Booking.flight_id == Flight.flight_id)  # Join with Booking
+        .join(
+            departure_airport,
+            Flight.departure_airport_id == departure_airport.airport_id,
+        )  # Join with departure airport
+        .join(
+            arrival_airport, Flight.destination_airport_id == arrival_airport.airport_id
+        )  # Join with arrival airport
+        .filter(Booking.booking_id == db_booking.booking_id)
+        .first()
+    )
+
+    if not result:
+        raise HTTPException(
+            status_code=404, detail="Flight not found for this booking ID"
+        )
+
+    # Destructure the result
+    (
+        flight,
+        departure_city,
+        departure_airport_name,
+        arrival_city,
+        arrival_airport_name,
+    ) = result
+
+    db_payment = get_payment_by_booking(booking_id=str(db_booking.booking_id), db=db)
+
+    payment_status = "Paid"
+
+    if not db_payment:
+        payment_status = "Pending"
+
+    # Calculate flight duration, checking for delays
+    if flight.actual_departure_time and flight.actual_arrival_time:
+        duration: timedelta = flight.actual_arrival_time - flight.actual_departure_time
+        departure_time = flight.actual_departure_time.strftime("%H:%M")
+        arrival_time = flight.actual_arrival_time.strftime("%H:%M")
+    else:
+        duration: timedelta = (
+            flight.estimated_arrival_time - flight.estimated_departure_time
+        )
+        departure_time = flight.estimated_departure_time.strftime("%H:%M")
+        arrival_time = flight.estimated_arrival_time.strftime("%H:%M")
+
+    # Format the duration
+    hours, remainder = divmod(duration.total_seconds(), 3600)
+    minutes = remainder // 60
+    formatted_duration = f"{int(hours)} hours {int(minutes)} minutes"
+
+    passengers = get_passengers_in_booking(db_booking, db)
+
+    # Construct the response dictionary
+    return {
+        "id": flight.flight_id,
+        "class": db_booking.flight_class,
+        "cancelled": db_booking.cancelled,
+        "flightNumber": flight.flight_number,  # Replace with actual data if available
+        "departureTime": departure_time,
+        "arrivalTime": arrival_time,
+        "departure_city": departure_city,
+        "departure_airport": departure_airport_name,
+        "arrival_city": arrival_city,
+        "arrival_airport": arrival_airport_name,
+        "flightDate": flight.estimated_departure_time.strftime("%A, %d %B"),
+        "duration": formatted_duration,  # Replace with actual calculation
+        "status": flight.status,
+        "payment_status": payment_status,
+        "passengers": passengers,
     }
 
 
@@ -139,10 +286,10 @@ def get_users_booking(user_id: int, db: Session) -> List[Booking]:
     return bookings
 
 
-def calculate_price(booking: BookingCreate, db_booking: Booking, db: Session):
+def calculate_price(db_booking: Booking, db: Session):
     # Get flight seat information to determine the price
     flight_seat = get_flight_seat_by_flight_id_and_class(
-        db, booking.flight_id, booking.flight_class
+        db, conint(db_booking.flight_id), str(db_booking.flight_class)
     )
 
     price_per_adult = flight_seat.flight_price
@@ -173,17 +320,16 @@ def check_valid_passenger_seats(
     flight = db.query(Flight).filter(Flight.flight_id == booking.flight_id).first()
     if not flight:
         raise HTTPException(status_code=404, detail="Flight not found.")
-    
+
     # Query FlightSeats using the registration_number and flight class
     seating_info = (
         db.query(FlightSeats.max_col_seat, FlightSeats.max_row_seat)
         .filter(
             FlightSeats.registration_number == flight.registration_number,
-            FlightSeats.flight_class == booking.flight_class
+            FlightSeats.flight_class == booking.flight_class,
         )
         .first()
     )
-
 
     # Check if seating information was found
     if seating_info is None:
@@ -209,6 +355,7 @@ def check_valid_passenger_seats(
     passengers_in_flight = get_all_passenger_in_flight(booking.flight_id, db)
 
     for p in passengers_in_flight:
+        p = p["passenger"]
         if str(p.citizen_id) == passenger.citizen_id:
             raise HTTPException(
                 status_code=400,  # Use 400 for bad request

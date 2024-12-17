@@ -25,19 +25,17 @@ class AirplaneBase(SchemaModel):
     airplane_id: int
     airplane_model_id: int
     registration_number: str
-    current_airport_id: int
+  
 
 
 class AirplaneCreate(SchemaModel):
     airplane_model_id: int
     registration_number: str
-    current_airport_id: int
     flight_seats: List[FlightSeatsCreate]
 
 
 class AirplaneUpdate(SchemaModel):
     registration_number: str
-    current_airport_id: int
 
 
 class AirplaneInfo(SchemaModel):

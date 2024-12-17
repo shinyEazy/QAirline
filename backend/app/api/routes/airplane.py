@@ -65,6 +65,7 @@ async def delete_airplane_model_end_point(
     return delete_airplane_model(db, db_airplane_model)
 
 
+
 # Endpoints for Airplane
 
 
@@ -72,10 +73,9 @@ async def delete_airplane_model_end_point(
 async def create_airplane_end_point(
     airplane: AirplaneCreate, db: Session = Depends(get_db)
 ):
-    if not get_airport(db, airplane.current_airport_id):
-        raise HTTPException(status_code=404, detail="Airport not found")
     if not get_airplane_model(db, airplane.airplane_model_id):
         raise HTTPException(status_code=404, detail="Airplane model not found")
+    
     return create_airplane(db, airplane)
 
 
@@ -114,15 +114,23 @@ async def delete_airplane_end_point(airplane_id: int, db: Session = Depends(get_
     db_airplane = get_airplane_by_id(db, airplane_id)
     if not db_airplane:
         raise HTTPException(status_code=404, detail="Airplane not found")
-    return delete_airplane(db, db_airplane)
+    delete_airplane(db, db_airplane)
+    return{"message": f"Airplane with ID {airplane_id} has been deleted"}
 
-
-@router.get("/by-city/{city}", response_model=List[AirplaneInfo])
-async def get_airplane_by_city_end_point(city: str, db: Session = Depends(get_db)):
+@router.get("")
+async def get_all_airplanes_end_point(db: Session = Depends(get_db)):
     """
-    Get a list of airplanes by city
+    Get a list of all airplanes
     """
-    db_airplanes = get_airplane_by_city(db, city)
-    if not db_airplanes:
-        raise HTTPException(status_code=404, detail="Airplane not found")
+    db_airplanes = get_all_airplanes(db)
     return db_airplanes
+
+# @router.get("/by-city/{city}", response_model=List[AirplaneInfo])
+# async def get_airplane_by_city_end_point(city: str, db: Session = Depends(get_db)):
+#     """
+#     Get a list of airplanes by city
+#     """
+#     db_airplanes = get_airplane_by_city(db, city)
+#     if not db_airplanes:
+#         raise HTTPException(status_code=404, detail="Airplane not found")
+#     return db_airplanes

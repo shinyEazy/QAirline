@@ -5,6 +5,7 @@ from app.models import User
 from sqlalchemy.orm import Session
 from core.security import bcrypt_context
 from fastapi import HTTPException
+from app.service.email import is_valid_email
 
 MINIMUM_USER_PASSWORD = 8
 
@@ -49,12 +50,20 @@ def create_user(user: UserCreate, db: Session):
     user_model = user.model_dump()
 
     user_password = user_model["password"]
+    user_email = user_model["email"]
 
     for field in REQUIRED_FIELDS:
         if not user_model.get(field):
             raise HTTPException(
                 status_code=HTTP_400_BAD_REQUEST, detail=f"'{field}' is required."
             )
+
+    if not is_valid_email(user_email):
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail="User's email is invalid",
+        )
+
     if len(user_password) < MINIMUM_USER_PASSWORD:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,

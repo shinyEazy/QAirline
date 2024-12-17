@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
-from starlette.status import HTTP_404_NOT_FOUND
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks, status
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND
 from app.core.security import role_checker
 from app.models import FlightStatus
 from service.airplane import get_airplane_by_registration_number
@@ -51,7 +51,7 @@ async def update_flight_end_point(
                 status_code=400,
                 detail="Actual departure time cannot be earlier than estimated departure time",
             )
-    return update_flight(db, db_flight, flight)
+    return await update_flight(db, db_flight, flight)
 
 
 @router.delete("/{flight_id}", dependencies=[Depends(role_checker(["admin"]))])
@@ -121,6 +121,11 @@ async def delay_flight_end_point(
     db: Session = Depends(get_db),
 ):
     db_flight = get_flight(db, flight.flight_id)
+    if flight.status not in FlightStatus.__members__:
+        raise HTTPException(
+            status_code=HTTP_400_BAD_REQUEST,
+            detail=f"Flight status is invalid, please choose a correct flight status: Scheduled, On Time, Delayed, Cancelled, Landed",
+        )
     if not db_flight:
         raise HTTPException(status_code=404, detail="Flight not found")
 
@@ -129,19 +134,52 @@ async def delay_flight_end_point(
     return {"message": "Flight delayed"}
 
 
-@router.get("/{flight_id}/{flight_class}")
-def get_flight_seats_matrix_end_point(
-    flight_id: int, flight_class: FlightClass, db: Session = Depends(get_db)
-):
+@router.get("/flight-seats/{flight_id}/")
+def get_flight_seats_matrix_end_point(flight_id: int, db: Session = Depends(get_db)):
     """
     End point to get the flight's seat matrix based on the flight class
     """
-    if flight_class not in FlightClass:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid flight class value: {flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
-        )
+    # if flight_class not in FlightClass:
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail=f"Invalid flight class value: {flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
+    #     )
 
-    return get_flight_seats_matrix(
-        flight_id=flight_id, flight_class=flight_class, db=db
-    )
+    flight_seats_matrix = []
+    for flight_class in FlightClass:
+        flight_seats_matrix.append(
+            [
+                flight_class.value,
+                get_flight_seats_matrix(
+                    flight_id=flight_id, flight_class=flight_class, db=db
+                ),
+            ]
+        )
+    return flight_seats_matrix
+
+
+@router.get("/flight-seats-available/{flight_id}/")
+def get_available_flight_seats(flight_id: int, db: Session = Depends(get_db)):
+    """
+    End point to get the available seats for a given flight
+    """
+    flight_seat_matrix = []
+    for flight_class in FlightClass:
+        seat_matrix = get_flight_seats_matrix(
+            flight_id=flight_id, flight_class=flight_class, db=db
+        )
+        available_seats = count_available_seat(seat_matrix)
+        flight_seat_matrix.append([flight_class.value, available_seats])
+    return flight_seat_matrix
+
+
+# @router.get("/booking/{booking_id}")
+# def get_flight_info_by_flight(booking_id: str, db: Session = Depends(get_db)):
+#     booking_info = get_flight_by_booking(booking_id, db)
+
+#     if not db_flight:
+#         raise HTTPException(
+#             status_code=404, detail="No flight was found with that booking identifier"
+#         )
+
+#     return db_flight

@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from service.airport import get_city_by_airport_id
 from sqlalchemy.orm import joinedload
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, aliased
@@ -22,19 +23,21 @@ from app.models import (
     User,
 )
 from typing import List
-from app.service.email import send_email
+from app.service.email import is_valid_email, send_email
 from app.service.service_utils import seat_col_to_int, conint
+
+CANCELLED = True
 
 
 # CRUD for Flight
 def create_flight(db: Session, flight: FlightCreate) -> Flight:
     # Lấy máy bay từ database
-    airplane = (
-        db.query(Airplane).filter(Airplane.registration_number == flight.registration_number).first()
-    )
+    # airplane = (
+    #     db.query(Airplane).filter(Airplane.registration_number == flight.registration_number).first()
+    # )
 
-    flight_data = flight.model_dump(exclude={"flight_seats"})
-    flight_data["departure_airport_id"] = airplane.current_airport_id
+    flight_data = flight.model_dump()
+    # flight_data["departure_airport_id"] = airplane.current_airport_id
     db_flight = create(Flight, db, flight_data)
 
     # create_flight_seats_for_flight(flight, db_flight, db)
@@ -72,7 +75,37 @@ def get_flights_by_departure_time_and_cities(
     if not flights:
         raise HTTPException(status_code=404, detail="No flights found")
     result = []
+
     for flight, dep_airport, arr_airport in flights:
+        if flight.actual_departure_time and flight.actual_arrival_time:
+            duration: timedelta = (
+                flight.actual_arrival_time - flight.actual_departure_time
+            )
+            departure_time = flight.actual_departure_time.strftime("%H:%M")
+            arrival_time = flight.actual_arrival_time.strftime("%H:%M")
+        else:
+            duration: timedelta = (
+                flight.estimated_arrival_time - flight.estimated_departure_time
+            )
+            departure_time = flight.estimated_departure_time.strftime("%H:%M")
+            arrival_time = flight.estimated_arrival_time.strftime("%H:%M")
+
+        # Format the duration
+        hours, remainder = divmod(duration.total_seconds(), 3600)
+        minutes = remainder // 60
+        formatted_duration = f"{int(hours)} hours {int(minutes)} minutes"
+
+        # Calculate the available seats
+        flight_seat_matrix = []
+        total_available_seats = 0
+        for flight_class in FlightClass:
+            seat_matrix = get_flight_seats_matrix(
+                flight_id=flight.flight_id, flight_class=flight_class, db=db
+            )
+            available_seats = count_available_seat(seat_matrix)
+            total_available_seats += available_seats
+            flight_seat_matrix.append([flight_class.value, available_seats])
+        print(flight.flight_number, "BUIDUCANH")
         result.append(
             {
                 "id": flight.flight_id,
@@ -80,24 +113,40 @@ def get_flights_by_departure_time_and_cities(
                 "arrivalTime": flight.estimated_arrival_time.strftime("%H:%M"),
                 "from": dep_airport.city,
                 "to": arr_airport.city,
-                "seatsLeft": 666,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
-                "flightNumber": "VN 7239",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
-                "price": "$100 - $200",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "departure_airport_code": dep_airport.airport_code,
+                "arrival_airport_code": arr_airport.airport_code,
+                "seatsLeft": total_available_seats,
+                "flightNumber": str(
+                    flight.flight_number
+                ),  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "price": flight.flight_price,  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
                 "flightDate": flight.estimated_departure_time.strftime("%A, %d %B"),
                 "flightRoute": f"{dep_airport.city} - {arr_airport.city}",
-                "departureDetailTime": flight.estimated_departure_time.strftime(
-                    "%H:%M %p"
-                ),
+                "departureDetailTime": departure_time,
                 "departureAirport": f"{dep_airport.name}, {dep_airport.city}",
-                "arrivalDetailTime": flight.estimated_arrival_time.strftime("%H:%M %p"),
+                "arrivalDetailTime": arrival_time,
                 "arrivalAirport": f"{arr_airport.name}, {arr_airport.city}",
-                "duration": "2 hours 10 minutes",  # Bạn cần thay đổi giá trị này theo dữ liệu thực tế
+                "duration": formatted_duration,
+                "flight_seat_matrix": flight_seat_matrix,
             }
         )
     return result
 
 
-def update_flight(db: Session, db_flight: Flight, flight: FlightUpdate) -> Flight:
+async def update_flight(db: Session, db_flight: Flight, flight: FlightUpdate) -> Flight:
+
+    print(flight.status, FlightStatus.Delayed.value, "INNER UPDATE FLIGHT")
+    if flight.status == FlightStatus.Delayed.value:
+        message = await delay_flight(
+            conint(db_flight.flight_id),
+            flight.actual_departure_time,
+            flight.actual_arrival_time,
+            db_flight,
+            db,
+        )
+
+        print(message, "INNER UPDATE FLIGHT")
+
     return update(db_flight, db, flight.model_dump())
 
 
@@ -105,16 +154,22 @@ def delete_flight(db: Session, db_flight: Flight) -> Flight:
     return delete(db_flight, db)
 
 
-def get_all_passenger_in_flight(flight_id: int, db: Session) -> List[Passenger]:
+def get_all_passenger_in_flight(flight_id: int, db: Session):
     """
     Get all passengers in a given flight
     """
-    passengers = (
-        db.query(Passenger)
+    db_passengers = (
+        db.query(Passenger, Booking.flight_class)
+        .select_from(Passenger)
         .join(Booking, Booking.booking_id == Passenger.booking_id)
-        .filter(Booking.flight_id == flight_id)
+        .join(Flight, Booking.flight_id == Flight.flight_id)
+        .filter(Flight.flight_id == flight_id)
         .all()
     )
+
+    passengers = []
+    for db_passenger, flight_class in db_passengers:
+        passengers.append({"passenger": db_passenger, "flight_class": flight_class})
 
     return passengers
 
@@ -130,40 +185,70 @@ def get_flight_by_citizen_id(citizen_id: str, db: Session) -> Flight:
 
 
 def get_all_flights(db: Session):
-    return get_all(Flight, db)
+    # Truy vấn tất cả các flights
+    flights = db.query(Flight).all()
+
+    result = []
+    for flight in flights:
+        # Tìm thông tin departure airport
+        departure_airport = get_city_by_airport_id(db, flight.departure_airport_id)
+
+        # Tìm thông tin destination airport
+        destination_airport = get_city_by_airport_id(db, flight.destination_airport_id)
+
+        # Tạo dictionary flight với thông tin thành phố
+        flight_dict = flight.__dict__.copy()
+        flight_dict["departure_city"] = (
+            departure_airport.city if departure_airport else None
+        )
+        flight_dict["destination_city"] = (
+            destination_airport.city if destination_airport else None
+        )
+
+        # Loại bỏ các thuộc tính không cần thiết
+        flight_dict.pop("departure_airport_id", None)
+        flight_dict.pop("destination_airport_id", None)
+
+        result.append(flight_dict)
+
+    return result
 
 
-async def delay_flight(flight: FlightDelay, db_flight: Flight, db: Session):
+async def delay_flight(
+    flight_id,
+    actual_arrival_time,
+    actual_departure_time,
+    db_flight: Flight,
+    db: Session,
+):
     """
     Delays the flight
     """
-    users = get_users_in_flight(flight_id=flight.flight_id, db=db)
+    user_emails = get_user_emails_in_flight(flight_id=flight_id, db=db)
 
-    recipents = [str(user.email) for user in users]
+    recipents = [email for email in user_emails if is_valid_email(email)]
 
-    await send_email(
-        recipents,
-        f"Flight {flight.flight_id} delay",
-        f"Flight {flight.flight_id} has been delayed to {flight.actual_arrival_time}",
-    )
+    if recipents:
+        await send_email(
+            recipents,
+            f"Flight {db_flight.flight_number} delay",
+            f"Flight {db_flight.flight_number} has been delayed to {actual_departure_time} to {actual_arrival_time}",
+        )
 
-    return update(db_flight, db, flight.model_dump())
+    return "Delay successful"
 
 
-def get_users_in_flight(flight_id: int, db: Session) -> List[User]:
+def get_user_emails_in_flight(flight_id: int, db: Session) -> List[str]:
     """
     Used to send email to all users who booked this flight
     """
     bookings: List[Booking] = get_bookings_by_flight(flight_id, db)
 
-    users: List[User] = []
+    bookers_email: List[str] = []
 
     for booking in bookings:
-        user = get_booking_user(booking, db)
-
-        users.append(user)
-
-    return users
+        bookers_email.append(str(booking.booker_email))
+    return bookers_email
 
 
 def get_booking_user(db_booking: Booking, db: Session) -> User:
@@ -193,6 +278,7 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
         .join(Booking, Passenger.booking_id == Booking.booking_id)
         .filter(Booking.flight_id == flight_id)
         .filter(Booking.flight_class == flight_class.value)
+        .filter(Booking.cancelled != CANCELLED)  # Exclude cancelled bookings
         .options(
             joinedload(Passenger.booking)
         )  # Optional: Eager loading for related data
@@ -206,7 +292,7 @@ def get_flight_seats_matrix(flight_id: int, flight_class: FlightClass, db: Sessi
     max_seat_col: int = seat_col_to_int(str(flight_seat.max_col_seat))
     # seat_row and seat_col are 1-based
     passengers_seats_in_flight_class = [
-        (conint(passenger.seat_row), seat_col_to_int(str(passenger.seat_col)))
+        (conint(passenger.seat_row) - 1, seat_col_to_int(str(passenger.seat_col)) - 1)
         for passenger in passengers_in_flight_class
     ]
 
@@ -229,3 +315,13 @@ def get_flight_price(flight_id: int, flight_class: str, db: Session) -> float:
     flight_seats = get_flight_seat_by_flight_id_and_class(db, flight_id, flight_class)
 
     return flight_seats.class_multiplier * flight.flight_price
+
+
+def count_available_seat(seat_matrix: list[list[bool]]) -> int:
+    """
+    Count the number of available seats in a given seat matrix
+    """
+    available_seats = 0
+    for row in seat_matrix:
+        available_seats += row.count(False)
+    return available_seats

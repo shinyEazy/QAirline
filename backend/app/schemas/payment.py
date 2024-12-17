@@ -18,4 +18,5 @@ class PaymentCreate(SchemaModel):
     amount: Optional[float]
     currency: str = "USD"
     payment_method: str
-    booking_id: int
+    status: str
+    booking_id: str

@@ -19,7 +19,10 @@ export const useAdminAuth = () => {
   //   useEffect(() => {
   //     setIsLogin(!!authorizationUtil.getIsAdmin());
   //   }, []);
-
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    setIsLogin(!!token); // Kiểm tra token để cập nhật trạng thái đăng nhập
+  }, []);
   return { isLogin };
 };
 

@@ -8,10 +8,6 @@ def create_flight_seat(db: Session, flight_seat: FlightSeatsCreate) -> FlightSea
     return create(FlightSeats, db, flight_seat.model_dump())
 
 
-def get_flight_seat_by_registration_number(db: Session, registration_number: str) -> FlightSeats:
-    return db.query(FlightSeats).filter(FlightSeats.registration_number == registration_number).all()
-
-
 def get_flight_seat_by_flight_id_and_class(
     db: Session, flight_id: int, flight_class: str
 ) -> FlightSeats:
@@ -19,7 +15,8 @@ def get_flight_seat_by_flight_id_and_class(
     return (
         db.query(FlightSeats)
         .filter(
-            FlightSeats.registration_number == airplane.registration_number, FlightSeats.flight_class == flight_class
+            FlightSeats.registration_number == airplane.registration_number,
+            FlightSeats.flight_class == flight_class,
         )
         .first()
     )

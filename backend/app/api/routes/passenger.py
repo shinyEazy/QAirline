@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.core.security import role_checker
+from app.models import Gender
+from service.statistical import get_ticket_count_by_period, get_ticket_count_details
 from service.passenger import *
 from sqlalchemy.orm import Session
 from core.database import get_db
@@ -33,6 +35,9 @@ def create_passenger_end_point(
     Create a passenger
     """
 
+    if passenger.gender not in Gender.__members__:
+        raise HTTPException(status_code=400, detail="Must be either Male or Female")
+
     return create_passenger(passenger, db)
 
 
@@ -44,7 +49,8 @@ def update_passenger_end_point(
     Update a passenger
     """
     db_passenger = get_passenger(citizen_id, db)
-
+    if passenger.gender not in Gender.__members__:
+        raise HTTPException(status_code=400, detail="Must be either Male or Female")
     if not db_passenger:
         raise HTTPException(status_code=404, detail="Passenger not found")
 
@@ -96,3 +102,13 @@ def delete_passenger_end_point(
 @router.get("/")
 def get_all_passengers_end_point(db: Session = Depends(get_db)):
     return get_all(Passenger, db)
+
+
+@router.get("/ticket/count/{period}")
+def get_ticket_counts_end_point(period: str, db: Session = Depends(get_db)):
+    return get_ticket_count_by_period(db, period)
+
+
+@router.get("/ticket/count/")
+def get_ticket_count_details_end_point(db: Session = Depends(get_db)):
+    return get_ticket_count_details(db)

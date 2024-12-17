@@ -9,13 +9,15 @@ from core.database import get_db
 router = APIRouter(
     prefix="/airports",
     tags=["Airport"],
-    dependencies=[Depends(role_checker(["admin"]))],
 )
 
 # Endpoints for Airport
 
 
-@router.post("/")
+@router.post(
+    "/",
+    dependencies=[Depends(role_checker(["admin"]))],
+)
 async def create_airport_end_point(
     airport: AirportCreate, db: Session = Depends(get_db)
 ):
@@ -30,7 +32,10 @@ async def get_airport_end_point(airport_id: int, db: Session = Depends(get_db)):
     return db_airport
 
 
-@router.put("/{airport_id}")
+@router.put(
+    "/{airport_id}",
+    dependencies=[Depends(role_checker(["admin"]))],
+)
 async def update_airport_end_point(
     airport_id: int, airport: AirportUpdate, db: Session = Depends(get_db)
 ):
@@ -43,7 +48,10 @@ async def update_airport_end_point(
     return update_airport(db, db_airport, airport)
 
 
-@router.delete("/{airport_id}")
+@router.delete(
+    "/{airport_id}",
+    dependencies=[Depends(role_checker(["admin"]))],
+)
 async def delete_airport_end_point(airport_id: int, db: Session = Depends(get_db)):
     """
     Delete an airport
@@ -52,3 +60,9 @@ async def delete_airport_end_point(airport_id: int, db: Session = Depends(get_db
     if not db_airport:
         raise HTTPException(status_code=404, detail="Airport not found")
     return delete_airport(db, db_airport)
+
+
+@router.get("/")
+async def get_all_airports_end_point(db: Session = Depends(get_db)):
+    return get_all_airports(db)
+

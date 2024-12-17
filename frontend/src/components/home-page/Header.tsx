@@ -25,7 +25,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useMediaQuery("(max-width:1100px)");
+  const isMobile = useMediaQuery("(max-width:900px)");
 
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -34,8 +34,8 @@ const Header = () => {
     {
       label: "Flight",
       subItems: [
-        { label: "Flight Listing", path: "/flight-listing" },
-        { label: "Flight Booking", path: "/flight-booking" },
+        { label: "Flight Listing", path: "/flight/list" },
+        { label: "Flight Booking", path: "/flight/booking" },
       ],
     },
     {
@@ -60,14 +60,14 @@ const Header = () => {
         { label: "About", path: "/about" },
         { label: "Contact", path: "/contact" },
         { label: "Privacy Policy", path: "/privacy-policy" },
-        { label: "Login", path: "/auth/login" },
-        { label: "Sign Up", path: "/auth/signup" },
+        // { label: "Login", path: "/auth/login" },
+        // { label: "Sign Up", path: "/auth/signup" },
       ],
     },
     {
       label: "News",
       subItems: [
-        { label: "News Listing", path: "/news-listing" },
+        { label: "News Listing", path: "/news/list" },
         { label: "News Detail", path: "/news-detail" },
       ],
     },
@@ -126,11 +126,14 @@ const Header = () => {
           >
             {menu.label}
           </Button>
-          {hoveredMenu === menu.label && (
+          {hoveredMenu === menu.label && menu.subItems.length > 0 && (
             <Box
               sx={{
                 position: "absolute",
-                left: 0,
+                left:
+                  menu.label === "News" || menu.label === "Pages" ? "auto" : 0,
+                right:
+                  menu.label === "News" || menu.label === "Pages" ? 0 : "auto",
                 bgcolor: "rgb(230, 238, 245)",
                 borderRadius: "8px",
                 padding: "10px",
@@ -171,7 +174,37 @@ const Header = () => {
       <IconButton onClick={toggleDrawer}>
         {isDrawerOpen ? <CloseIcon /> : <MenuIcon />}
       </IconButton>
-      <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
+      <Drawer
+        anchor="left"
+        open={isDrawerOpen}
+        onClose={toggleDrawer}
+        sx={{
+          "& .MuiDrawer-paper": {
+            padding: "0 10px",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "auto",
+            "::-webkit-scrollbar": {
+              width: "8px",
+              height: "8px",
+            },
+            "::-webkit-scrollbar-track": {
+              background: "#f0f0f0",
+              borderRadius: "8px",
+            },
+            "::-webkit-scrollbar-thumb": {
+              background: "#888",
+              borderRadius: "8px",
+            },
+            "::-webkit-scrollbar-thumb:hover": {
+              background: "#555",
+            },
+            "::-webkit-scrollbar-corner": {
+              background: "#f0f0f0",
+            },
+          },
+        }}
+      >
         <List
           sx={{
             width: "250px",
@@ -356,7 +389,10 @@ const Header = () => {
         backgroundColor: "#ffffff",
         top: 0,
         zIndex: 1100,
-        padding: { xs: "10px 20px", sm: "10px 80px" },
+        padding: { sm: "10px 80px" },
+        "@media (max-width: 1000px)": {
+          padding: "10px 20px",
+        },
       }}
     >
       {/* Logo */}
@@ -378,7 +414,7 @@ const Header = () => {
       {isMobile ? renderMobileMenu() : renderDesktopMenu()}
 
       {/* Authentication Links */}
-      <Box display="flex" gap="10px">
+      {/* <Box display="flex" gap="10px">
         <Button
           sx={{
             color: "#1e90ff",
@@ -423,7 +459,7 @@ const Header = () => {
         >
           Signup
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

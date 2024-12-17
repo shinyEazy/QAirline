@@ -16,10 +16,15 @@ const Footer = () => {
         borderRadius: "20px",
         margin: "0 60px",
         color: "black",
-        gap: "40px",
+        gap: "20px",
+        "@media (max-width: 1000px)": {
+          margin: 0,
+          overflow: "hidden",
+          flexDirection: "column",
+        },
       }}
     >
-      <Box flex={2}>
+      <Box flex={1}>
         <Box display="flex" alignItems="center" gap="8px">
           <img
             src="/logo.png"
@@ -79,146 +84,157 @@ const Footer = () => {
           </Button>
         </Box>
       </Box>
-      <Box flex={1}>
-        <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
-          Booking
-        </Typography>
-        <Typography marginBottom="10px">Book Flights</Typography>
-        <Typography marginBottom="10px">Travel Services</Typography>
-        <Typography marginBottom="10px">Transportation</Typography>
-        <Typography marginBottom="10px"> Planning Your Trip</Typography>
-      </Box>
-      <Box flex={1}>
-        <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
-          Useful Links
-        </Typography>
-        <Typography marginBottom="10px">Home</Typography>
-        <Typography marginBottom="10px">Blogs</Typography>
-        <Typography marginBottom="10px">About</Typography>
-        <Typography marginBottom="10px">Contact Us</Typography>
-      </Box>
-      <Box flex={1}>
-        <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
-          Manage
-        </Typography>
-        <Typography marginBottom="10px">Check-in</Typography>
-        <Typography marginBottom="10px">Manage Your Booking</Typography>
-        <Typography marginBottom="10px">Chaurfeur Drive</Typography>
-        <Typography marginBottom="10px">Flight Status</Typography>
-      </Box>
-      <Box flex={2}>
-        <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
-          Contact Us
-        </Typography>
-        <Typography marginBottom="10px" alignItems="center" display="flex">
-          <FontAwesomeIcon
-            icon={faLocationDot}
-            fontSize="1.2rem"
-            style={{ marginRight: "8px" }}
-          />{" "}
-          123 Main Street, Anytown, USA.
-        </Typography>
-        <Typography
-          color="rgb(77, 115, 252)"
-          fontSize="1.5rem"
-          fontWeight="500"
-          marginBottom="10px"
-          alignItems="center"
-          display="flex"
-        >
-          <FontAwesomeIcon
-            style={{ marginRight: "8px" }}
-            icon={faPhone}
-            fontSize="1.2rem"
-            color="black"
-          />{" "}
-          +1 234 567 890
-        </Typography>
-        <Typography marginBottom="20px" alignItems="center" display="flex">
-          <FontAwesomeIcon
-            style={{ marginRight: "8px" }}
-            icon={faEnvelope}
-            fontSize="1.2rem"
-          />{" "}
-          email@example.com
-        </Typography>
-        <Typography marginBottom="8px">Follow Us!</Typography>
-        <Box display="flex" gap="16px" marginBottom="20px">
-          <Button
-            sx={{
-              backgroundColor: "#4D73FC",
-              borderRadius: "8px",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textTransform: "none",
-              padding: "8px",
-              minWidth: "48px",
-
-              "&:hover": {
-                backgroundColor: "#3B5FC1",
-              },
-            }}
-          >
-            <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/instagram.png" />
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "#4D73FC",
-              borderRadius: "8px",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textTransform: "none",
-              padding: "8px",
-              minWidth: "48px",
-              "&:hover": {
-                backgroundColor: "#3B5FC1",
-              },
-            }}
-          >
-            <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/facebook.png" />
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "#4D73FC",
-              borderRadius: "8px",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textTransform: "none",
-              padding: "8px",
-              minWidth: "48px",
-              "&:hover": {
-                backgroundColor: "#3B5FC1",
-              },
-            }}
-          >
-            <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/linkedin.png" />
-          </Button>
-          <Button
-            sx={{
-              backgroundColor: "#4D73FC",
-              borderRadius: "8px",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textTransform: "none",
-              padding: "8px",
-              minWidth: "48px",
-              "&:hover": {
-                backgroundColor: "#3B5FC1",
-              },
-            }}
-          >
-            <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/twitter.png" />
-          </Button>
+      <Box display="flex" flex={1} gap="20px">
+        <Box flex={1}>
+          <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
+            Booking
+          </Typography>
+          <Typography marginBottom="10px">Book Flights</Typography>
+          <Typography marginBottom="10px">Travel Services</Typography>
+          <Typography marginBottom="10px">Transportation</Typography>
+          <Typography marginBottom="10px"> Planning Your Trip</Typography>
         </Box>
-        <Typography>©2024 QAirline All Rights Reserved.</Typography>
+        <Box flex={1}>
+          <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
+            Useful Links
+          </Typography>
+          <Typography marginBottom="10px">Home</Typography>
+          <Typography marginBottom="10px">Blogs</Typography>
+          <Typography marginBottom="10px">About</Typography>
+          <Typography marginBottom="10px">Contact Us</Typography>
+        </Box>
+      </Box>
+      <Box display="flex" flex={1.5} gap="20px">
+        <Box flex={1}>
+          <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
+            Manage
+          </Typography>
+          <Typography marginBottom="10px">Check-in</Typography>
+          <Typography marginBottom="10px">Manage Your Booking</Typography>
+          <Typography marginBottom="10px">Chaurfeur Drive</Typography>
+          <Typography marginBottom="10px">Flight Status</Typography>
+        </Box>
+        <Box
+          flex={2}
+          sx={{
+            "@media (max-width: 1000px)": {
+              flex: 1,
+            },
+          }}
+        >
+          <Typography fontWeight="500" fontSize="1.4rem" marginBottom="20px">
+            Contact Us
+          </Typography>
+          <Typography marginBottom="10px" alignItems="center" display="flex">
+            <FontAwesomeIcon
+              icon={faLocationDot}
+              fontSize="1.2rem"
+              style={{ marginRight: "8px" }}
+            />
+            144 Xuan Thuy, Hanoi
+          </Typography>
+          <Typography
+            color="rgb(77, 115, 252)"
+            fontSize="1.5rem"
+            fontWeight="500"
+            marginBottom="10px"
+            alignItems="center"
+            display="flex"
+          >
+            <FontAwesomeIcon
+              style={{ marginRight: "8px" }}
+              icon={faPhone}
+              fontSize="1.2rem"
+              color="black"
+            />
+            +84 0989.xxx.xxx
+          </Typography>
+          <Typography marginBottom="20px" alignItems="center" display="flex">
+            <FontAwesomeIcon
+              style={{ marginRight: "8px" }}
+              icon={faEnvelope}
+              fontSize="1.2rem"
+            />
+            email@example.com
+          </Typography>
+          <Typography marginBottom="8px">Follow Us!</Typography>
+          <Box display="flex" gap="16px" marginBottom="20px">
+            <Button
+              sx={{
+                backgroundColor: "#4D73FC",
+                borderRadius: "8px",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textTransform: "none",
+                padding: "8px",
+                minWidth: "48px",
+
+                "&:hover": {
+                  backgroundColor: "#3B5FC1",
+                },
+              }}
+            >
+              <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/instagram.png" />
+            </Button>
+            <Button
+              sx={{
+                backgroundColor: "#4D73FC",
+                borderRadius: "8px",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textTransform: "none",
+                padding: "8px",
+                minWidth: "48px",
+                "&:hover": {
+                  backgroundColor: "#3B5FC1",
+                },
+              }}
+            >
+              <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/facebook.png" />
+            </Button>
+            <Button
+              sx={{
+                backgroundColor: "#4D73FC",
+                borderRadius: "8px",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textTransform: "none",
+                padding: "8px",
+                minWidth: "48px",
+                "&:hover": {
+                  backgroundColor: "#3B5FC1",
+                },
+              }}
+            >
+              <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/linkedin.png" />
+            </Button>
+            <Button
+              sx={{
+                backgroundColor: "#4D73FC",
+                borderRadius: "8px",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textTransform: "none",
+                padding: "8px",
+                minWidth: "48px",
+                "&:hover": {
+                  backgroundColor: "#3B5FC1",
+                },
+              }}
+            >
+              <img src="https://uiparadox.co.uk/public/templates/flynow/v2/assets/media/icons/twitter.png" />
+            </Button>
+          </Box>
+          <Typography>©2024 QAirline All Rights Reserved.</Typography>
+        </Box>
       </Box>
     </Box>
   );

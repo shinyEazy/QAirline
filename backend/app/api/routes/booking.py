@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends
 from starlette.status import HTTP_404_NOT_FOUND
 from app.core.security import get_current_user, role_checker
 from schemas.booking import BookingCreate, BookingBase
@@ -7,16 +7,17 @@ from service.passenger import *
 from sqlalchemy.orm import Session
 from core.database import get_db
 from app.models import Admin, FlightClass, FlightSeats, User
+from typing import Optional
 
 router = APIRouter(
     prefix="/booking",
     tags=["Booking"],
-    dependencies=[Depends(role_checker(["admin", "user"]))],
+    # dependencies=[Depends(role_checker(["admin"]))],
 )
 
 
 @router.get("/{booking_id}")
-def get_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
+def get_booking_end_point(booking_id, db: Session = Depends(get_db)):
     """
     Get a specific booking by booking_id
     """
@@ -30,7 +31,7 @@ def get_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/passengers/{booking_id}")
-def get_passenger_in_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
+def get_passenger_in_booking_end_point(booking_id, db: Session = Depends(get_db)):
     """
     Get all passengers in a booking
     """
@@ -55,9 +56,9 @@ def get_passenger_in_booking_end_point(booking_id: int, db: Session = Depends(ge
 
 
 @router.post("/")
-def create_booking_end_point(
+async def create_booking_end_point(
+    background_tasks: BackgroundTasks,
     booking: BookingCreate,
-    user: User = Depends(role_checker(["user", "admin"])),
     db: Session = Depends(get_db),
 ):
     """
@@ -70,19 +71,18 @@ def create_booking_end_point(
             detail=f"Invalid flight class value: {booking.flight_class}. Please use one of the valid options: 'Economy', 'Business', 'FirstClass'.",
         )
 
-    db_booking = create_booking(user, booking, db)
-    
+    db_booking = await create_booking(booking, db)
+
     print("Type of db_booking:", type(db_booking))
     print("db_booking:", db_booking)
     return {
         "booking": db_booking,
-        "user_id": user.user_id,
     }
 
 
 @router.get("/flight/{flight_id}")
 def get_booking_by_flight_id_end_point(
-    flight_id: int,
+    flight_id,
     db: Session = Depends(get_db),
     admin: Admin = Depends(role_checker(["admin"])),
 ):
@@ -100,7 +100,7 @@ def get_booking_by_flight_id_end_point(
 
 @router.put("/{booking_id}")
 def update_booking_end_point(
-    booking_id: int, booking: BookingUpdate, db: Session = Depends(get_db)
+    booking_id, booking: BookingUpdate, db: Session = Depends(get_db)
 ):
     """
     Update a booking
@@ -114,7 +114,7 @@ def update_booking_end_point(
 
 
 @router.delete("/{booking_id}")
-def delete_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
+def delete_booking_end_point(booking_id, db: Session = Depends(get_db)):
     """
     Delete a booking
     """
@@ -127,7 +127,7 @@ def delete_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/cancel/{booking_id}")
-def cancel_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
+def cancel_booking_end_point(booking_id, db: Session = Depends(get_db)):
 
     db_booking = get_booking(booking_id, db)
 
@@ -138,4 +138,22 @@ def cancel_booking_end_point(booking_id: int, db: Session = Depends(get_db)):
     return {"message": "Successfully cancelled the flight"}
 
 
-# helper functions
+@router.get("/info/{booking_id}")
+def get_booking_info_end_point(booking_id: str, db: Session = Depends(get_db)):
+    db_booking = get_booking(booking_id, db)
+
+    if not db_booking:
+        raise HTTPException(status_code=404, detail="No booking with identifier exists")
+
+    booking_info = get_booking_info(db_booking, db)
+    if not booking_info:
+        raise HTTPException(
+            status_code=404, detail="No flight was found with that booking identifier"
+        )
+
+    return booking_info
+
+
+@router.get("/", dependencies=[Depends(role_checker(["admin"]))])
+def get_all_bookings_end_point(db: Session = Depends(get_db)):
+    return get_all_bookings(db)

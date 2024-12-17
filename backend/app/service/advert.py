@@ -4,6 +4,7 @@ from app.schemas.advert import AdvertBase, AdvertCreate
 from .crud_utils import *
 from sqlalchemy.orm import Session
 import os
+from app.main import UPLOAD_DIR
 
 
 async def create_advert(file: UploadFile, advert_name: str, text: str, db: Session):

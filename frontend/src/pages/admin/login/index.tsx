@@ -9,10 +9,23 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { handleUserAuthentication } from "hooks/auth-hook";
 const AdminLogin = () => {
   const navigate = useNavigate();
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLoginSubmission = async () => {
+    try {
+      await handleUserAuthentication(username, password);
+      navigate("/admin");
+    } catch (err) {
+      console.error("Error authenticating user", err);
+    }
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/admin/login');
+  }
   return (
     <Box margin="auto" height="100vh">
       <Box
@@ -36,8 +49,9 @@ const AdminLogin = () => {
           </Box>
           <TextField
             fullWidth
-            label="Email"
+            label="Username"
             variant="outlined"
+            onChange={(e) => setUsername(e.target.value)}
             sx={{
               margin: "10px auto",
               "& .MuiOutlinedInput-root": {
@@ -49,13 +63,13 @@ const AdminLogin = () => {
               },
             }}
           />
-
           <TextField
             fullWidth
             label="Password"
             variant="outlined"
             margin="normal"
-            // type={showPassword ? "text" : "password"}
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
             sx={{
               margin: "10px auto 20px",
               "& .MuiOutlinedInput-root": {
@@ -67,9 +81,10 @@ const AdminLogin = () => {
               },
             }}
           />
+
           <Box display="flex" justifyContent="center" width="100%">
             <Button
-              onClick={() => navigate("/admin")}
+              onClick={handleLoginSubmission}
               variant="contained"
               sx={{
                 marginTop: "20px",

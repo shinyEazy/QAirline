@@ -10,6 +10,8 @@ import {
   Typography,
   Divider,
   Checkbox,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -17,28 +19,64 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "react-datepicker/dist/react-datepicker.css";
 import "./css/DatePickerStyles.css";
+import "./css/test.css";
 import { Flight } from "types/flight";
-interface FlightSearchProps {
-  setFlights: React.Dispatch<React.SetStateAction<Flight[]>>;
-}
-const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
-  const [departureCity, setDepartureCity] = useState("");
-  const [arrivalCity, setArrivalCity] = useState("");
-  const [departing, setDeparting] = useState(new Date());
-  const [returning, setReturning] = useState(() => {
-    const today = new Date();
-    today.setDate(today.getDate() + 2);
-    return today;
-  });
-  const [showReturnDate, setShowReturnDate] = useState(false);
-  const [tripType, setTripType] = useState("oneway");
-  const [isRoundTrip, setIsRoundTrip] = useState(false);
-  const location = useLocation();
-  const naviagate = useNavigate();
+import { useFlightSearchStore } from "hooks/flight-search-hook";
+import { fetchAirport } from "hooks/airport-hook";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const FlightSearch: React.FC = () => {
+  const navigate = useNavigate();
+  const [airports, setAirports] = useState<
+    { airport_id: number; city: string; airport_code: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchInitialAirports = async () => {
+      try {
+        const data = await fetchAirport();
+        setAirports(data);
+      } catch (error) {
+        console.error("Failed to fetch airports:", error);
+      }
+    };
+
+    fetchInitialAirports();
+  }, []);
 
   // useEffect(() => {
   //   window.scrollTo(0, 0);
   // }, [location]);
+
+  const {
+    departureCity,
+    arrivalCity,
+    departing,
+    returning,
+    tripType,
+    showReturnDate,
+    isRoundTrip,
+    setDepartureCity,
+    setArrivalCity,
+    setDeparting,
+    setReturning,
+    setShowReturnDate,
+    setIsRoundTrip,
+    setTripType,
+    setFlights,
+    loading,
+    setLoading,
+  } = useFlightSearchStore();
+
+  const options = airports.map((airport) => ({
+    value: airport.city,
+    label: `${airport.city} (${airport.airport_code})`,
+  }));
+
+  const handleChange = (selectedOption) => {
+    setDepartureCity(selectedOption ? selectedOption.value : "");
+  };
 
   useEffect(() => {
     if (tripType === "roundtrip") {
@@ -47,32 +85,64 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
       setShowReturnDate(false);
     }
   }, [tripType]);
+
   const handleSearch = async () => {
+    setLoading(true);
+
+    toast.dismiss();
+
     const searchParams = new URLSearchParams({
       departure_city: departureCity,
       arrival_city: arrivalCity,
       departure_time: departing.toISOString().split("T")[0],
     });
 
+    if (departureCity === "" || arrivalCity === "") {
+      toast.error("Please select departure and arrival cities");
+      setLoading(false);
+      return;
+    }
+
     if (tripType === "roundtrip") {
       searchParams.append("return_date", returning.toISOString().split("T")[0]);
     }
-    fetch(`http://localhost:8000/api/flights/search/?${searchParams.toString()}`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Data:", data);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/flights/search/?${searchParams.toString()}`
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
         setFlights(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching flights:", error);
-      });
-    // naviagate('/flight-listing?${searchParams.toString()}');
+        navigate(`/flight/list?${searchParams.toString()}`);
+        toast.success("Flights fetched successfully!");
+      } else {
+        setFlights([]);
+        navigate(`/flight/list`);
+        toast.info("No flights found for your search criteria.");
+      }
+    } catch (error) {
+      console.error("Error fetching flights:", error);
+      toast.error("An unexpected error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const swapCities = () => {
+    setDepartureCity(arrivalCity);
+    setArrivalCity(departureCity);
+  };
+
   return (
     <Box
       sx={{
         borderRadius: "20px",
         margin: "40px 80px",
+        "@media (max-width:1000px)": {
+          margin: "40px 20px 20px",
+        },
       }}
     >
       <Box bgcolor="#1e9faf" borderRadius="16px">
@@ -84,10 +154,6 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
             sx={{
               justifyContent: "flex-start",
               marginLeft: "12px",
-              "@media (max-width:800px)": {
-                flexDirection: "column",
-                gap: "10px", // Adjust spacing for stacked layout
-              },
             }}
           >
             <FormControlLabel
@@ -153,6 +219,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
             />
           </RadioGroup>
         </FormControl>
+
         {/* Input Fields */}
         <Box
           gap="10px"
@@ -167,36 +234,24 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
             alignItems="center"
             flexWrap="wrap"
             sx={{
-              flexDirection: {
-                xs: "column", // Extra small screens
-                md: "row", // Medium screens (default row for larger screens)
-              },
               "@media (max-width:1000px)": {
                 flexDirection: "column",
-                gap: "20px", // Adjust spacing for stacked layout
-              },
-              "@media (max-width:800px)": {
-                flexDirection: "column",
-                gap: "0",
+                gap: "20px",
               },
             }}
           >
             <Box
-              width="100%"
               flex={1}
               display="flex"
               alignItems="center"
-              justifyContent="space-between"
-              margin="20px 0"
               gap="20px"
               sx={{
-                "@media (max-width:800px)": {
-                  flexDirection: "column",
-                  gap: "10px",
+                "@media (max-width:1000px)": {
+                  width: "100%",
                 },
               }}
             >
-              <Box>
+              <Box flex={1}>
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -205,37 +260,106 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
                 >
                   From
                 </Typography>
-                <TextField
-                  fullWidth
+                <Select
+                  labelId="departure-label"
+                  id="departure"
                   value={departureCity}
                   onChange={(e) => setDepartureCity(e.target.value)}
-                  variant="standard"
-                  InputProps={{
-                    disableUnderline: false,
-                    style: {
-                      backgroundColor: "transparent",
+                  displayEmpty
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 200,
+                        overflow: "auto",
+                        "&::-webkit-scrollbar": {
+                          width: "8px",
+                          height: "8px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          background: "#f0f0f0",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: "#888",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb:hover": {
+                          background: "#555",
+                        },
+                        "&::-webkit-scrollbar-corner": {
+                          background: "#f0f0f0",
+                        },
+                      },
                     },
                   }}
                   sx={{
-                    "& .MuiInput-root": {
-                      fontSize: "1.3rem",
-                      borderRadius: "10px",
-                      backgroundColor: "transparent",
+                    width: "100%",
+                    minHeight: "40px",
+                    marginBottom: "0",
+                    marginTop: "0",
+                    fontSize: "1rem",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    boxShadow: "none",
+                    "& .MuiOutlinedInput-root": {
+                      border: "none",
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                    "&:focus": {
+                      border: "none",
                     },
                   }}
-                />
+                >
+                  <MenuItem value="" disabled>
+                    Select city
+                  </MenuItem>
+                  {airports.map((airport) => (
+                    <MenuItem
+                      key={airport.airport_id}
+                      value={airport.city}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
+                        },
+                        "&.Mui-selected": {
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
+                        },
+                      }}
+                    >
+                      {`${airport.city} (${airport.airport_code})`}
+                    </MenuItem>
+                  ))}
+                </Select>
               </Box>
               <FontAwesomeIcon
                 icon={faArrowRightArrowLeft}
                 style={{
-                  color: "rgba(0, 0, 0, 0.6)",
-                  fontSize: "0.8rem",
-                  border: "1px solid rgba(0, 0, 0, 0.6)",
+                  color: "white",
+                  fontSize: "1rem",
+                  border: "1px solid #1e90ff",
                   borderRadius: "50%",
-                  padding: "4px",
+                  padding: "8px",
+                  backgroundColor: "#1e90ff",
+                  transition: "all 0.3s ease-in-out",
+                  cursor: "pointer",
                 }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#2177cb";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#1e90ff";
+                }}
+                onClick={swapCities}
               />
-              <Box>
+              <Box flex={1}>
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -244,25 +368,84 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
                 >
                   To
                 </Typography>
-                <TextField
-                  fullWidth
-                  value={arrivalCity}
+                <Select
+                  labelId="arrival-label"
+                  id="departure"
+                  value={arrivalCity || ""}
                   onChange={(e) => setArrivalCity(e.target.value)}
-                  variant="standard"
-                  InputProps={{
-                    disableUnderline: false,
-                    style: {
-                      backgroundColor: "transparent",
+                  displayEmpty
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 200,
+                        overflowY: "auto",
+                        "&::-webkit-scrollbar": {
+                          width: "8px",
+                          height: "8px",
+                        },
+                        "&::-webkit-scrollbar-track": {
+                          background: "#f0f0f0",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb": {
+                          background: "#888",
+                          borderRadius: "8px",
+                        },
+                        "&::-webkit-scrollbar-thumb:hover": {
+                          background: "#555",
+                        },
+                        "&::-webkit-scrollbar-corner": {
+                          background: "#f0f0f0",
+                        },
+                      },
                     },
                   }}
                   sx={{
-                    "& .MuiInput-root": {
-                      fontSize: "1.3rem",
-                      borderRadius: "10px",
-                      backgroundColor: "transparent",
+                    width: "100%",
+                    height: "40px",
+                    marginBottom: "0",
+                    marginTop: "0",
+                    fontSize: "1rem",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    boxShadow: "none",
+                    "& .MuiOutlinedInput-root": {
+                      border: "none",
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                    "&:focus": {
+                      border: "none",
                     },
                   }}
-                />
+                >
+                  <MenuItem value="" disabled>
+                    Select city
+                  </MenuItem>
+                  {airports.map((airport) => (
+                    <MenuItem
+                      key={airport.airport_id}
+                      value={airport.city}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
+                        },
+                        "&.Mui-selected": {
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
+                        },
+                        "&.Mui-selected:hover": {
+                          backgroundColor: "#1e90ff",
+                          color: "#fff",
+                        },
+                      }}
+                    >
+                      {`${airport.city} (${airport.airport_code})`}
+                    </MenuItem>
+                  ))}
+                </Select>
               </Box>
             </Box>
             <Divider
@@ -271,33 +454,18 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
               sx={{ mx: 2, backgroundColor: "rgba(0, 0, 0, 0.2)" }}
             />
             <Box
-              width="100%"
               flex={1}
               display="flex"
-              justifyContent="space-between"
               sx={{
                 "@media (max-width:1350px)": {
-                  gap: "60px",
-                },
-                "@media (max-width:800px)": {
-                  flexDirection: "column",
                   gap: "20px",
-                  justifyContent: "center",
-                  alignItems: "center",
+                },
+                "@media (max-width:1000px)": {
+                  width: "100%",
                 },
               }}
             >
-              <Box
-                sx={{
-                  "@media (min-width:1400px)": {
-                    gap: "60px",
-                    flex: "1",
-                  },
-                  "@media (max-width:1350px)": {
-                    gap: "20px",
-                  },
-                }}
-              >
+              <Box flex={1} sx={{}}>
                 <Typography
                   sx={{
                     color: "rgba(0, 0, 0, 0.6)",
@@ -306,41 +474,56 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
                 >
                   Departure Date
                 </Typography>
-                <DatePicker
-                  selected={departing}
-                  onChange={(date) => {
-                    if (date) setDeparting(date); // Chỉ cập nhật nếu `date` không phải null
-                  }}
-                  dateFormat="MMM d, yyyy"
-                  customInput={
-                    <TextField
-                      variant="standard"
-                      InputProps={{
-                        disableUnderline: false,
-                        style: {
-                          backgroundColor: "transparent",
-                        },
-                      }}
-                      sx={{
-                        "& .MuiInput-root": {
-                          fontSize: "1.3rem",
-                          borderRadius: "10px",
-                          backgroundColor: "transparent",
-                        },
-                      }}
-                    />
-                  }
-                />
+                <Box flex={1}>
+                  <DatePicker
+                    selected={departing}
+                    onChange={(date) => {
+                      if (date) setDeparting(date);
+                    }}
+                    dateFormat="MMM d, yyyy"
+                    customInput={
+                      <TextField
+                        variant="standard"
+                        InputProps={{
+                          disableUnderline: false,
+                          style: {
+                            backgroundColor: "transparent",
+                          },
+                        }}
+                        sx={{
+                          width: "100%",
+                          "& .MuiInput-root": {
+                            fontSize: "1.3rem",
+                            borderRadius: "10px",
+                            backgroundColor: "transparent",
+                          },
+                          "@media (max-width:1000px)": {},
+                        }}
+                      />
+                    }
+                    wrapperClassName="datepicker-custom"
+                  />
+                  <style>
+                    {`
+  .datepicker-custom {
+    display: block !important;
+    width: 100% !important;
+  }
+`}
+                  </style>
+                </Box>
               </Box>
-
-              <Box
-                sx={{
-                  "@media (min-width:1400px)": {
-                    gap: "60px",
-                    flex: "1",
-                  },
+              <FontAwesomeIcon
+                icon={faArrowRightArrowLeft}
+                visibility="hidden"
+                style={{
+                  fontSize: "1rem",
+                  border: "1px solid #1e90ff",
+                  borderRadius: "50%",
+                  padding: "8px",
                 }}
-              >
+              />
+              <Box flex={1} sx={{}}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -429,11 +612,12 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
                     <DatePicker
                       selected={returning}
                       onChange={(date) => {
-                        if (date) setReturning(date)
+                        if (date) setReturning(date);
                       }}
                       dateFormat="MMM d, yyyy"
                       customInput={
                         <TextField
+                          fullWidth
                           variant="standard"
                           InputProps={{
                             disableUnderline: false,
@@ -450,7 +634,16 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
                           }}
                         />
                       }
+                      wrapperClassName="datepicker-custom"
                     />
+                    <style>
+                      {`
+  .datepicker-custom {
+    display: block !important;
+    width: 100% !important;
+  }
+`}
+                    </style>
                   </Box>
                 )}
               </Box>
@@ -459,6 +652,7 @@ const FlightSearch: React.FC<FlightSearchProps> = ({ setFlights }) => {
           {/* Search Button */}
           <Box display="flex" justifyContent="center">
             <Button
+              disableRipple
               sx={{
                 width: "40%",
                 backgroundColor: "#1e90ff",
