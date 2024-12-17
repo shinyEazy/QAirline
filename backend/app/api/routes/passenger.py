@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.core.security import role_checker
 from app.models import Gender
-from service.statistical import get_ticket_count_details
+from service.statistical import get_ticket_count_by_period, get_ticket_count_details
 from service.passenger import *
 from sqlalchemy.orm import Session
 from core.database import get_db
@@ -104,8 +104,8 @@ def get_all_passengers_end_point(db: Session = Depends(get_db)):
     return get_all(Passenger, db)
 
 
-@router.get("/ticket-countss")
+@router.get("/ticket/count/{period}")
 def get_ticket_counts_end_point(
-    period: str = "day", db: Session = Depends(get_db)
-):
-    return get_ticket_count_details(db, period)
+    period: str , db: Session = Depends(get_db)
+): 
+     return get_ticket_count_by_period(db, period) 

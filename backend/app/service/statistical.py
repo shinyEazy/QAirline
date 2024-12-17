@@ -40,27 +40,51 @@ def get_ticket_count_by_period(db: Session, period: str = 'day'):
         )
     
     elif period == 'month':
-        start_time = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        if now.month == 12:
-            end_time = datetime(now.year + 1, 1, 1)
-        else:
-            end_time = datetime(now.year, now.month + 1, 1)
-        query = query.join(Booking, Passenger.booking_id == Booking.booking_id)
-        query = query.join(Flight, Booking.flight_id == Flight.flight_id)
-        query = query.filter(
-            Flight.estimated_departure_time >= start_time,
-            Flight.estimated_departure_time < end_time
-        )
+        # Trả về tổng số vé theo từng tuần trong tháng
+        weekly_counts = {}
+        start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+        for week in range(4):  # Giả định chia thành 4 tuần
+            week_start = start_of_month + timedelta(days=week * 7)
+            week_end = week_start + timedelta(days=7)
+
+            # Nếu tuần cuối vượt quá ngày cuối tháng, giới hạn đến ngày cuối tháng
+            if week == 3:  # Tuần cuối cùng
+                next_month = (start_of_month + timedelta(days=32)).replace(day=1)
+                week_end = next_month
+
+            count = (
+                query.join(Booking, Passenger.booking_id == Booking.booking_id)
+                .join(Flight, Booking.flight_id == Flight.flight_id)
+                .filter(
+                    Flight.estimated_departure_time >= week_start,
+                    Flight.estimated_departure_time < week_end
+                )
+                .scalar()
+            )
+            weekly_counts[f"week_{week + 1}"] = count or 0
+        return weekly_counts
     
     elif period == 'year':
-        start_time = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
-        end_time = datetime(now.year + 1, 1, 1)
-        query = query.join(Booking, Passenger.booking_id == Booking.booking_id)
-        query = query.join(Flight, Booking.flight_id == Flight.flight_id)
-        query = query.filter(
-            Flight.estimated_departure_time >= start_time,
-            Flight.estimated_departure_time < end_time
-        )
+        # Trả về tổng số vé cho từng tháng của năm
+        result = {}
+        for month in range(1, 13):
+            month_start = now.replace(month=month, day=1, hour=0, minute=0, second=0, microsecond=0)
+            if month == 12:
+                month_end = datetime(now.year + 1, 1, 1)
+            else:
+                month_end = now.replace(month=month + 1, day=1)
+            count = (
+                query.join(Booking, Passenger.booking_id == Booking.booking_id)
+                .join(Flight, Booking.flight_id == Flight.flight_id)
+                .filter(
+                    Flight.estimated_departure_time >= month_start,
+                    Flight.estimated_departure_time < month_end
+                )
+                .scalar()
+            )
+            result[f"month_{month}"] = count or 0
+        return result 
     
     else:
         raise ValueError("Invalid period. Choose 'day', 'week', 'month', or 'year'.")
@@ -85,7 +109,7 @@ def get_yearly_ticket_count(db: Session):
     """Get total tickets for this year"""
     return get_ticket_count_by_period(db, 'year')
 
-# Optional: Get detailed ticket count breakdown
+
 def get_ticket_count_details(db: Session):
     """
     Get ticket counts for different time periods
@@ -93,6 +117,7 @@ def get_ticket_count_details(db: Session):
     :param db: Database session
     :return: Dictionary with ticket counts
     """
+    print("Getting ticket count details")
     return {
         'daily': get_daily_ticket_count(db),
         'weekly': get_weekly_ticket_count(db),
