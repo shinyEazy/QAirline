@@ -76,7 +76,7 @@ const routes = [
         component: NewsList,
       },
       {
-        path: "new/:id",
+        path: "new/:advert_id",
         component: New,
       },
     ],

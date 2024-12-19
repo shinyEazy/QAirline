@@ -1,24 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAdverts } from "hooks/advert-hook";
 
 interface NewProps {
-  id: string;
+  id: number;
   title: string;
   content: string;
   image: string;
 }
 
-const mockNew: NewProps = {
-  id: "1",
-  title: "Vote for Bamboo Airways at the World Travel Awards 2024",
-  content:
-    "Fly to Bangkok (Don Mueang International Airport) - Daily flight\n\nReady to explore the Land of Smiles? \nBamboo Airways brings you the perfect journey to Bangkok, offering an experience beyond expectations: \n\nDaily flights with convenient schedules\n\nWith flights available every day, you can easily plan a trip to Thailand – a destination known for its unique blend of tradition and modernity. \n\nThoughtful service on every flight \nNo need to worry about a long journey, enjoy a complimentary light meal in a comfortable setting with Bamboo Airways' professional service. \n\nSeamless connections at Don Mueang International Airport\nAs one of Thailand’s largest and most vibrant airports, Don Mueang (DMK) offers a quick and efficient immigration process. It’s also a gateway to Bangkok’s top attractions, just a short ride away. From here, you can: \n\nShop at famous markets like Chatuchak\nVisit iconic temples such as Wat Arun and Wat Pho\nSavor Thailand’s vibrant street food scene\n\n\nSpecial fare deals available until December 20, 2024, take this opportunity to plan your adventure to Thailand with your family, friends, or loved ones at an incredibly affordable price. \n\n\n\n\nBook now via our official website, mobile app, authorized agents, or Bamboo Airways ticket offices to enjoy a journey that exceeds expectations!",
-  image: "https://via.placeholder.com/150",
-};
-
-// Function to convert \n to <br /> tags for proper line breaks
 const formatContent = (content: string) => {
   return content.split("\n").map((line, index) => (
     <span key={index}>
@@ -30,6 +23,28 @@ const formatContent = (content: string) => {
 
 const New = ({ id, title, content, image }: NewProps) => {
   const navigate = useNavigate();
+  const { advert_id } = useParams();
+  const [news, setNews] = useState(null);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const fetchedNews = await getAdverts();
+
+        const selectedNews = fetchedNews.find(
+          (item) => item.advert_id === Number(advert_id)
+        );
+
+        setNews(selectedNews);
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    };
+
+    fetchNews();
+  }, [advert_id]);
+
+  console.log(news);
 
   return (
     <Box>
@@ -119,7 +134,7 @@ const New = ({ id, title, content, image }: NewProps) => {
                 opacity: 0.6,
               }}
             >
-              {mockNew.title}
+              {news?.advert_name}
             </Typography>
           </Box>
         </Box>
@@ -133,10 +148,10 @@ const New = ({ id, title, content, image }: NewProps) => {
           }}
         >
           <Typography variant="h4" color="#1976d2">
-            {mockNew.title}
+            {news?.advert_name}
           </Typography>
           <Typography fontSize="1.2rem" marginTop="20px">
-            {formatContent(mockNew.content)}
+            {news?.text}
           </Typography>
         </Box>
       </Box>
