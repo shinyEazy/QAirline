@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
 } from "@mui/material";
 import { fetchAirplane } from "hooks/airplane-hook";
 import { useState, useEffect } from "react";
@@ -21,7 +22,7 @@ import { Airplanes } from "types/airplane";
 const AirplaneList = () => {
   const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedAirplaneId, setSelectedAirplaneId] = useState<number | null>(
+  const [selectedAirplane, setSelectedAirplane] = useState<Airplanes | null>(
     null
   );
 
@@ -38,26 +39,27 @@ const AirplaneList = () => {
     loadAirplane();
   }, []);
 
-  const handleDeleteClick = (airplane_id: number) => {
-    setSelectedAirplaneId(airplane_id);
+  const handleEditClick = (airplane: Airplanes) => {
+    setSelectedAirplane({ ...airplane });
     setDialogOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (selectedAirplaneId !== null) {
+  const handleSave = () => {
+    if (selectedAirplane) {
       setAirplaneData((prevData) =>
-        prevData
-          .filter((airplane) => airplane.airplane_id !== selectedAirplaneId)
-          .map((airplane, index) => ({ ...airplane, airplane_id: index + 1 }))
+        prevData.map((airplane) =>
+          airplane.airplane_id === selectedAirplane.airplane_id
+            ? { ...selectedAirplane }
+            : airplane
+        )
       );
-      setSelectedAirplaneId(null);
     }
     setDialogOpen(false);
+    setSelectedAirplane(null);
   };
 
-  const handleCancelDelete = () => {
-    setSelectedAirplaneId(null);
-    setDialogOpen(false);
+  const handleChange = (field: keyof Airplanes, value: string | number) => {
+    setSelectedAirplane((prev) => (prev ? { ...prev, [field]: value } : null));
   };
 
   return (
@@ -172,10 +174,10 @@ const AirplaneList = () => {
                 >
                   <Button
                     variant="contained"
-                    color="error"
-                    onClick={() => handleDeleteClick(airplane.airplane_id)}
+                    color="secondary"
+                    onClick={() => handleEditClick(airplane)}
                   >
-                    Delete
+                    Edit
                   </Button>
                 </TableCell>
               </TableRow>
@@ -183,17 +185,48 @@ const AirplaneList = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog open={dialogOpen} onClose={handleCancelDelete}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth>
+        <DialogTitle>Edit Airplane</DialogTitle>
         <DialogContent>
-          Are you sure you want to delete this airplane?
+          <TextField
+            label="Model"
+            fullWidth
+            margin="dense"
+            value={selectedAirplane?.airplane_model || ""}
+            onChange={(e) => handleChange("airplane_model", e.target.value)}
+          />
+          <TextField
+            label="Registration Number"
+            fullWidth
+            margin="dense"
+            value={selectedAirplane?.registration_number || ""}
+            onChange={(e) =>
+              handleChange("registration_number", e.target.value)
+            }
+          />
+          <TextField
+            label="Manufacturer"
+            fullWidth
+            margin="dense"
+            value={selectedAirplane?.manufacturer || ""}
+            onChange={(e) => handleChange("manufacturer", e.target.value)}
+          />
+          <TextField
+            label="Capacity"
+            fullWidth
+            margin="dense"
+            value={selectedAirplane?.total_seats || ""}
+            onChange={(e) =>
+              handleChange("total_seats", Number(e.target.value))
+            }
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelDelete} color="primary">
+          <Button onClick={() => setDialogOpen(false)} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error" autoFocus>
-            Delete
+          <Button onClick={handleSave} color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>
