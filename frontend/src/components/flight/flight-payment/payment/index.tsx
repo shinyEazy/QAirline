@@ -74,21 +74,13 @@ const Payment = () => {
           </Box>
         </Collapse>
       </RadioGroup>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(1, 1fr)",
-          gap: "16px",
-        }}
-      >
-        <TextField
+      {/* <TextField
           fullWidth
           label="Booker Email*"
           value={bookerEmail}
           onChange={(e) => handleBookerEmailField(e.target.value)}
           variant="outlined"
-        />
-      </Box>
+        /> */}
     </Box>
   );
 };

@@ -20,21 +20,22 @@ const FlightPayment = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email.trim());
   };
-  const submitBooking = async () => {
-    const payload = getPayload();
 
-    if (!payload.booker_email) {
-      toast.error("Please enter your email before submitting the booking.");
-      return;
-    }
-    if (!isValidEmail(payload.booker_email)) {
-      toast.error("Please provide a valid email address");
-      return;
-    }
+  const submitBooking = async () => {
+    // const payload = getPayload();
+
+    // if (!payload.booker_email) {
+    //   toast.error("Please enter your email before submitting the booking.");
+    //   return;
+    // }
+    // if (!isValidEmail(payload.booker_email)) {
+    //   toast.error("Please provide a valid email address");
+    //   return;
+    // }
 
     try {
       navigate("/");
-      await createBooking(payload);
+      // await createBooking(payload);
       toast.success("Booking submitted successfully.");
     } catch (error) {
       toast.error(error.response.data.detail);

@@ -8,9 +8,9 @@ import Price from "components/flight/flight-detail/price";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import useBookingStore from "hooks/booking-hook";
 import axios from "../../../hooks/axios-config";
 import { toast } from "react-toastify";
+import useBookingStore, { createBooking } from "hooks/booking-hook";
 
 const FlightDetail = () => {
   const navigate = useNavigate();
@@ -58,6 +58,11 @@ const FlightDetail = () => {
   const isValidPhoneNumber = (phoneNumber: string) => {
     const phoneRegex = /^\+?[0-9]{7,15}$/; // Allows optional "+" and 7-15 digits.
     return phoneRegex.test(phoneNumber.trim());
+  };
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim());
   };
 
   const handleNext = async () => {
@@ -130,9 +135,25 @@ const FlightDetail = () => {
         validationErrors.forEach((error) => toast.error(error));
         return false;
       }
+
+      if (!payload.booker_email) {
+        toast.error("Please enter your email before submitting the booking.");
+        return;
+      }
+      if (!isValidEmail(payload.booker_email)) {
+        toast.error("Please provide a valid email address");
+        return;
+      }
+
+      try {
+        navigate("/flight/payment");
+        console.log(payload);
+        await createBooking(payload);
+      } catch (error) {
+        toast.error(error.response.data.detail);
+      }
     }
 
-    navigate("/flight/payment");
     // try {
     //   const response = await axios.post("/api/booking/", payload);
     //   const data = response.data;

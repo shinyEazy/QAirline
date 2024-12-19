@@ -72,7 +72,7 @@ const FlightRoute = () => {
         <Divider orientation="vertical" flexItem />
         <Box>
           <Typography variant="h6">Arrival</Typography>
-          <Typography>11 November, 2024</Typography>
+          <Typography>{selectedFlight.flightDate}</Typography>
         </Box>
       </Box>
     </Box>
