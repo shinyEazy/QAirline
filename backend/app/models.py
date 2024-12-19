@@ -209,6 +209,7 @@ class FlightSeats(Base):
 class Advert(Base):
     __tablename__ = "advert"
 
-    advert_name = Column(String, nullable=False, primary_key=True)
+    advert_id = Column(Integer, nullable=False, primary_key=True)
+    advert_name = Column(String, nullable=False)
     media_link = Column(String)
     text = Column(String)

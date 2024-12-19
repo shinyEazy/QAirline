@@ -19,7 +19,7 @@ import "slick-carousel/slick/slick-theme.css";
 import ChevronRight from "@mui/icons-material/ChevronRight";
 import ChevronLeft from "@mui/icons-material/ChevronLeft";
 import { cancelBooking, fetchbookingInfo } from "hooks/booking-hook";
-
+import '@fontsource/montserrat/700.css'; // Bold weight
 type Passenger = {
   booking_id: string;
   passenger_id: number;
@@ -612,25 +612,27 @@ const FlightBooking = () => {
         </Slider>
       </Box>
 
-      {selectedBooking && (
-        <Box
-          justifyContent="center"
-          alignItems="center"
-          display="flex"
-          marginTop="8px"
-        >
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleCancelClick}
-            sx={{
-              padding: "4px 10px",
-            }}
+      {
+        selectedBooking && (
+          <Box
+            justifyContent="center"
+            alignItems="center"
+            display="flex"
+            marginTop="8px"
           >
-            Cancel Booking
-          </Button>
-        </Box>
-      )}
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleCancelClick}
+              sx={{
+                padding: "4px 10px",
+              }}
+            >
+              Cancel Booking
+            </Button>
+          </Box>
+        )
+      }
 
       <Dialog
         open={openDialog}
@@ -654,7 +656,7 @@ const FlightBooking = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Box >
   );
 };
 
