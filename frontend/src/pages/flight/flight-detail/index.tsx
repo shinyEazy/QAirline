@@ -1,10 +1,9 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import StepFlightDetail from "components/flight/flight-detail/step-flight-detaill";
 import SeatDetail from "components/flight/flight-detail/seat-detail";
 import FlightRoute from "components/flight/flight-detail/flight-route";
-import Price from "components/flight/flight-detail/price";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
@@ -15,6 +14,7 @@ import useBookingStore, { createBooking } from "hooks/booking-hook";
 const FlightDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { priceSummary } = location.state || {};
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -146,7 +146,11 @@ const FlightDetail = () => {
       }
 
       try {
-        navigate("/flight/payment");
+        navigate("/flight/payment", {
+          state: {
+            priceSummary,
+          },
+        });
         console.log(payload);
         await createBooking(payload);
       } catch (error) {
@@ -202,7 +206,46 @@ const FlightDetail = () => {
             }}
           >
             <FlightRoute />
-            <Price />
+            <Box
+              sx={{
+                backgroundColor: "white",
+                borderRadius: "20px",
+                padding: "20px",
+                boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+                marginTop: "40px",
+              }}
+            >
+              <Typography variant="h6">Price Summary</Typography>
+              <Box marginTop="20px">
+                {Object.entries(priceSummary).map(
+                  ([className, { count, total }]) => (
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      marginBottom="10px"
+                      key={className}
+                    >
+                      <Typography>
+                        {className} x {count}
+                      </Typography>
+                      <Typography>{total}$</Typography>
+                    </Box>
+                  )
+                )}
+              </Box>
+
+              <Divider sx={{ margin: "20px 0" }} />
+              <Box display="flex" justifyContent="space-between">
+                <Typography>Total</Typography>
+                <Typography>
+                  {Object.values(priceSummary).reduce(
+                    (acc, { total }) => acc + total,
+                    0
+                  )}
+                  $
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>

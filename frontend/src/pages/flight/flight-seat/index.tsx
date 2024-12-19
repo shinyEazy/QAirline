@@ -156,7 +156,7 @@ const FlightSeat = () => {
   const handleNext = () => {
     setFlightClass(selectedClass);
 
-    let passengers: [Passenger] = [];
+    let passengers: Passenger[] = [];
     selectedSeats.forEach((seat) => {
       let dummyPassenger = defaultPassenger;
 
@@ -169,9 +169,13 @@ const FlightSeat = () => {
 
     setPassengers(passengers);
     setNumberOfAdultsAndChildren(passengers.length, 0);
+
     navigate("/flight/detail", {
       state: {
         selectedSeats,
+        flightClass: selectedClass,
+        passengers,
+        priceSummary,
       },
     });
   };
