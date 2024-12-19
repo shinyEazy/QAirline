@@ -30,6 +30,7 @@ def get_airplane_model(db: Session, airplane_model_id: int) -> AirplaneModel:
     )
     return db_airplane_model
 
+
 def update_airplane_model(
     db: Session, db_airplane_model: Airplane, airplane_model: AirplaneModelUpdate
 ) -> AirplaneModel:
@@ -50,26 +51,38 @@ def create_airplane(db: Session, airplane: AirplaneCreate) -> Airplane:
     return db_airplane
 
 
-def get_airplane_by_registration_number(db: Session, registration_number:str) -> Airplane:
-    db_airplane = db.query(Airplane).filter(Airplane.registration_number == registration_number).first()
+def get_airplane_by_registration_number(
+    db: Session, registration_number: str
+) -> Airplane:
+    db_airplane = (
+        db.query(Airplane)
+        .filter(Airplane.registration_number == registration_number)
+        .first()
+    )
     return db_airplane
 
-def get_airplane_by_id(db: Session, airplane_id: int) ->Airplane:
+
+def get_airplane_by_id(db: Session, airplane_id: int) -> Airplane:
     db_airplane = db.query(Airplane).filter(Airplane.airplane_id == airplane_id).first()
     return db_airplane
 
-def get_all_airplanes(db: Session) -> List[Dict[str,any]]:
+
+def get_all_airplanes(db: Session) -> List[Dict[str, any]]:
     db_airplanes = db.query(Airplane).join(AirplaneModel).all()
     result = []
     for airplane in db_airplanes:
-        result.append({
-            "airplane_id": airplane.airplane_id,
-            "airplane_model": airplane.airplane_model.name,
-            "registration_number": airplane.registration_number,
-            "manufacturer": airplane.airplane_model.manufacturer,
-            "total_seats": airplane.airplane_model.total_seats,
-        })
+        result.append(
+            {
+                "airplane_id": airplane.airplane_id,
+                "airplane_model": airplane.airplane_model.name,
+                "registration_number": airplane.registration_number,
+                "manufacturer": airplane.airplane_model.manufacturer,
+                "total_seats": airplane.airplane_model.total_seats,
+                "active": airplane.active,
+            }
+        )
     return result
+
 
 def update_airplane(
     db: Session, db_airplane: Airplane, airplane: AirplaneUpdate
@@ -123,5 +136,5 @@ def create_flight_seats_for_airplane(
     for flight_seat in flight_seats:
         flight_seat.registration_number = db_airplane.registration_number
         create_flight_seat(db, flight_seat)
-    
+
     return {"message": "flight successfully created"}

@@ -20,6 +20,7 @@ CREATE TABLE airplane (
     airplane_id SERIAL PRIMARY KEY,
     airplane_model_id INTEGER,
     registration_number TEXT UNIQUE,
+    active BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (airplane_model_id) REFERENCES airplane_model(airplane_model_id) ON DELETE CASCADE
 );
 
