@@ -170,6 +170,7 @@ class Airplane(Base):
     )
     registration_number = Column(String, unique=True)
 
+    active = Column(Boolean, default=True)
     # Thêm relationship
     airplane_model = relationship("AirplaneModel", back_populates="airplanes")
 

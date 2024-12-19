@@ -28,8 +28,14 @@ async def create_flight_end_point(flight: FlightCreate, db: Session = Depends(ge
             status_code=HTTP_404_NOT_FOUND,
             detail=f"Invalid flight status. Please use one of the valid options: 'Delayed', 'On Time', 'Cancelled','Scheduled'",
         )
-    if not get_airplane_by_registration_number(db, flight.registration_number):
+    airplane = get_airplane_by_registration_number(db, flight.registration_number)
+    if not airplane:
         raise HTTPException(status_code=404, detail="Airplane not found")
+
+    if not bool(airplane.active):
+        raise HTTPException(
+            status_code=400, detail="Retired airplane cannot be used on flight"
+        )
 
     return create_flight(db, flight)
 

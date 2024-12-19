@@ -4,6 +4,7 @@ export interface Airplanes {
   registration_number: string;
   manufacturer: string;
   total_seats: number;
+  active: boolean;
 }
 
 export interface AirplaneModel {
