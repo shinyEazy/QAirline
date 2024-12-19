@@ -7,30 +7,37 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAdverts } from "hooks/advert-hook";
+
 const News = () => {
   const navigate = useNavigate();
   const [newsData, setNewsData] = useState([]);
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   useEffect(() => {
     const fetchNewsData = async () => {
       try {
         const fetchedNews = await getAdverts();
-        setNewsData(fetchedNews); // Update state with fetched news
+        const sortedNews = fetchedNews.sort(
+          (a, b) => b.advert_id - a.advert_id
+        );
+
+        setNewsData(sortedNews);
       } catch (err) {
         console.error("Error fetching news data", err);
         setError("Failed to load news. Please try again later.");
       } finally {
-        setLoading(false); // Ensure loading state is updated
+        setLoading(false);
       }
     };
 
     fetchNewsData();
   }, []);
+
   const handleNavigate = (direction: "up" | "down") => {
     setCurrentNewsIndex((prevIndex: number) => {
-      if (newsData.length === 0) return prevIndex; // Prevent navigation if no data
+      if (newsData.length === 0) return prevIndex;
       if (direction === "up") {
         return prevIndex === 0 ? newsData.length - 1 : prevIndex - 1;
       } else {

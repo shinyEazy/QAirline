@@ -1,10 +1,13 @@
 import { Box, Divider, Typography } from "@mui/material";
 import { useFlightStore } from "hooks/flight-search-hook";
+
 const FlightRoute = () => {
   const { selectedFlight } = useFlightStore();
+
   if (!selectedFlight) {
     return <Typography>No flight selected</Typography>;
   }
+
   return (
     <Box
       sx={{
@@ -69,7 +72,7 @@ const FlightRoute = () => {
         <Divider orientation="vertical" flexItem />
         <Box>
           <Typography variant="h6">Arrival</Typography>
-          <Typography>11 November, 2024</Typography>
+          <Typography>{selectedFlight.flightDate}</Typography>
         </Box>
       </Box>
     </Box>

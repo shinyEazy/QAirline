@@ -10,28 +10,28 @@ const buttonStyles = {
   textTransform: "none",
   fontSize: "1rem",
   borderRadius: "8px",
-  padding: "10px 20px", // Adjusted for better responsiveness
+  padding: "10px 20px",
   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   "&:hover": { backgroundColor: "#1e90ff", color: "white" },
 };
 
 const FilterSearch = () => {
-  // const [selectedCabin, setSelectedCabin] = useState<string | null>(null);
-  // const [selectedPrice, setSelectedPrice] = useState<number>(30);
-  // const [selectedDepartureTime, setSelectedDepartureTime] = useState<
-  //   string | null
-  // >(null);
-  // const [selectedArrivalTime, setSelectedArrivalTime] = useState<string | null>(
-  //   null
-  // );
-  const { selectedPrice, selectedDepartureTime, selectedArrivalTime, setSelectedPrice, setSelectedDepartureTime, setSelectedArrivalTime } = useFilterStore();
+  const {
+    selectedPrice,
+    selectedDepartureTime,
+    selectedArrivalTime,
+    setSelectedPrice,
+    setSelectedDepartureTime,
+    setSelectedArrivalTime,
+  } = useFilterStore();
+
   const handleApplyFilters = () => {
     if (!selectedDepartureTime || !selectedArrivalTime) {
       alert("Please select all required filters before applying!");
       return;
     }
-    console.log("Filters applied:", {
 
+    console.log("Filters applied:", {
       selectedPrice,
       selectedDepartureTime,
       selectedArrivalTime,

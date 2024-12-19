@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Divider } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import FlightRoute from "components/flight/flight-detail/flight-route";
@@ -15,26 +15,28 @@ const FlightPayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { getPayload } = useBookingStore();
-
+  const { priceSummary } = location.state || {};
+  console.log(priceSummary);
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email.trim());
   };
-  const submitBooking = async () => {
-    const payload = getPayload();
 
-    if (!payload.booker_email) {
-      toast.error("Please enter your email before submitting the booking.");
-      return;
-    }
-    if (!isValidEmail(payload.booker_email)) {
-      toast.error("Please provide a valid email address");
-      return;
-    }
+  const submitBooking = async () => {
+    // const payload = getPayload();
+
+    // if (!payload.booker_email) {
+    //   toast.error("Please enter your email before submitting the booking.");
+    //   return;
+    // }
+    // if (!isValidEmail(payload.booker_email)) {
+    //   toast.error("Please provide a valid email address");
+    //   return;
+    // }
 
     try {
       navigate("/");
-      await createBooking(payload);
+      // await createBooking(payload);
       toast.success("Booking submitted successfully.");
     } catch (error) {
       toast.error(error.response.data.detail);
@@ -80,7 +82,46 @@ const FlightPayment = () => {
             }}
           >
             <FlightRoute />
-            <Price />
+            <Box
+              sx={{
+                backgroundColor: "white",
+                borderRadius: "20px",
+                padding: "20px",
+                boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+                marginTop: "40px",
+              }}
+            >
+              <Typography variant="h6">Price Summary</Typography>
+              <Box marginTop="20px">
+                {Object.entries(priceSummary).map(
+                  ([className, { count, total }]) => (
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      marginBottom="10px"
+                      key={className}
+                    >
+                      <Typography>
+                        {className} x {count}
+                      </Typography>
+                      <Typography>{total}$</Typography>
+                    </Box>
+                  )
+                )}
+              </Box>
+
+              <Divider sx={{ margin: "20px 0" }} />
+              <Box display="flex" justifyContent="space-between">
+                <Typography>Total</Typography>
+                <Typography>
+                  {Object.values(priceSummary).reduce(
+                    (acc, { total }) => acc + total,
+                    0
+                  )}
+                  $
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -96,7 +137,13 @@ const FlightPayment = () => {
         }}
       >
         <Button
-          onClick={() => navigate("/flight/detail")}
+          onClick={() => {
+            navigate("/flight/detail", {
+              state: {
+                priceSummary,
+              },
+            });
+          }}
           fullWidth
           sx={{
             marginTop: "40px",
@@ -135,7 +182,7 @@ const FlightPayment = () => {
             "&:hover": { backgroundColor: "#2177cb", color: "white" },
           }}
         >
-          Submit
+          Finish
         </Button>
       </Box>
       <Footer />

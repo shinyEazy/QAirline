@@ -21,6 +21,7 @@ import { useState, useEffect } from "react";
 import { fetchFlights, updateFlight } from "hooks/flight-hook";
 import { getPassengerInFlight } from "hooks/passenger-hook";
 import { Passenger, NewPassenger } from "types/passenger";
+
 interface Flight {
   flight_id: number;
   flight_number: string;
@@ -34,45 +35,6 @@ interface Flight {
   status: "Landed" | "Delayed" | "Canceled" | "Departed" | "On time";
   flight_price: number;
 }
-
-
-
-// const passengersByFlightId: Record<string, Passenger[]> = {
-//   1: [
-//     {
-//       passengerId: 1,
-//       firstName: "John",
-//       lastName: "Doe",
-//       dob: "1990-01-01",
-//       class: "Economy",
-//       seat: "A1",
-//     },
-//     {
-//       passengerId: 2,
-//       firstName: "Jane",
-//       lastName: "Smith",
-//       dob: "1985-05-15",
-//       class: "First Class",
-//       seat: "B2",
-//     },
-//     {
-//       passengerId: 3,
-//       firstName: "Alice",
-//       lastName: "Johnson",
-//       dob: "1992-07-21",
-//       class: "Business",
-//       seat: "C3",
-//     },
-//     {
-//       passengerId: 4,
-//       firstName: "Joshep",
-//       lastName: "Zues",
-//       dob: "1992-07-21",
-//       class: "Business",
-//       seat: "A4",
-//     },
-//   ],
-// };
 
 const FlightList = () => {
   const getStatusStyle = (status: string) => {
@@ -96,7 +58,9 @@ const FlightList = () => {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [open, setOpen] = useState(false);
   const [openView, setOpenView] = useState(false);
-  const [selectedPassengers, setSelectedPassengers] = useState<NewPassenger[]>([]);
+  const [selectedPassengers, setSelectedPassengers] = useState<NewPassenger[]>(
+    []
+  );
   const [error, setError] = useState<string | null>(null);
   const sortFlightsByID = (flights: Flight[]) => {
     return [...flights].sort((a, b) => a.flight_id - b.flight_id);
@@ -426,7 +390,6 @@ const FlightList = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
       {/* View Passengers Dialog */}
       <Dialog open={openView} onClose={() => setOpenView(false)} fullWidth>
         <DialogTitle>Passenger List</DialogTitle>
@@ -444,9 +407,11 @@ const FlightList = () => {
               </TableHead>
               <TableBody>
                 {selectedPassengers.map((passenger, index) => (
-                  <TableRow >
+                  <TableRow>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{passenger.first_name + " " + passenger.last_name}</TableCell>
+                    <TableCell>
+                      {passenger.first_name + " " + passenger.last_name}
+                    </TableCell>
                     <TableCell>{passenger.date_of_birth}</TableCell>
                     <TableCell>{passenger.flight_class}</TableCell>
                     <TableCell>
@@ -464,7 +429,6 @@ const FlightList = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* Edit Flight Dialog */}
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
         <DialogTitle>Edit Flight</DialogTitle>

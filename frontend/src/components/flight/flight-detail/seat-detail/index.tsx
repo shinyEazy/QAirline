@@ -1,11 +1,19 @@
 import { Box, Typography, TextField, Button, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useBookingStore from "hooks/booking-hook";
 import { Passenger } from "types/passenger";
 import { toast } from "react-toastify";
 
 const SeatDetail = () => {
+  const [bookerEmail, setBookerEmailField] = useState("");
+  const { setBookerEmail } = useBookingStore();
+
+  useEffect(() => {
+    setBookerEmail("");
+    setBookerEmailField("");
+  }, []);
+
   const { payload, getPassengers, setPassengers } = useBookingStore();
   const passengers = getPassengers();
   const [seatOwners, setSeatOwners] = useState<Passenger[]>(
@@ -15,17 +23,20 @@ const SeatDetail = () => {
       seat_col: passenger.seat_col || "A",
     }))
   );
+
   const [currentSeatIndex, setCurrentSeatIndex] = useState(0);
 
   const isValidDate = (date: string) => {
     const parsedDate = new Date(date);
     const today = new Date();
+
     return (
       !isNaN(parsedDate.getTime()) &&
       parsedDate < today && // Date is in the past
       today.getFullYear() - parsedDate.getFullYear() <= 120 // Reasonable age check
     );
   };
+
   const constructSeatId = (seatOwner: Passenger) =>
     `${seatOwner.seat_col}${seatOwner.seat_row}`;
 
@@ -54,7 +65,7 @@ const SeatDetail = () => {
       "nationality",
     ];
 
-    const allFieldsFilled = requiredFields.every((field) => passenger[field])
+    const allFieldsFilled = requiredFields.every((field) => passenger[field]);
     if (!allFieldsFilled) return false;
 
     if (!isValidDate(passenger.date_of_birth)) {
@@ -90,7 +101,6 @@ const SeatDetail = () => {
 
       // Initialize new seat if data doesn't exist yet
       if (direction === "next" && !validateFields(seatOwners[newIndex])) {
-
         setSeatOwners((prev) => {
           const updatedSeatOwners = [...prev];
           updatedSeatOwners[newIndex] = {
@@ -112,6 +122,16 @@ const SeatDetail = () => {
     });
   };
 
+  const handleBookerEmailField = (bookerEmail: string) => {
+    setBookerEmailField(bookerEmail);
+    setBookerEmail(bookerEmail);
+  };
+
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim());
+  };
+
   return (
     <Box
       sx={{
@@ -123,6 +143,24 @@ const SeatDetail = () => {
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
       }}
     >
+      <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
+        <Typography
+          sx={{
+            fontSize: "1.3rem",
+            fontWeight: "500",
+            marginBottom: "16px",
+          }}
+        >
+          Enter your email
+        </Typography>
+        <TextField
+          fullWidth
+          label="Booker Email*"
+          value={bookerEmail}
+          onChange={(e) => handleBookerEmailField(e.target.value)}
+          variant="outlined"
+        />
+      </Box>
       <Box
         sx={{
           borderRadius: "20px",
