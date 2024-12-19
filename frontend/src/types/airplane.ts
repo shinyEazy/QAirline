@@ -13,3 +13,7 @@ export interface AirplaneModel {
   name: string;
   total_seats: number;
 }
+export interface AirplaneUpdate {
+  registration_number: number;
+  active: boolean;
+}
