@@ -1,4 +1,5 @@
-import axios from './axios-config';
+import axios from "./axios-config";
+
 export async function fetchStats() {
   try {
     const response = await axios.get(`/api/passenger/ticket/count/`);
@@ -7,4 +8,3 @@ export async function fetchStats() {
     console.error("Request error", error);
   }
 }
-

@@ -5,9 +5,7 @@ import Banner from "components/home-page/Banner";
 import FlightSearch from "components/home-page/FlightSearch";
 import Benefit from "components/home-page/Benefit";
 import LatestFlight from "components/home-page/LatestFlight";
-import GlobalTravel from "components/home-page/GlobalTravel";
 import Achievement from "components/home-page/Achievement";
-import Testimonial from "components/home-page/Testimonial";
 import LatestNews from "components/home-page/LatestNews";
 import Footer from "components/home-page/Footer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -32,9 +30,7 @@ const HomePage = () => {
           <News />
           <Benefit />
           <LatestFlight />
-          {/* <GlobalTravel /> */}
           <Achievement />
-          {/* <Testimonial /> */}
           <LatestNews />
         </Box>
         <Footer />
