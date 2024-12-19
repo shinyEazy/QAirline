@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const StepFlightDetail = () => {
   const navigate = useNavigate();
+
   return (
     <Box
       sx={{

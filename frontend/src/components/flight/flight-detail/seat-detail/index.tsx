@@ -15,17 +15,20 @@ const SeatDetail = () => {
       seat_col: passenger.seat_col || "A",
     }))
   );
+
   const [currentSeatIndex, setCurrentSeatIndex] = useState(0);
 
   const isValidDate = (date: string) => {
     const parsedDate = new Date(date);
     const today = new Date();
+
     return (
       !isNaN(parsedDate.getTime()) &&
       parsedDate < today && // Date is in the past
       today.getFullYear() - parsedDate.getFullYear() <= 120 // Reasonable age check
     );
   };
+
   const constructSeatId = (seatOwner: Passenger) =>
     `${seatOwner.seat_col}${seatOwner.seat_row}`;
 
@@ -54,7 +57,7 @@ const SeatDetail = () => {
       "nationality",
     ];
 
-    const allFieldsFilled = requiredFields.every((field) => passenger[field])
+    const allFieldsFilled = requiredFields.every((field) => passenger[field]);
     if (!allFieldsFilled) return false;
 
     if (!isValidDate(passenger.date_of_birth)) {
@@ -90,7 +93,6 @@ const SeatDetail = () => {
 
       // Initialize new seat if data doesn't exist yet
       if (direction === "next" && !validateFields(seatOwners[newIndex])) {
-
         setSeatOwners((prev) => {
           const updatedSeatOwners = [...prev];
           updatedSeatOwners[newIndex] = {

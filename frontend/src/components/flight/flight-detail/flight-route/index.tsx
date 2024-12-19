@@ -1,10 +1,13 @@
 import { Box, Divider, Typography } from "@mui/material";
 import { useFlightStore } from "hooks/flight-search-hook";
+
 const FlightRoute = () => {
   const { selectedFlight } = useFlightStore();
+
   if (!selectedFlight) {
     return <Typography>No flight selected</Typography>;
   }
+
   return (
     <Box
       sx={{
