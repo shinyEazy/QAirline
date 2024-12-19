@@ -12,8 +12,10 @@ from typing import List
 from app.models import User
 import hashlib
 import os
+from dotenv import load_dotenv
 
-SECRET_KEY = "123"
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITMH = "HS256"
 RANDOM_BYTES = 16
 
@@ -50,15 +52,6 @@ def authenticate_user(user, password: str):
     return bcrypt_context.verify(password, str(user.password))
 
 
-# def create_access_token_admin(admin, expires_delta: timedelta):
-#     """Create a JWT access token."""
-#     encode = {"sub": admin.username, "id": admin.admin_id, "role": "admin"}
-#     expires = datetime.now() + expires_delta
-#     encode.update({"expires": expires.isoformat()})
-#
-#     return jwt.encode(encode, SECRET_KEY, ALGORITMH)
-
-
 def create_access_token_user(user, expires_delta: timedelta):
     """Create a JWT access token."""
     encode = {"sub": user.username, "id": user.user_id, "role": user.role}
@@ -66,34 +59,6 @@ def create_access_token_user(user, expires_delta: timedelta):
     encode.update({"expires": expires.isoformat()})
 
     return jwt.encode(encode, SECRET_KEY, ALGORITMH)
-
-
-# async def get_current_admin(
-#     token: str = Depends(oauth2_admin_scheme), db: Session = Depends(get_db)
-# ):
-#     credential_exception = HTTPException(
-#         status_code=status.HTTP_401_UNAUTHORIZED,
-#         detail="Could not validate credentials",
-#         headers={"WWW-Authenticate": "Admin"},
-#     )
-#
-#     try:
-#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITMH])
-#         username: str = payload.get("sub")
-#
-#         if not username:
-#             raise credential_exception
-#
-#         token_data = TokenData(username=username)
-#     except JWTError:
-#         raise credential_exception
-#
-#     user = get_admin_by_username(token_data.username, db=db)
-#
-#     if not user:
-#         raise credential_exception
-#
-#     return user
 
 
 async def get_current_user(

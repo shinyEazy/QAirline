@@ -65,7 +65,6 @@ async def create_user_end_point(user: UserCreate, db: Session = Depends(get_db))
     Create a new user
     """
     db_user = get_user_by_username(user.username, db)
-
     if db_user:
         raise HTTPException(
             status_code=HTTP_409_CONFLICT, detail="Username already registered"
