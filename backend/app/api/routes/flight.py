@@ -171,15 +171,3 @@ def get_available_flight_seats(flight_id: int, db: Session = Depends(get_db)):
         available_seats = count_available_seat(seat_matrix)
         flight_seat_matrix.append([flight_class.value, available_seats])
     return flight_seat_matrix
-
-
-# @router.get("/booking/{booking_id}")
-# def get_flight_info_by_flight(booking_id: str, db: Session = Depends(get_db)):
-#     booking_info = get_flight_by_booking(booking_id, db)
-
-#     if not db_flight:
-#         raise HTTPException(
-#             status_code=404, detail="No flight was found with that booking identifier"
-#         )
-
-#     return db_flight

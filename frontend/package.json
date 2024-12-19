@@ -5,6 +5,8 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fontsource/ibm-plex-sans": "^5.1.0",
+    "@fontsource/montserrat": "^5.1.0",
     "@fontsource/roboto": "^5.0.8",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
