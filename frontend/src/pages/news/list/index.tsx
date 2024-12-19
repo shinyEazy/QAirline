@@ -7,57 +7,6 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getAdverts } from "hooks/advert-hook";
 
-
-const newsItems = [
-  {
-    id: 1,
-    title: "Update on Bamboo Club Login System Upgrade",
-    imageUrl:
-      "https://huongnghiep.hocmai.vn/wp-content/uploads/2023/01/Hoc-phi-DH-Cong-nghe-HN.jpg",
-  },
-  {
-    id: 2,
-    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1931938&t=1.9",
-  },
-  {
-    id: 3,
-    title:
-      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1912358&t=2.3",
-  },
-  {
-    id: 4,
-    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
-    imageUrl: "/images/plane.jpeg",
-  },
-  {
-    id: 5,
-    title: "Update on Bamboo Club Login System Upgrade",
-    imageUrl:
-      "https://huongnghiep.hocmai.vn/wp-content/uploads/2023/01/Hoc-phi-DH-Cong-nghe-HN.jpg",
-  },
-  {
-    id: 6,
-    title: "Fly to Bangkok (Don Mueang International Airport) - Daily flight",
-    imageUrl: "/images/cucda.jpeg",
-  },
-  {
-    id: 7,
-    title:
-      "Be cautious of tactics impersonating the Vietnam Civil Aviation Authority",
-    imageUrl: "/images/ducanh.jpeg",
-  },
-  {
-    id: 8,
-    title: "Vote for Bamboo Airways at the World Travel Awards 2024",
-    imageUrl:
-      "https://www.bambooairways.com/image/journal/article?img_id=1937815&t=2.3",
-  },
-];
-
 const readMoreStyle = {
   position: "relative",
   display: "inline-block",
@@ -108,11 +57,15 @@ const NewsList = () => {
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState(1);
   const [newsItems, setNewsItems] = useState([]);
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const fetchedNews = await getAdverts();
-        const sortedNews = fetchedNews.sort((a: any, b: any) => b.id - a.id); // Assuming news items have an 'id'
+        console.log("fetc", fetchedNews);
+        const sortedNews = fetchedNews.sort(
+          (a: any, b: any) => b.advert_id - a.advert_id
+        );
         setNewsItems(sortedNews);
       } catch (error) {
         console.error("Error fetching news data", error);
@@ -121,7 +74,8 @@ const NewsList = () => {
 
     fetchNews();
   }, []);
-  const sortedNews = [...newsItems].sort((a, b) => b.advert_name - a.advert_name);
+
+  const sortedNews = [...newsItems].sort((a, b) => b.avert_id - a.advert_id);
   const totalPages = Math.ceil(newsItems.length / PAGE_SIZE);
 
   const paginatedNews = sortedNews.slice(
@@ -256,7 +210,7 @@ const NewsList = () => {
                 >
                   <img
                     onClick={() =>
-                      navigate(`/news/new/${paginatedNews[0]?.advert_name}`)
+                      navigate(`/news/new/${paginatedNews[0]?.advert_id}`)
                     }
                     src={paginatedNews[0]?.media_link}
                     alt={paginatedNews[0]?.advert_name}
@@ -279,16 +233,16 @@ const NewsList = () => {
                 <Box mt={2}>
                   <Typography
                     onClick={() =>
-                      navigate(`/news/new/${paginatedNews[0]?.advert_name}`)
+                      navigate(`/news/new/${paginatedNews[0]?.advert_id}`)
                     }
                     variant="h5"
                     sx={titleStyle}
                   >
-                    {paginatedNews[0]?.advert_name}{" "}
+                    {paginatedNews[0]?.advert_name}
                   </Typography>
                   <Typography
                     onClick={() =>
-                      navigate(`/news/new/${paginatedNews[0]?.advert_name}`)
+                      navigate(`/news/new/${paginatedNews[0]?.advert_id}`)
                     }
                     variant="h6"
                     color="primary"
@@ -311,6 +265,7 @@ const NewsList = () => {
                     }}
                   >
                     <img
+                      onClick={() => navigate(`/news/new/${news?.advert_id}`)}
                       src={news.media_link}
                       alt={news.advert_name}
                       style={{
@@ -329,10 +284,20 @@ const NewsList = () => {
                       }
                     />
                   </Box>
-                  <Typography variant="h5" sx={titleStyle} marginTop="16px">
+                  <Typography
+                    variant="h5"
+                    sx={titleStyle}
+                    marginTop="16px"
+                    onClick={() => navigate(`/news/new/${news?.advert_id}`)}
+                  >
                     {news.advert_name}
                   </Typography>
-                  <Typography variant="h6" color="primary" sx={readMoreStyle}>
+                  <Typography
+                    variant="h6"
+                    color="primary"
+                    sx={readMoreStyle}
+                    onClick={() => navigate(`/news/new/${news?.advert_id}`)}
+                  >
                     Read More
                   </Typography>
                 </Box>

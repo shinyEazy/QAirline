@@ -1,4 +1,4 @@
-import axios from './axios-config';
+import axios from "./axios-config";
 
 // Fetch an advertisement by name
 export async function getAdvert(advert_name: string) {
@@ -22,8 +22,8 @@ export async function createAdvert({ fileUpload, advertName, text }) {
 
     const response = await axios.post("/api/advert/", formData, {
       headers: {
-        "Content-Type": "multipart/form-data"
-      }
+        "Content-Type": "multipart/form-data",
+      },
     });
 
     return response.data;

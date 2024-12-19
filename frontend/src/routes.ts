@@ -1,17 +1,9 @@
 import NoFoundPage from "pages/404";
 import HomePage from "pages/home-page";
-import Login from "pages/auth/login";
-import Auth from "pages/auth";
-import SignUp from "pages/auth/signup";
-import Recovery from "pages/auth/recovery";
 import AdminPage from "pages/admin";
 import AdminLogin from "pages/admin/login";
 import AdminAuthWrapper from "wrappers/admin-auth";
-// import UserAuthWrapper from "wrappers/user-auth";
 import FlightSeat from "pages/flight/flight-seat";
-import UserPage from "pages/user";
-import BookedTickets from "pages/user/booked-tickets";
-import PaymentHistory from "pages/user/payment-history";
 import Flight from "pages/flight";
 import FlightList from "pages/flight/flight-list";
 import FlightDetail from "pages/flight/flight-detail";
@@ -23,24 +15,6 @@ import New from "pages/news/new";
 import AdminStatistical from "pages/admin/statistical";
 
 const routes = [
-  {
-    path: "/auth",
-    component: Auth,
-    routes: [
-      {
-        path: "login",
-        component: Login,
-      },
-      {
-        path: "signup",
-        component: SignUp,
-      },
-      {
-        path: "recovery",
-        component: Recovery,
-      },
-    ],
-  },
   {
     path: "/admin",
     component: AdminAuthWrapper,
@@ -58,18 +32,6 @@ const routes = [
   {
     path: "/admin/login",
     component: AdminLogin,
-  },
-  {
-    path: "/user/:id",
-    component: UserPage,
-  },
-  {
-    path: "/user/:id/booked-tickets",
-    component: BookedTickets,
-  },
-  {
-    path: "/user/:id/payment-history",
-    component: PaymentHistory,
   },
   {
     path: "",
@@ -114,7 +76,7 @@ const routes = [
         component: NewsList,
       },
       {
-        path: "new/:id",
+        path: "new/:advert_id",
         component: New,
       },
     ],

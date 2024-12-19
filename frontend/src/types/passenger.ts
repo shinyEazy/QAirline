@@ -11,7 +11,6 @@ export interface Passenger {
   seat_col: string;
 }
 
-
 export let defaultPassenger: Passenger = {
   citizen_id: null as unknown as string,
   passport_number: null as unknown as string,
@@ -27,7 +26,7 @@ export let defaultPassenger: Passenger = {
 
 export function updatePassengerSeat(
   passenger: Passenger,
-  seatID: string,
+  seatID: string
 ): Passenger {
   return {
     ...passenger, // Preserve other properties

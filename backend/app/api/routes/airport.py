@@ -65,4 +65,3 @@ async def delete_airport_end_point(airport_id: int, db: Session = Depends(get_db
 @router.get("/")
 async def get_all_airports_end_point(db: Session = Depends(get_db)):
     return get_all_airports(db)
-
