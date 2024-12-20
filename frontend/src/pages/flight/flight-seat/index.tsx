@@ -6,7 +6,7 @@ import FlightRoute from "components/flight/flight-detail/flight-route";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import useBookingStore from "hooks/booking-hook";
-import { fetchFlightSeats } from "hooks/flight-hook";
+import { fetchFlightSeats, fetchFlightSeatsPrice } from "hooks/flight-hook";
 import {
   defaultPassenger,
   Passenger,
@@ -36,13 +36,19 @@ const FlightSeat = () => {
   const [loading, setLoading] = useState(true);
   const [letters, setLetters] = useState([]);
   const [seats, setSeats] = useState([]);
+  const [flightPrices, setFlightPrices] = useState<Record<string, number>>({});
 
   // Fetch flight seats on component mount
   useEffect(() => {
     const fetchSeats = async () => {
       try {
-        const fetchedMatrix = await fetchFlightSeats(getPayload().flight_id);
-        setMatrix(fetchedMatrix);
+        const flightId = getPayload().flight_id;
+        if (flightId !== null) {
+          const fetchedMatrix = await fetchFlightSeats(flightId);
+          setMatrix(fetchedMatrix);
+        } else {
+          throw new Error("Flight ID is null");
+        }
       } catch (error) {
         console.error("Error fetching flight seats:", error);
       } finally {
@@ -51,6 +57,33 @@ const FlightSeat = () => {
     };
 
     fetchSeats();
+  }, []);
+
+
+  // Fetch flight class price
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const flightId = getPayload().flight_id;
+        if (flightId !== null) {
+          const priceData = await fetchFlightSeatsPrice(flightId);
+          const prices = priceData.prices.reduce(
+            (acc: Record<string, number>, price: { flight_class: string; price: number }) => {
+              acc[price.flight_class] = price.price;
+              return acc;
+            },
+            {}
+          );
+          setFlightPrices(prices);
+        } else {
+          throw new Error("Flight ID is null");
+        }
+      } catch (error) {
+        console.error("Error fetching flight prices:", error);
+      }
+    };
+
+    fetchPrices();
   }, []);
 
   // Generate letters dynamically based on the number of columns in the first row of the first seat class
@@ -134,11 +167,7 @@ const FlightSeat = () => {
   }, [seats]);
 
   const priceSummary = useMemo<PriceSummary>(() => {
-    const classPrices = {
-      Economy: SEAT_PRICE,
-      Business: SEAT_PRICE * 1.5,
-      "First Class": SEAT_PRICE * 2,
-    };
+
 
     return seats
       .flat(2) // Flatten by two levels to get a flat array of seats
@@ -146,8 +175,7 @@ const FlightSeat = () => {
         if (seat.selected) {
           if (!acc[seat.class]) acc[seat.class] = { count: 0, total: 0 };
           acc[seat.class].count += 1;
-          acc[seat.class].total +=
-            classPrices[seat.class as keyof typeof classPrices];
+          acc[seat.class].total += flightPrices[seat.class] || 0;
         }
         return acc;
       }, {} as PriceSummary);

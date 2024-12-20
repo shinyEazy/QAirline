@@ -16,13 +16,14 @@ from app.models import (
     Flight,
     Airplane,
     FlightClass,
+    FlightSeats,
     FlightStatus,
     Passenger,
     Booking,
     Airport,
     User,
 )
-from typing import List
+from typing import Dict, List
 from app.service.email import is_valid_email, send_email
 from app.service.service_utils import seat_col_to_int, conint
 
@@ -325,3 +326,28 @@ def count_available_seat(seat_matrix: list[list[bool]]) -> int:
     for row in seat_matrix:
         available_seats += row.count(False)
     return available_seats
+
+
+def get_flight_class_prices(db: Session, flight_id: int) -> List[Dict[str, float]]:
+    """
+    Lấy giá vé cho từng hạng ghế của chuyến bay dựa vào flight_id và base_price.
+    """
+    # Lấy thông tin chuyến bay
+    flight = db.query(Flight).filter(Flight.flight_id == flight_id).first()
+    if not flight:
+        return None
+
+    # Lấy thông tin ghế của chuyến bay
+    flight_seats = db.query(FlightSeats).filter(
+        FlightSeats.registration_number == flight.registration_number
+    ).all()
+
+    # Tính giá vé cho từng hạng ghế
+    prices = []
+    for seat in flight_seats:
+        prices.append({
+            "flight_class": seat.flight_class,
+            "price": flight.flight_price * seat.class_multiplier,
+        })
+
+    return prices

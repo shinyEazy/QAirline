@@ -76,6 +76,19 @@ export async function fetchFlightSeats(flight_id: number) {
   }
 }
 
+export async function fetchFlightSeatsPrice(flight_id: number) {
+  try {
+    const response = await axios.get(`/api/flights/flight-seats/${flight_id}/prices`);
+
+    const flights_price = response.data;
+
+    return flights_price;
+  } catch (error) {
+    console.error("Error fetching flights matrix", error);
+    throw error;
+
+  }
+}
 // export async function getAvailableSeats(flight_id: number) {
 //   try {
 //     const response = await axios.get(`/api/flights/flight-seats-available/${flight_id}`);

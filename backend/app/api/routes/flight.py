@@ -177,3 +177,18 @@ def get_available_flight_seats(flight_id: int, db: Session = Depends(get_db)):
         available_seats = count_available_seat(seat_matrix)
         flight_seat_matrix.append([flight_class.value, available_seats])
     return flight_seat_matrix
+
+@router.get("/flight-seats/{flight_id}/prices/")
+def get_flight_seat_prices_end_point(
+    flight_id: int,
+    db: Session = Depends(get_db),
+):
+    """
+    Endpoint để lấy giá vé cho từng hạng ghế của một chuyến bay.
+    """
+    prices = get_flight_class_prices(db, flight_id)
+    if prices is None:
+        raise HTTPException(
+            status_code=404, detail="Flight not found or no seat information available"
+        )
+    return {"prices": prices}
