@@ -34,3 +34,14 @@ export async function fetchAirplane() {
     throw error;
   }
 }
+
+export async function updateAirplane(airplane_id, payload) {
+  try {
+    const response = await axios.put(`/api/airplanes/${airplane_id}`, payload);
+
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update airplane", error);
+    throw error;
+  }
+}

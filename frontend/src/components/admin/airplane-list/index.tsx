@@ -14,8 +14,12 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  FormControl,
+  MenuItem,
+  Select,
+  InputLabel
 } from "@mui/material";
-import { fetchAirplane } from "hooks/airplane-hook";
+import { fetchAirplane, updateAirplane } from "hooks/airplane-hook";
 import { useState, useEffect } from "react";
 import { Airplanes } from "types/airplane";
 
@@ -44,7 +48,7 @@ const AirplaneList = () => {
     setDialogOpen(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedAirplane) {
       setAirplaneData((prevData) =>
         prevData.map((airplane) =>
@@ -54,6 +58,13 @@ const AirplaneList = () => {
         )
       );
     }
+
+    const payload = {
+      "registration_number": selectedAirplane?.registration_number,
+      "active": selectedAirplane?.active,
+    }
+
+    await updateAirplane(selectedAirplane?.airplane_id, payload);
     setDialogOpen(false);
     setSelectedAirplane(null);
   };
@@ -122,6 +133,17 @@ const AirplaneList = () => {
                 Capacity
               </TableCell>
               <TableCell
+
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  border: "1px solid #ddd",
+                  textAlign: "center",
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
                 sx={{
                   color: "white",
                   fontWeight: "bold",
@@ -172,6 +194,12 @@ const AirplaneList = () => {
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
                 >
+
+                  {airplane.active ? "Active" : "Inactive"}
+                </TableCell>
+                <TableCell
+                  sx={{ border: "1px solid #ddd", textAlign: "center" }}
+                >
                   <Button
                     variant="contained"
                     color="secondary"
@@ -189,13 +217,6 @@ const AirplaneList = () => {
         <DialogTitle>Edit Airplane</DialogTitle>
         <DialogContent>
           <TextField
-            label="Model"
-            fullWidth
-            margin="dense"
-            value={selectedAirplane?.airplane_model || ""}
-            onChange={(e) => handleChange("airplane_model", e.target.value)}
-          />
-          <TextField
             label="Registration Number"
             fullWidth
             margin="dense"
@@ -204,22 +225,17 @@ const AirplaneList = () => {
               handleChange("registration_number", e.target.value)
             }
           />
-          <TextField
-            label="Manufacturer"
-            fullWidth
-            margin="dense"
-            value={selectedAirplane?.manufacturer || ""}
-            onChange={(e) => handleChange("manufacturer", e.target.value)}
-          />
-          <TextField
-            label="Capacity"
-            fullWidth
-            margin="dense"
-            value={selectedAirplane?.total_seats || ""}
-            onChange={(e) =>
-              handleChange("total_seats", Number(e.target.value))
-            }
-          />
+          {/* Status Field as Dropdown */}
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={selectedAirplane?.active ? "Active" : "Inactive"}
+              onChange={(e) => handleChange("active", e.target.value === "Active")}
+            >
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Inactive">Inactive</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)} color="secondary">
