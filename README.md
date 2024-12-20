@@ -193,7 +193,7 @@ The Swagger UI provides an interactive interface for exploring and testing the A
 - **Team Members**:
   - Bùi Đức Anh - 22028071 (Backend Developer, Database Administrator, Project Manager)
   - Nguyễn Tuấn Anh - 22028303 (Frontend Developer, UI/UX Designer)
-  - Vũ Việt Hùng - 22028124 (Backend Developer, Database Administrator)
+  - Vũ Việt Hùng - 22028124 (Backend Developer, Database Administrator, Integration Developer)
 - Developed as part of **INT3306 - Phát triển ứng dụng web** course.
 
 ---
