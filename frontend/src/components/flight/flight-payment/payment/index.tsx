@@ -13,21 +13,21 @@ import { useEffect } from "react";
 
 const Payment = () => {
   const [paymentOption, setPaymentOption] = useState("payLater");
-  const [bookerEmail, setBookerEmailField] = useState("");
+  // const [bookerEmail, setBookerEmailField] = useState("");
   const { setBookerEmail } = useBookingStore();
   const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPaymentOption((event.target as HTMLInputElement).value);
   };
 
-  const handleBookerEmailField = (bookerEmail: string) => {
-    setBookerEmailField(bookerEmail);
-    setBookerEmail(bookerEmail);
-  };
+  // const handleBookerEmailField = (bookerEmail: string) => {
+  //   setBookerEmailField(bookerEmail);
+  //   setBookerEmail(bookerEmail);
+  // };
 
-  useEffect(() => {
-    setBookerEmail("");
-    setBookerEmailField("");
-  }, []);
+  // useEffect(() => {
+  //   setBookerEmail("");
+  //   setBookerEmailField("");
+  // }, []);
 
   return (
     <Box

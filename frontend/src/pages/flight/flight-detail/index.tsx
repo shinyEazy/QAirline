@@ -9,12 +9,12 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "../../../hooks/axios-config";
 import { toast } from "react-toastify";
-import useBookingStore, { createBooking } from "hooks/booking-hook";
+import useBookingStore from "hooks/booking-hook";
 
 const FlightDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { priceSummary } = location.state || {};
+  const { priceSummary }: { priceSummary: { [key: string]: { count: number; total: number } } } = location.state || {};
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -67,7 +67,6 @@ const FlightDetail = () => {
 
   const handleNext = async () => {
     const payload = getPayload();
-    console.log(payload);
     const passengers = payload.passengers;
     toast.dismiss();
     for (let i = 0; i < passengers.length; i++) {
@@ -151,8 +150,8 @@ const FlightDetail = () => {
             priceSummary,
           },
         });
-        console.log(payload);
-        await createBooking(payload);
+        console.log("Payload truoc do", payload);
+        // await createBooking(payload);
       } catch (error) {
         toast.error(error.response.data.detail);
       }

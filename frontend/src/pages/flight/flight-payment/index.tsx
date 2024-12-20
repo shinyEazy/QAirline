@@ -10,34 +10,34 @@ import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import useBookingStore, { createBooking } from "hooks/booking-hook";
 import { toast } from "react-toastify";
+import { createPayment } from "hooks/payment-hook";
 
 const FlightPayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { getPayload } = useBookingStore();
-  const { priceSummary } = location.state || {};
+  interface PriceSummary {
+    [className: string]: {
+      count: number;
+      total: number;
+    };
+  }
+
+  const { priceSummary } = location.state as { priceSummary: PriceSummary } || {};
   console.log(priceSummary);
-  const isValidEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email.trim());
-  };
-
+  // const isValidEmail = (email: string) => {
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   return emailRegex.test(email.trim());
+  // };
+  const payload = getPayload();
+  console.log("This is payload", payload);
   const submitBooking = async () => {
-    // const payload = getPayload();
-
-    // if (!payload.booker_email) {
-    //   toast.error("Please enter your email before submitting the booking.");
-    //   return;
-    // }
-    // if (!isValidEmail(payload.booker_email)) {
-    //   toast.error("Please provide a valid email address");
-    //   return;
-    // }
-
     try {
+      const response = await createBooking(payload);
+      console.log(response.booking.booking_id);
+      await createPayment(response.booking.booking_id);
       navigate("/");
-      // await createBooking(payload);
-      toast.success("Booking submitted successfully.");
+      toast.success("Booking and payment completed successfully.");
     } catch (error) {
       toast.error(error.response.data.detail);
     }

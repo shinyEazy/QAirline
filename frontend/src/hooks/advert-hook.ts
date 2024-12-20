@@ -12,7 +12,13 @@ export async function getAdvert(advert_name: string) {
 }
 
 // Create a new advertisement
-export async function createAdvert({ fileUpload, advertName, text }) {
+interface AdvertData {
+  fileUpload: File;
+  advertName: string;
+  text: string;
+}
+
+export async function createAdvert({ fileUpload, advertName, text }: AdvertData) {
   try {
     const formData = new FormData();
     console.log(fileUpload);

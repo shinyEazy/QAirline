@@ -35,7 +35,7 @@ export async function fetchAirplane() {
   }
 }
 
-export async function updateAirplane(airplane_id, payload) {
+export async function updateAirplane(airplane_id: number, payload) {
   try {
     const response = await axios.put(`/api/airplanes/${airplane_id}`, payload);
 

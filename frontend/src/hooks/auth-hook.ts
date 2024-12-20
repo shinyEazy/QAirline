@@ -27,7 +27,7 @@ export const useAdminAuth = () => {
 };
 
 
-export const handleUserAuthentication = async (username, password) => {
+export const handleUserAuthentication = async (username: string, password: string) => {
   try {
     // Form data payload
     const formData = new URLSearchParams();
