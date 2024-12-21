@@ -23,7 +23,7 @@ QAirline is a robust airline booking system designed to streamline flight search
 ### Customer Features
 
 * **Flight Search**: Search flights using filters like date, destination, and flight type.
-![image](https://github.com/user-attachments/assets/c4c53509-90ce-4266-9426-7474db8b4814)
+![image](https://github.com/user-attachments/assets/1b44d06d-e3fe-491c-a3f0-b52758b4bd39)
 ![image](https://github.com/user-attachments/assets/9fc2e450-a25e-4e55-8856-4e40c3384348)
 
 * **Booking Flights**: Reserve seats and proceed to the booking process.
