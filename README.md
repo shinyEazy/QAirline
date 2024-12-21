@@ -175,7 +175,7 @@ The Swagger UI provides an interactive interface for exploring and testing the A
 ### Frontend
 
 - Use **React functional components** and **hooks** for building user interface components.
-- 
+
 ### Backend
 
 - Follow **FastAPI conventions** for defining API routes and services.
