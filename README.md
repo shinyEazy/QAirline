@@ -23,28 +23,38 @@ QAirline is a robust airline booking system designed to streamline flight search
 ### Customer Features
 
 * **Flight Search**: Search flights using filters like date, destination, and flight type.
-* ![image](https://github.com/user-attachments/assets/9fc2e450-a25e-4e55-8856-4e40c3384348)
+![image](https://github.com/user-attachments/assets/9fc2e450-a25e-4e55-8856-4e40c3384348)
 
 * **Booking Flights**: Reserve seats and proceed to the booking process.
-* ![image](https://github.com/user-attachments/assets/20b9f789-4f23-465b-9cfb-b56188e15a49)
-* ![image](https://github.com/user-attachments/assets/0facf0d6-0fa2-4363-960d-c914e158eade)
-
+![image](https://github.com/user-attachments/assets/20b9f789-4f23-465b-9cfb-b56188e15a49)
+![image](https://github.com/user-attachments/assets/0facf0d6-0fa2-4363-960d-c914e158eade)
 
 * **Payment Management**: Placeholder for payment steps (without integration).
-* ![image](https://github.com/user-attachments/assets/93c2128b-3b76-4d9b-be5e-a5683f677e55)
+![image](https://github.com/user-attachments/assets/93c2128b-3b76-4d9b-be5e-a5683f677e55)
 
 * **View Booked Tickets**: Manage and track flight reservations.
-* ![image](https://github.com/user-attachments/assets/f4ade764-7b1e-49db-9ac6-9f0a754626cb)
-
+![image](https://github.com/user-attachments/assets/f4ade764-7b1e-49db-9ac6-9f0a754626cb)
 
 ### Admin Features
 
-* **Manage Flights**: Add, update, and delete flight schedules.
-* **Manage Airplanes**: Manage airplane details like model, capacity, etc.
-* **Monitor Bookings**: View passenger reservations and cancellations.
-* **Manage Airports**: Handle airport information.
-* **Generate Statistics**: View system reports and summaries.
+* **Manage Flights**: Manage, add, update, and delete flight schedules.
+![image](https://github.com/user-attachments/assets/a9ef5a3c-99e9-4f05-918d-60856416d520)
+![image](https://github.com/user-attachments/assets/098c97d6-c99f-4c4f-8354-bbb2088534d3)
+![image](https://github.com/user-attachments/assets/74669463-1f8e-48f4-a7cb-ad6517fbd55e)
 
+* **Manage Airplanes**: Manage,add airplane details like model, capacity, etc.
+![image](https://github.com/user-attachments/assets/86baef31-fc25-46e7-9924-29947cdd5508)
+![image](https://github.com/user-attachments/assets/b0732f8c-2e8f-4f7b-a959-14b4cad6571e)
+
+* **Monitor Bookings**: View passenger reservations and cancellations.
+![image](https://github.com/user-attachments/assets/10368d0b-f407-4e48-8082-611f0ae93056)
+
+* **Manage Airports**: Handle airport information.
+![image](https://github.com/user-attachments/assets/466d6a20-e0f5-4d69-8493-23131eb563f5)
+
+* **Generate Statistics**: View system reports and summaries.
+![image](https://github.com/user-attachments/assets/33d7c082-75a7-40be-8b33-1b654b0494bf)
+![image](https://github.com/user-attachments/assets/b7d97878-94dd-467d-8487-aecc041afe94)
 ---
 
 ## Technology Stack
