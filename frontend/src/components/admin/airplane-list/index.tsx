@@ -17,11 +17,12 @@ import {
   FormControl,
   MenuItem,
   Select,
-  InputLabel
+  InputLabel,
 } from "@mui/material";
 import { fetchAirplane, updateAirplane } from "hooks/airplane-hook";
 import { useState, useEffect } from "react";
 import { Airplanes } from "types/airplane";
+import { toast } from "react-toastify";
 
 const AirplaneList = () => {
   const [airplaneData, setAirplaneData] = useState<Airplanes[]>([]);
@@ -60,13 +61,16 @@ const AirplaneList = () => {
     }
 
     const payload = {
-      "registration_number": selectedAirplane?.registration_number,
-      "active": selectedAirplane?.active,
-    }
+      registration_number: selectedAirplane?.registration_number,
+      active: selectedAirplane?.active,
+    };
 
     await updateAirplane(selectedAirplane?.airplane_id, payload);
     setDialogOpen(false);
     setSelectedAirplane(null);
+
+    toast.dismiss();
+    toast.success("Airplane details saved successfully!");
   };
 
   const handleChange = (field: keyof Airplanes, value: string | number) => {
@@ -133,7 +137,6 @@ const AirplaneList = () => {
                 Capacity
               </TableCell>
               <TableCell
-
                 sx={{
                   color: "white",
                   fontWeight: "bold",
@@ -194,7 +197,6 @@ const AirplaneList = () => {
                 <TableCell
                   sx={{ border: "1px solid #ddd", textAlign: "center" }}
                 >
-
                   {airplane.active ? "Active" : "Inactive"}
                 </TableCell>
                 <TableCell
@@ -227,10 +229,11 @@ const AirplaneList = () => {
           />
           {/* Status Field as Dropdown */}
           <FormControl fullWidth margin="dense">
-            <InputLabel>Status</InputLabel>
             <Select
               value={selectedAirplane?.active ? "Active" : "Inactive"}
-              onChange={(e) => handleChange("active", e.target.value === "Active")}
+              onChange={(e) =>
+                handleChange("active", e.target.value === "Active")
+              }
             >
               <MenuItem value="Active">Active</MenuItem>
               <MenuItem value="Inactive">Inactive</MenuItem>

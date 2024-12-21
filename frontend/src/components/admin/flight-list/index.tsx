@@ -21,6 +21,7 @@ import { useState, useEffect } from "react";
 import { fetchFlights, updateFlight } from "hooks/flight-hook";
 import { getPassengerInFlight } from "hooks/passenger-hook";
 import { Passenger, NewPassenger } from "types/passenger";
+import { toast } from "react-toastify";
 
 interface Flight {
   flight_id: number;
@@ -407,7 +408,7 @@ const FlightList = () => {
               </TableHead>
               <TableBody>
                 {selectedPassengers.map((passenger, index) => (
-                  <TableRow>
+                  <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>
                       {passenger.first_name + " " + passenger.last_name}
@@ -424,11 +425,19 @@ const FlightList = () => {
           </TableContainer>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenView(false)} color="secondary">
+          <Button
+            onClick={() => {
+              setOpenView(false);
+              toast.dismiss();
+              toast.info("Passenger list closed.");
+            }}
+            color="secondary"
+          >
             Close
           </Button>
         </DialogActions>
       </Dialog>
+
       {/* Edit Flight Dialog */}
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
         <DialogTitle>Edit Flight</DialogTitle>
@@ -485,10 +494,24 @@ const FlightList = () => {
           </Select>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="secondary">
+          <Button
+            onClick={() => {
+              setOpen(false);
+              toast.dismiss();
+              toast.info("Edit flight cancelled.");
+            }}
+            color="secondary"
+          >
             Cancel
           </Button>
-          <Button onClick={handleSave} color="primary">
+          <Button
+            onClick={() => {
+              handleSave();
+              toast.dismiss();
+              toast.success("Flight details saved successfully.");
+            }}
+            color="primary"
+          >
             Save
           </Button>
         </DialogActions>

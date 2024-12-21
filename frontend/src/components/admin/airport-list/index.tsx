@@ -17,7 +17,7 @@ import {
 import { deleteAirport, fetchAirport } from "hooks/airport-hook";
 import { useState, useEffect } from "react";
 import { Airport } from "types/airport";
-
+import { toast } from "react-toastify";
 
 const AirportList = () => {
   const [airportData, setAirportData] = useState<Airport[]>([]);
@@ -38,7 +38,6 @@ const AirportList = () => {
 
     loadAirport();
   }, []);
-
 
   const handleDeleteClick = async (airport_id: number) => {
     try {
@@ -61,6 +60,8 @@ const AirportList = () => {
       setSelectedAirportId(null);
     }
     setDialogOpen(false);
+    toast.dismiss();
+    toast.success("Airport deleted successfully!");
   };
 
   const handleCancelDelete = () => {

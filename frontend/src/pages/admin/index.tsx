@@ -23,6 +23,7 @@ import AirplaneList from "../../components/admin/airplane-list";
 import AirportList from "../../components/admin/airport-list";
 import { useNavigate } from "react-router-dom";
 import { createAdvert } from "hooks/advert-hook";
+import { toast } from "react-toastify";
 
 const AdminPage = () => {
   const [flightModalOpen, setFlightModalOpen] = useState(false);
@@ -189,7 +190,7 @@ const AdminPage = () => {
     console.log(`Updating ${field}:`, value);
     setNewNews((prevNews) => ({
       ...prevNews,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -207,14 +208,16 @@ const AdminPage = () => {
         departure_airport_id: newFlight.departure,
         destination_airport_id: newFlight.destination,
         flight_price: newFlight.price,
-        status: "Scheduled", // Default status or you can add a field in the UI to select this
+        status: "Scheduled",
       };
 
       const createdFlight = await createFlight(payload);
       console.log("Flight created successfully:", createdFlight);
+      toast.dismiss();
+      toast.success("New flight added successfully!");
       handleFlightModalClose();
     } catch (error) {
-      console.error("Failed to save flight:", error);
+      toast.error("Failed to save flight");
     }
   };
 
@@ -227,9 +230,10 @@ const AdminPage = () => {
         flight_seats: newAirplane.flight_seats,
       };
       const createdAirplane = createAirplane(payload);
-      console.log("Airplane created successfully:", createdAirplane);
+      toast.dismiss();
+      toast.success("New airplane added successfully!");
     } catch (error) {
-      console.error("Failed to save airplane:", error);
+      toast.error("Failed to save airplane");
     }
     handleAirplaneModalClose();
   };
@@ -244,13 +248,12 @@ const AdminPage = () => {
         text: newNews.content,
       });
 
-      console.log("News created successfully:", createdNews);
+      toast.dismiss();
+      toast.success("New news item added successfully!");
       handleNewsModalClose();
+    } catch (error) {
+      toast.error("Failed to save news");
     }
-    catch (error) {
-      console.error("Failed to save news:", error);
-    }
-
   };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -262,6 +265,8 @@ const AdminPage = () => {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     navigate("/admin/login");
+    toast.dismiss();
+    toast.success("Logged out successfully!");
   };
   return (
     <Box overflow="hidden">
