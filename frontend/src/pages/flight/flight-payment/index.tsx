@@ -33,10 +33,10 @@ const FlightPayment = () => {
   console.log("This is payload", payload);
   const submitBooking = async () => {
     try {
+      navigate("/");
       const response = await createBooking(payload);
       console.log(response.booking.booking_id);
       await createPayment(response.booking.booking_id);
-      navigate("/");
       toast.success("Booking and payment completed successfully.");
     } catch (error) {
       toast.error(error.response.data.detail);

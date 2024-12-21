@@ -32,7 +32,16 @@ const FlightDetail = () => {
       today.getFullYear() - parsedDate.getFullYear() <= 120 // Reasonable age check
     );
   };
-
+  const isValidCitizenID = (citizenId: string) => {
+    if (citizenId == "") return true;
+    const citizenIdRegex = /^\d{9,16}$/; // Allows 9 to 16 digits.
+    return citizenIdRegex.test(citizenId);
+  };
+  const isValidPassportNumber = (passportNumber: string) => {
+    if (passportNumber == "") return true;
+    const passportRegex = /^[A-Za-z0-9]{6,12}$/; // Alphanumeric, 6–12 characters.
+    return passportRegex.test(passportNumber);
+  };
   const isValidCountryName = (countryName: string) => {
     // Regular expression to match common country name patterns
     const countryNameRegex = /^[A-Za-z\s-]+$/;
@@ -76,7 +85,6 @@ const FlightDetail = () => {
         return;
       }
       const validationErrors = [];
-
       if (!isValidDate(passenger.date_of_birth)) {
         validationErrors.push(
           `Seat ${passenger.seat_col}${passenger.seat_row}: Please provide a valid date of birth`
@@ -100,7 +108,16 @@ const FlightDetail = () => {
           `Seat ${passenger.seat_col}${passenger.seat_row}: Please provide a valid nationality`
         );
       }
-
+      if (!isValidCitizenID(passenger.citizen_id)) {
+        validationErrors.push(
+          "Please provide a valid Citizen ID (9–16 digits)"
+        );
+      }
+      if (!isValidPassportNumber(passenger.passport_number)) {
+        validationErrors.push(
+          "Please provide a valid Passport Number (6–12 alphanumeric characters)"
+        );
+      }
       if (validationErrors.length > 0) {
         validationErrors.forEach((error) => toast.error(error));
         return false;

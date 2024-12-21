@@ -149,7 +149,7 @@ const AdminStatistical = () => {
               padding="20px"
               flexDirection="column"
             >
-              <LineChart data={dataForChartWeek} width={1200} height={300}>
+              <LineChart data={dataForChartDay} width={1200} height={300}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
