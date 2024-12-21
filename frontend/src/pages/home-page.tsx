@@ -11,11 +11,12 @@ import Footer from "components/home-page/Footer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import News from "components/home-page/news";
-import '@fontsource/montserrat/400.css'; // Bold weight
-import '@fontsource/ibm-plex-sans';
+import "@fontsource/montserrat/400.css";
+import "@fontsource/ibm-plex-sans";
+
 const theme = createTheme({
   typography: {
-    fontFamily: 'IBM Plex Sans, sans-serif',
+    fontFamily: "IBM Plex Sans, sans-serif",
   },
 });
 

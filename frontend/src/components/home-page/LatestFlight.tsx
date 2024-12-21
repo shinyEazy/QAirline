@@ -11,28 +11,52 @@ import Slider from "react-slick";
 
 const flightDeals = [
   {
-    destination: "Hanoi to HoChiMinh",
-    dateRange: "31 Oct, 2024 - 2 Nov, 2024",
-    class: "Business Class",
-    price: "$980",
+    destination: "Hanoi to Ho Chi Minh",
+    date: "21 Dec, 2024",
+    class: "Economy Class",
+    price: "$120",
     imageUrl:
       "https://www.trailsofindochina.com/wp-content/uploads/2017/05/hochiminhcity_header.jpg",
   },
   {
-    destination: "Hanoi to HoChiMinh",
-    dateRange: "31 Oct, 2024 - 2 Nov, 2024",
+    destination: "New York to Los Angeles",
+    date: "24 Dec, 2024",
     class: "Business Class",
-    price: "$980",
+    price: "$480",
     imageUrl:
-      "https://www.trailsofindochina.com/wp-content/uploads/2017/05/hochiminhcity_header.jpg",
+      "https://nomadicated.com/wp-content/uploads/2023/05/New-York-City-22.jpg",
   },
   {
-    destination: "Hanoi to HoChiMinh",
-    dateRange: "31 Oct, 2024 - 2 Nov, 2024",
-    class: "Business Class",
-    price: "$980",
+    destination: "Tokyo to Osaka",
+    date: "25 Dec, 2024",
+    class: "First Class",
+    price: "$1,050",
     imageUrl:
-      "https://www.trailsofindochina.com/wp-content/uploads/2017/05/hochiminhcity_header.jpg",
+      "https://vietnamtouristvn.com/thumbs/670x500x1/upload/product/1z-8444.jpg",
+  },
+  {
+    destination: "London to Paris",
+    date: "26 Dec, 2024",
+    class: "Economy Class",
+    price: "$210",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/e/e6/Paris_Night.jpg",
+  },
+  {
+    destination: "Singapore to Bali",
+    date: "24 Dec, 2024",
+    class: "Business Class",
+    price: "$650",
+    imageUrl:
+      "https://res.cloudinary.com/enchanting/q_70,f_auto,c_fill,g_face/hj-web/2020/10/DPS.A.2002.050091.009.jpg",
+  },
+  {
+    destination: "Sydney to Auckland",
+    date: "25 Dec, 2024",
+    class: "Economy Class",
+    price: "$380",
+    imageUrl:
+      "https://media.cntraveler.com/photos/623a0766b0df60ea7b86c280/16:9/w_2560%2Cc_limit/New%2520Zealand%2C%2520North%2520Islaqnd%2C%2520Auckland_GettyImages-596287311.jpg",
   },
 ];
 
@@ -154,12 +178,11 @@ const LatestFlight = () => {
                 />
               </Box>
               <Box marginLeft="20px">
-                {" "}
                 <Typography fontSize="1.2rem" fontWeight="500">
                   {deal.destination}
                 </Typography>
                 <Typography color="text.secondary" fontSize="0.9rem">
-                  {deal.dateRange}
+                  {deal.date}
                 </Typography>
               </Box>
               <Box
