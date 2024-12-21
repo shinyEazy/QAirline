@@ -52,6 +52,14 @@ const News = () => {
   const currentNews = newsData[currentNewsIndex];
 
   console.log(newsData);
+
+  const shortenText = (text: string, maxLength: number) => {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + "...";
+    }
+    return text;
+  };
+
   return (
     <Box
       sx={{
@@ -89,19 +97,26 @@ const News = () => {
         flexGrow={1}
         flexDirection="column"
       >
-        <Typography fontSize="1rem" color="gray">
+        <Typography
+          onClick={() => navigate(`/news/new/${currentNews?.advert_id}`)}
+          fontSize="1rem"
+          color="gray"
+          sx={{ "&:hover": { textDecoration: "underline", cursor: "pointer" } }}
+        >
           {currentNews?.advert_name || "No Name Available"}
         </Typography>
-        <Link
-          href="#"
-          underline="hover"
+        <Typography
+          onClick={() => navigate(`/news/new/${currentNews?.advert_id}`)}
           color="#003366"
-          fontSize="1.1rem"
+          fontSize="1.2rem"
           fontWeight="500"
-          sx={{ flexGrow: 1 }}
+          sx={{
+            flexGrow: 1,
+            "&:hover": { textDecoration: "underline", cursor: "pointer" },
+          }}
         >
-          {currentNews?.text || "No news text"}
-        </Link>
+          {shortenText(currentNews?.text || "No news text", 100)}
+        </Typography>
       </Box>
 
       <Box display="flex" alignItems="center" gap="10px">

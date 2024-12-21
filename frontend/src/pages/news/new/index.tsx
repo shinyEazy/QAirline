@@ -138,6 +138,7 @@ const New = ({ id, title, content, image }: NewProps) => {
             </Typography>
           </Box>
         </Box>
+
         <Box
           margin="0 80px 0"
           paddingBottom="40px"
@@ -150,6 +151,20 @@ const New = ({ id, title, content, image }: NewProps) => {
           <Typography variant="h4" color="#1976d2">
             {news?.advert_name}
           </Typography>
+          <Box>
+            <img
+              src={news.media_link}
+              alt={news.advert_name}
+              style={{
+                marginTop: "20px",
+                height: "368px",
+                width: "100%",
+                objectFit: "cover",
+                borderRadius: "10px",
+                transition: "transform 0.3s ease-in-out",
+              }}
+            />
+          </Box>
           <Typography fontSize="1.2rem" marginTop="20px">
             {news?.text}
           </Typography>
