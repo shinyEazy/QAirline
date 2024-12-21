@@ -25,24 +25,29 @@ const New = ({ id, title, content, image }: NewProps) => {
   const navigate = useNavigate();
   const { advert_id } = useParams();
   const [news, setNews] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const fetchedNews = await getAdverts();
-
         const selectedNews = fetchedNews.find(
           (item) => item.advert_id === Number(advert_id)
         );
-
-        setNews(selectedNews);
+        setNews(selectedNews || null);
       } catch (error) {
         console.error("Error fetching news:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchNews();
   }, [advert_id]);
+
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   console.log(news);
 
