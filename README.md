@@ -23,6 +23,7 @@ QAirline is a robust airline booking system designed to streamline flight search
 ### Customer Features
 
 * **Flight Search**: Search flights using filters like date, destination, and flight type.
+![image](https://github.com/user-attachments/assets/328adeab-7cc3-408e-bf6b-831493aeac54)
 ![image](https://github.com/user-attachments/assets/9fc2e450-a25e-4e55-8856-4e40c3384348)
 
 * **Booking Flights**: Reserve seats and proceed to the booking process.
@@ -39,15 +40,12 @@ QAirline is a robust airline booking system designed to streamline flight search
 
 * **Manage Flights**: Manage, add, update, and delete flight schedules.
 ![image](https://github.com/user-attachments/assets/a9ef5a3c-99e9-4f05-918d-60856416d520)
-![image](https://github.com/user-attachments/assets/098c97d6-c99f-4c4f-8354-bbb2088534d3)
-![image](https://github.com/user-attachments/assets/74669463-1f8e-48f4-a7cb-ad6517fbd55e)
 
 * **Manage Airplanes**: Manage,add airplane details like model, capacity, etc.
 ![image](https://github.com/user-attachments/assets/86baef31-fc25-46e7-9924-29947cdd5508)
-![image](https://github.com/user-attachments/assets/b0732f8c-2e8f-4f7b-a959-14b4cad6571e)
 
 * **Monitor Bookings**: View passenger reservations and cancellations.
-![image](https://github.com/user-attachments/assets/10368d0b-f407-4e48-8082-611f0ae93056)
+![image](https://github.com/user-attachments/assets/1f132b71-d149-462e-90d9-a5fe9e6aeda1)
 
 * **Manage Airports**: Handle airport information.
 ![image](https://github.com/user-attachments/assets/466d6a20-e0f5-4d69-8493-23131eb563f5)
