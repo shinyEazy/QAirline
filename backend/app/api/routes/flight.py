@@ -178,6 +178,7 @@ def get_available_flight_seats(flight_id: int, db: Session = Depends(get_db)):
         flight_seat_matrix.append([flight_class.value, available_seats])
     return flight_seat_matrix
 
+
 @router.get("/flight-seats/{flight_id}/prices/")
 def get_flight_seat_prices_end_point(
     flight_id: int,

@@ -125,3 +125,4 @@ export async function cancelBooking(booking_id: string) {
   }
 }
 export default useBookingStore;
+

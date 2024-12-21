@@ -217,6 +217,7 @@ def get_booking_info(db_booking: Booking, db: Session) -> dict:
 
     payment_status = "Paid"
 
+    print(db_payment)
     if not db_payment:
         payment_status = "Pending"
 
