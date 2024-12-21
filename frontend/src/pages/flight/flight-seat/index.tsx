@@ -21,8 +21,6 @@ interface PriceSummary {
   };
 }
 
-const SEAT_PRICE = 100;
-
 const FlightSeat = () => {
   const navigate = useNavigate();
   const {
@@ -59,7 +57,6 @@ const FlightSeat = () => {
     fetchSeats();
   }, []);
 
-
   // Fetch flight class price
   useEffect(() => {
     const fetchPrices = async () => {
@@ -68,7 +65,10 @@ const FlightSeat = () => {
         if (flightId !== null) {
           const priceData = await fetchFlightSeatsPrice(flightId);
           const prices = priceData.prices.reduce(
-            (acc: Record<string, number>, price: { flight_class: string; price: number }) => {
+            (
+              acc: Record<string, number>,
+              price: { flight_class: string; price: number }
+            ) => {
               acc[price.flight_class] = price.price;
               return acc;
             },
@@ -167,8 +167,6 @@ const FlightSeat = () => {
   }, [seats]);
 
   const priceSummary = useMemo<PriceSummary>(() => {
-
-
     return seats
       .flat(2) // Flatten by two levels to get a flat array of seats
       .reduce((acc, seat) => {

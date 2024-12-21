@@ -8,19 +8,16 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
   LineChart,
   Line,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
 import { fetchStats } from "hooks/stats-hook";
 
-
 const AdminStatistical = () => {
-
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("month");
-  const [stats, setStats] = useState(null)
+  const [stats, setStats] = useState(null);
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
@@ -30,11 +27,10 @@ const AdminStatistical = () => {
       const stats = await fetchStats();
 
       setStats(stats);
-
-    }
+    };
 
     getStats();
-  }, [])
+  }, []);
 
   if (!stats) {
     return <p>Loading...</p>;
@@ -56,19 +52,23 @@ const AdminStatistical = () => {
     revenue: value.tickets_bought * 100, // Example revenue calculation
   }));
 
-  const dataForChartMonth = Object.entries(stats.monthly).map(([week, value]) => ({
-    name: week.replace("_", " ").toUpperCase(),
-    tickets_bought: value.tickets_bought,
-    tickets_canceled: value.tickets_canceled,
-    revenue: value.tickets_bought * 100, // Example revenue calculation
-  }));
+  const dataForChartMonth = Object.entries(stats.monthly).map(
+    ([week, value]) => ({
+      name: week.replace("_", " ").toUpperCase(),
+      tickets_bought: value.tickets_bought,
+      tickets_canceled: value.tickets_canceled,
+      revenue: value.tickets_bought * 100, // Example revenue calculation
+    })
+  );
 
-  const dataForChartYear = Object.entries(stats.yearly).map(([month, value]) => ({
-    name: month.replace("_", " ").toUpperCase(),
-    tickets_bought: value.tickets_bought,
-    tickets_canceled: value.tickets_canceled,
-    revenue: value.tickets_bought * 100,
-  }));
+  const dataForChartYear = Object.entries(stats.yearly).map(
+    ([month, value]) => ({
+      name: month.replace("_", " ").toUpperCase(),
+      tickets_bought: value.tickets_bought,
+      tickets_canceled: value.tickets_canceled,
+      revenue: value.tickets_bought * 100,
+    })
+  );
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>

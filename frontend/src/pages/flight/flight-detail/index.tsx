@@ -7,14 +7,16 @@ import FlightRoute from "components/flight/flight-detail/flight-route";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import axios from "../../../hooks/axios-config";
 import { toast } from "react-toastify";
 import useBookingStore from "hooks/booking-hook";
 
 const FlightDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { priceSummary }: { priceSummary: { [key: string]: { count: number; total: number } } } = location.state || {};
+  const {
+    priceSummary,
+  }: { priceSummary: { [key: string]: { count: number; total: number } } } =
+    location.state || {};
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -31,16 +33,6 @@ const FlightDetail = () => {
     );
   };
 
-  const isValidCitizenID = (citizenId: string) => {
-    const citizenIdRegex = /^\d{9,16}$/; // Allows 9 to 16 digits.
-    return citizenIdRegex.test(citizenId);
-  };
-
-  const isValidPassportNumber = (passportNumber: string) => {
-    const passportRegex = /^[A-Za-z0-9]{6,12}$/; // Alphanumeric, 6–12 characters.
-    return passportRegex.test(passportNumber);
-  };
-
   const isValidCountryName = (countryName: string) => {
     // Regular expression to match common country name patterns
     const countryNameRegex = /^[A-Za-z\s-]+$/;
@@ -53,11 +45,6 @@ const FlightDetail = () => {
   const isValidName = (name: string) => {
     const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,50}$/; // Supports international characters, spaces, hyphens, and apostrophes.
     return name.trim().length > 0 && nameRegex.test(name);
-  };
-
-  const isValidPhoneNumber = (phoneNumber: string) => {
-    const phoneRegex = /^\+?[0-9]{7,15}$/; // Allows optional "+" and 7-15 digits.
-    return phoneRegex.test(phoneNumber.trim());
   };
 
   const isValidEmail = (email: string) => {
@@ -96,10 +83,6 @@ const FlightDetail = () => {
         );
       }
 
-      // if (!isValidPhoneNumber(passenger.phone_number)) {
-      //   validationErrors.push("Please provide a valid phone number");
-      // }
-
       if (!isValidName(passenger.first_name)) {
         validationErrors.push(
           `Seat ${passenger.seat_col}${passenger.seat_row}: Please provide a valid first name`
@@ -117,18 +100,6 @@ const FlightDetail = () => {
           `Seat ${passenger.seat_col}${passenger.seat_row}: Please provide a valid nationality`
         );
       }
-
-      // if (!isValidCitizenID(passenger.citizen_id)) {
-      //   validationErrors.push(
-      //     "Please provide a valid Citizen ID (9–16 digits)"
-      //   );
-      // }
-
-      // if (!isValidPassportNumber(passenger.passport_number)) {
-      //   validationErrors.push(
-      //     "Please provide a valid Passport Number (6–12 alphanumeric characters)"
-      //   );
-      // }
 
       if (validationErrors.length > 0) {
         validationErrors.forEach((error) => toast.error(error));
@@ -156,18 +127,6 @@ const FlightDetail = () => {
         toast.error(error.response.data.detail);
       }
     }
-
-    // try {
-    //   const response = await axios.post("/api/booking/", payload);
-    //   const data = response.data;
-    //   // if (data) {
-    //   //   navigate("/flight/payment");
-    //   // }
-    //   console.log(data);
-    // } catch (error) {
-    //   console.error("Error create booking", error);
-    //   throw error;
-    // }
   };
 
   return (

@@ -2,7 +2,6 @@ import { Box, Typography, Button, Divider } from "@mui/material";
 import Header from "components/home-page/Header";
 import Footer from "components/home-page/Footer";
 import FlightRoute from "components/flight/flight-detail/flight-route";
-import Price from "components/flight/flight-detail/price";
 import Payment from "components/flight/flight-payment/payment";
 import StepFlightPayment from "components/flight/flight-payment/step-fight-payment";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +22,8 @@ const FlightPayment = () => {
     };
   }
 
-  const { priceSummary } = location.state as { priceSummary: PriceSummary } || {};
+  const { priceSummary } =
+    (location.state as { priceSummary: PriceSummary }) || {};
   console.log(priceSummary);
   // const isValidEmail = (email: string) => {
   //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
