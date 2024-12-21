@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { BookingPayload } from 'types/booking';
-import { Passenger } from 'types/passenger';
-import axios from './axios-config';
-import { persist } from 'zustand/middleware';  // Import the persist middleware from zustand
+import { create } from "zustand";
+import { BookingPayload } from "types/booking";
+import { Passenger } from "types/passenger";
+import axios from "./axios-config";
+import { persist } from "zustand/middleware"; // Import the persist middleware from zustand
 
 // Define the state and actions
 type BookingStore = {
@@ -10,17 +10,20 @@ type BookingStore = {
   setUserId: (userId: number) => void;
   setFlightId: (flightId: number) => void;
   setFlightClass: (flightClass: string) => void;
-  setNumberOfAdultsAndChildren: (numberOfAdults: number, numberOfChildren: number) => void;
+  setNumberOfAdultsAndChildren: (
+    numberOfAdults: number,
+    numberOfChildren: number
+  ) => void;
   setBookerEmail: (bookerEmail: string) => void;
   addPassenger: (passenger: Passenger) => void;
   updatePassenger: (index: number, passenger: Passenger) => void;
   getPassengers: () => [Passenger];
   getPayload: () => BookingPayload;
-  setPassengers: (passengers: Passenger[]) => void;  // New action to set passengers
+  setPassengers: (passengers: Passenger[]) => void; // New action to set passengers
 };
 
-const useBookingStore = create<BookingStore>(persist(
-  (set, get) => ({
+const useBookingStore = create<BookingStore>(
+  persist((set, get) => ({
     payload: {
       booker_email: null,
       number_of_adults: 0,
@@ -32,7 +35,9 @@ const useBookingStore = create<BookingStore>(persist(
     },
 
     setBookerEmail: (bookerEmail) => {
-      set((state) => ({ payload: { ...state.payload, booker_email: bookerEmail } }));
+      set((state) => ({
+        payload: { ...state.payload, booker_email: bookerEmail },
+      }));
     },
 
     setFlightId: (flightId) => {
@@ -48,7 +53,9 @@ const useBookingStore = create<BookingStore>(persist(
       }));
     },
     setFlightClass: (flightClass) => {
-      set((state) => ({ payload: { ...state.payload, flight_class: flightClass } }));
+      set((state) => ({
+        payload: { ...state.payload, flight_class: flightClass },
+      }));
     },
 
     setNumberOfAdultsAndChildren: (numberOfAdults, numberOfChildren) => {
@@ -83,19 +90,20 @@ const useBookingStore = create<BookingStore>(persist(
       return get().payload.passengers;
     },
     getPayload: () => get().payload,
-  }))
-  , {
-    name: 'booking-store', // Specify the custom key for localStorage
-  });
+  })),
+  {
+    name: "booking-store", // Specify the custom key for localStorage
+  }
+);
 
 export async function createBooking(payload: BookingPayload) {
   try {
     const response = await axios.post("/api/booking/", payload);
     useBookingStore.persist.clearStorage(); // Clears the persisted state
-    return response.data
+    return response.data;
   } catch (error) {
     console.error("Error creating booking", error);
-    throw (error);
+    throw error;
   }
 }
 
@@ -115,6 +123,5 @@ export async function cancelBooking(booking_id: string) {
   } catch (error) {
     throw error;
   }
-
 }
 export default useBookingStore;

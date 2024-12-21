@@ -1,4 +1,4 @@
-import axios from './axios-config'
+import axios from "./axios-config";
 
 export async function fetchFlights() {
   try {
@@ -7,8 +7,7 @@ export async function fetchFlights() {
     const flights = response.data;
 
     return flights;
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error fetching flights", error);
     throw error;
   }
@@ -42,16 +41,18 @@ export async function fetchAirplanes() {
   }
 }
 
-export async function updateFlight(flightId: number, flightData: {
-  registration_number: string;
-  estimated_departure_time: string;
-  actual_departure_time: string;
-  estimated_arrival_time: string;
-  actual_arrival_time: string;
-  flight_price: number;
-  status: string;
-}) {
-
+export async function updateFlight(
+  flightId: number,
+  flightData: {
+    registration_number: string;
+    estimated_departure_time: string;
+    actual_departure_time: string;
+    estimated_arrival_time: string;
+    actual_arrival_time: string;
+    flight_price: number;
+    status: string;
+  }
+) {
   try {
     flightData.actual_departure_time = flightData.estimated_departure_time;
     flightData.actual_arrival_time = flightData.estimated_arrival_time;
@@ -62,6 +63,7 @@ export async function updateFlight(flightId: number, flightData: {
     throw error;
   }
 }
+
 export async function fetchFlightSeats(flight_id: number) {
   try {
     const response = await axios.get(`/api/flights/flight-seats/${flight_id}`);
@@ -72,13 +74,14 @@ export async function fetchFlightSeats(flight_id: number) {
   } catch (error) {
     console.error("Error fetching flights matrix", error);
     throw error;
-
   }
 }
 
 export async function fetchFlightSeatsPrice(flight_id: number) {
   try {
-    const response = await axios.get(`/api/flights/flight-seats/${flight_id}/prices`);
+    const response = await axios.get(
+      `/api/flights/flight-seats/${flight_id}/prices`
+    );
 
     const flights_price = response.data;
 
@@ -86,7 +89,6 @@ export async function fetchFlightSeatsPrice(flight_id: number) {
   } catch (error) {
     console.error("Error fetching flights matrix", error);
     throw error;
-
   }
 }
 // export async function getAvailableSeats(flight_id: number) {

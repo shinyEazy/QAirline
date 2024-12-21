@@ -18,7 +18,11 @@ interface AdvertData {
   text: string;
 }
 
-export async function createAdvert({ fileUpload, advertName, text }: AdvertData) {
+export async function createAdvert({
+  fileUpload,
+  advertName,
+  text,
+}: AdvertData) {
   try {
     const formData = new FormData();
     console.log(fileUpload);
