@@ -356,11 +356,11 @@ def check_valid_passenger_seats(
 
     for p in passengers_in_flight:
         p = p["passenger"]
-        if str(p.citizen_id) == passenger.citizen_id:
-            raise HTTPException(
-                status_code=400,  # Use 400 for bad request
-                detail=f"Passenger with citizen_id {passenger.citizen_id} is already booked on this flight.",
-            )
+        # if str(p.citizen_id) == passenger.citizen_id:
+        #     raise HTTPException(
+        #         status_code=400,  # Use 400 for bad request
+        #         detail=f"Passenger with citizen_id {passenger.citizen_id} is already booked on this flight.",
+        #     )
 
         # Check if another passenger already has the same seat
         if (
