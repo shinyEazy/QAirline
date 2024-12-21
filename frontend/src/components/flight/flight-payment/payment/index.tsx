@@ -8,13 +8,14 @@ import {
   Collapse,
 } from "@mui/material";
 import { useState } from "react";
-import useBookingStore from "hooks/booking-hook";
-import { useEffect } from "react";
+import { usePaymentStore } from "hooks/payment-hook"; // Import the payment store
 
 const Payment = () => {
-  const [paymentOption, setPaymentOption] = useState("payLater");
+  const { paymentOption, setPaymentOption } = usePaymentStore();
+
   const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPaymentOption((event.target as HTMLInputElement).value);
+    setPaymentOption(event.target.value); // Update the payment option in the store
+    console.log(event.target.value)
   };
 
 
